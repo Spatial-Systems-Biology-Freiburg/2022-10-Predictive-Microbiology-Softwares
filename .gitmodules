@@ -1,0 +1,3 @@
+[submodule "model-design-fischer-information-matrix"]
+	path = model-design-fischer-information-matrix
+	url = git@github.com:spatial-systems-biology-freiburg/model-design-fischer-information-matrix
