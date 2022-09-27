@@ -1,24 +1,60 @@
 % Results and Discussion can be combined.
-\section*{Results}
+\section*{Materials and Methods}
+%
+%
+\subsection*{Model Formulation}
+\subsubsection*{Theory}
+\begin{enumerate}
+    \item Define ODE, Jacobian
+    \item Which parameters are present?
+    \item Differnce between Q-Values, P-Values, Const
+\end{enumerate}
+%
+\subsubsection*{Code}
+\begin{enumerate}
+    \item Write ODE, Jacobian functions in python with Q, P, Const\\
+    \mintinline[bgcolor=white,style=emacs]{python}{def ode_func(y, t, Q, P, Const):}\\
+    \mintinline[bgcolor=white,style=emacs]{python}{def jacobian(y, t, Q, P, Const):}
+    \item Define initial values \mintinline[bgcolor=white,style=emacs]{python}{(y0, t0)}
+\end{enumerate}
 
-% Place tables after the first paragraph in which they are cited.
-% \begin{table}[!ht]
-% \begin{adjustwidth}{-2.25in}{0in} % Comment out/remove adjustwidth environment if table fits in text column.
-% \centering
-% \caption{
-% {\bf Table caption Nulla mi mi, venenatis sed ipsum varius, volutpat euismod diam.}}
-% \begin{tabular}{|l+l|l|l|l|l|l|l|}
-% \hline
-% \multicolumn{4}{|l|}{\bf Heading1} & \multicolumn{4}{|l|}{\bf Heading2}\\ \thickhline
-% $cell1 row1$ & cell2 row 1 & cell3 row 1 & cell4 row 1 & cell5 row 1 & cell6 row 1 & cell7 row 1 & cell8 row 1\\ \hline
-% $cell1 row2$ & cell2 row 2 & cell3 row 2 & cell4 row 2 & cell5 row 2 & cell6 row 2 & cell7 row 2 & cell8 row 2\\ \hline
-% $cell1 row3$ & cell2 row 3 & cell3 row 3 & cell4 row 3 & cell5 row 3 & cell6 row 3 & cell7 row 3 & cell8 row 3\\ \hline
-% \end{tabular}
-% \begin{flushleft} Table notes Phasellus venenatis, tortor nec vestibulum mattis, massa tortor interdum felis, nec pellentesque metus tortor nec nisl. Ut ornare mauris tellus, vel dapibus arcu suscipit sed.
-% \end{flushleft}
-% \label{table1}
-% \end{adjustwidth}
-% \end{table}
+\subsection*{Parameter Estimation}
+\subsubsection*{Theory}
+\begin{enumerate}
+    \item Log-Likelihood Function
+    \item Maximum-Likelihood Estimators
+    \item Likelihood Function for Gaussian Noise
+\end{enumerate}
+%
+\subsubsection*{Code}
+\begin{enumerate}
+    \item \mintinline[bgcolor=white,style=emacs]{python}{def likelihood_function(fitted_parameter, measurement_data)}
+    \item \mintinline[bgcolor=white,style=emacs]{python}{scipy.optimize.minimize}
+\end{enumerate}
 
-
-%PLOS does not support heading levels beyond the 3rd (no 4th level headings).
+\subsection*{Experimental Design}
+\subsubsection*{Theory}
+\begin{enumerate}
+    \item Fischer, Sensitivity Matrix
+    \item Observables: Determinant, Eigenvalues, etc.
+\end{enumerate}
+%
+\subsubsection*{Code}
+\begin{enumerate}
+    \item How does the user calculate the Fischer Observable?
+    \begin{minted}{python}
+        def calculate_Fischer_observable(
+            parameter_combinations,
+            sensitivity_ode_function,
+            y0_t0,
+            jacobi,
+            observable):
+    \end{minted}
+    \item How do we optimize for best results?
+    \begin{minted}{python}
+        def optimize_parameters(
+            parameter_combinations,
+            observable):
+    \end{minted}
+\end{enumerate}
+%
