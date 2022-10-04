@@ -29,13 +29,140 @@
 
 \begin{document}
 
-\input{00-Abstract}
+\vspace*{0.2in}
+% Title must be 250 characters or less.
+\begin{flushleft}
+{\Large
+\textbf\newline{Model Calibration with Process Variables depending on Environmental Parameters}}
+\newline
+\\
+Polina Gaindrik\textsuperscript{1,2,3},
+Jonas Pleyer\textsuperscript{1,2},
+Christian Fleck\textsuperscript{1,2,3}
+\\
+\bigskip
+\textbf{1} \href{https://www.fdm.uni-freiburg.de/spatsysbio}{University of Freiburg}\\
+\textbf{2} \href{https://www.fdm.uni-freiburg.de/spatsysbio}{Freiburg Center for Data Analysis and Modeling}\\
+\textbf{3} \href{https://tsenso.com/en/}{Tsenso}\\
+\bigskip
+
+\end{flushleft}
+\section*{Abstract}
+%
+%
+%
 \linenumbers
-\input{01-Introduction}
-\input{03-Methods}
-\input{10-Conclusion}
-\input{20-Appendix}
+%
+%
+%
+% ########################################################################
+% ########################################################################
+\section*{Introduction}
+% \begin{figure}[h]
+% 	\inputminted[linenos,firstline=57,lastline=79]{python}{../model-design-fischer-information-matrix/pool_model.py}
+% 	\caption{Sample code written in Python~\cite{rossumPythonLanguageReference2010}.}
+% \end{figure}
+%
+\begin{enumerate}
+	\item Why do we want parameter estimation and experimental design?
+	\item Flow-Chart Experimental Design
+	\item Citations to common methods
+\end{enumerate}
+%
+%
+%
+% ########################################################################
+% ########################################################################
+\section*{Materials and Methods}
+%
+%
+% ########################################################################
+\subsection*{Model Formulation}
+\subsubsection*{Theory}
+\begin{enumerate}
+    \item Define ODE, Jacobian
+    \item Which parameters are present?
+    \item Differnce between Q-Values, P-Values, Const
+\end{enumerate}
+%
+% ########################################################################
+\subsubsection*{Code}
+\begin{enumerate}
+    \item Write ODE, Jacobian functions in python with Q, P, Const\\
+    \mintinline[bgcolor=white,style=emacs]{python}{def ode_func(y, t, Q, P, Const):}\\
+    \mintinline[bgcolor=white,style=emacs]{python}{def jacobian(y, t, Q, P, Const):}
+    \item Define initial values \mintinline[bgcolor=white,style=emacs]{python}{(y0, t0)}
+\end{enumerate}
+%
+% ########################################################################
+\subsection*{Parameter Estimation}
+%
+% ########################################################################
+\subsubsection*{Theory}
+\begin{enumerate}
+    \item Log-Likelihood Function
+    \item Maximum-Likelihood Estimators
+    \item Likelihood Function for Gaussian Noise
+\end{enumerate}
+%
+% ########################################################################
+\subsubsection*{Code}
+\begin{enumerate}
+    \item \mintinline[bgcolor=white,style=emacs]{python}{def likelihood_function(fitted_parameter, measurement_data)}
+    \item \mintinline[bgcolor=white,style=emacs]{python}{scipy.optimize.minimize}
+\end{enumerate}
+%
+% ########################################################################
+\subsection*{Experimental Design}
+\subsubsection*{Theory}
+\begin{enumerate}
+    \item Fischer, Sensitivity Matrix
+    \item Observables: Determinant, Eigenvalues, etc.
+\end{enumerate}
+%
+% ########################################################################
+\subsubsection*{Code}
+\begin{enumerate}
+    \item How does the user calculate the Fischer Observable?
+    \begin{minted}{python}
+        def calculate_Fischer_observable(
+            parameter_combinations,
+            sensitivity_ode_function,
+            y0_t0,
+            jacobi,
+            observable):
+    \end{minted}
+    \item How do we optimize for best results?
+    \begin{minted}{python}
+        def optimize_parameters(
+            parameter_combinations,
+            observable):
+    \end{minted}
+\end{enumerate}
+%
+%
+%
+% ########################################################################
+% ########################################################################
+\section*{Conclusion}
+\begin{enumerate}
+    \item Plots: Optimized time points
+    \item Observable vs number of measurements
+    \item Performance (scaling, limitations, etc.)
+    \item 
+\end{enumerate}
+%
+%
+%
+% ########################################################################
+% ########################################################################
+\section*{Supporting information}
+%
+%
+%
 \nolinenumbers
+% ########################################################################
+% ########################################################################
 \bibliography{bibliography/predictive-microbiology-software}
 
 \end{document}
