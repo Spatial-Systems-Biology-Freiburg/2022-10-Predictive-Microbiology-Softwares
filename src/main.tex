@@ -28,7 +28,8 @@
 
 
 \begin{document}
-
+% ########################################################################
+% ########################################################################
 \vspace*{0.2in}
 % Title must be 250 characters or less.
 \begin{flushleft}
@@ -47,10 +48,9 @@ Christian Fleck\textsuperscript{1,2,3}
 \bigskip
 
 \end{flushleft}
+% ########################################################################
+% ########################################################################
 \section*{Abstract}
-%
-%
-%
 \linenumbers
 %
 %
@@ -84,8 +84,6 @@ Christian Fleck\textsuperscript{1,2,3}
     \item Which parameters are present?
     \item Differnce between Q-Values, P-Values, Const
 \end{enumerate}
-%
-% ########################################################################
 \subsubsection*{Code}
 \begin{enumerate}
     \item Write ODE, Jacobian functions in python with Q, P, Const\\
@@ -96,16 +94,12 @@ Christian Fleck\textsuperscript{1,2,3}
 %
 % ########################################################################
 \subsection*{Parameter Estimation}
-%
-% ########################################################################
 \subsubsection*{Theory}
 \begin{enumerate}
     \item Log-Likelihood Function
     \item Maximum-Likelihood Estimators
     \item Likelihood Function for Gaussian Noise
 \end{enumerate}
-%
-% ########################################################################
 \subsubsection*{Code}
 \begin{enumerate}
     \item \mintinline[bgcolor=white,style=emacs]{python}{def likelihood_function(fitted_parameter, measurement_data)}
@@ -119,8 +113,6 @@ Christian Fleck\textsuperscript{1,2,3}
     \item Fischer, Sensitivity Matrix
     \item Observables: Determinant, Eigenvalues, etc.
 \end{enumerate}
-%
-% ########################################################################
 \subsubsection*{Code}
 \begin{enumerate}
     \item How does the user calculate the Fischer Observable?
