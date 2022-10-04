@@ -1,7 +1,7 @@
 CC:=latexmk
-SRCDIR:=src
-BIBDIR:=src/bibliography
-MEDIADIR:=src/media
+SRCDIR:=.
+BIBDIR:=.
+MEDIADIR:=./media
 ODIR:=out
 TARGET:=main
 OPTIONS:=-pdf -shell-escape
