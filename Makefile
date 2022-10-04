@@ -37,4 +37,4 @@ wordcount:
 	texcount $(COMPILATION_FILES)
 
 citecount: clean_cite bibexport
-	cat src/bibliography/cited.bib | grep -o ^@ | wc -l
+	cat $(BIBDIR)/cited.bib | grep -o ^@ | wc -l
