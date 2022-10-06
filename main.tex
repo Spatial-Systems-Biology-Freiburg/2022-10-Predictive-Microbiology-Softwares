@@ -11,7 +11,7 @@
 \usepackage{xcolor}
 
 \usepackage[outputdir=out]{minted}
-\definecolor{bg}{HTML}{282828} % from https://github.com/kevinsawicki/monokai
+\definecolor{bg}{HTML}{282828} % fro https://github.com/kevinsawicki/monokai
 \setminted{autogobble=true,bgcolor=bg,linenos=true,style=monokai}
 
 \bibliographystyle{abbrv}
@@ -68,6 +68,37 @@ Christian Fleck\textsuperscript{1,2,3}
 	\item Flow-Chart Experimental Design
 	\item Citations to common methods
 \end{enumerate}
+
+
+Mathematical modeling is a widely used tool to describe, understand and predict further behavior of the living systems.
+In particular, one can find a lot of works that dwell on building models controlled by a certain parameters in the field of the Predictive Biology, e.g., to describe bacteria growth. [cite !]
+These parameters vary for different cases and may be estimated from the experimental data for a certain chosen model structure.
+Taking into account that the real experimental data always contains the measurement noise, the parameter estimates can be only provided with some uncertainty. 
+To descrease the error of the parameter values, not only enough experimental data should be gathered but the quality of this data is also pretty sufficient.
+That rises pretty important question of finding the optimal experimental design (OED) to obtain as much information as possible from the data.
+According to this, several algorithms were developed to assess and maximize the informational content of a certain experimental scheme. 
+The experimental design allows to optimize the measurement conditions and times, helps to spare an effort of experimentalists and reduce the number of necessary measurements. 
+
+The process of the model building is iterative (see Fig. \ref{fig:expdesign_scheme}).
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{Figures/scheme.png}
+    \caption{The iterative process of model optimization for parameter estimation.}
+    \label{fig:expdesign_scheme}
+\end{figure}
+First of all, based on the literature review or some prior data from pilot experiments  the first parameter estimation of the chosen model structure should be done.
+The obtained values than can be applied to propose the first optimal experimental design accounting different constraints, e.g., the lab limitations, human resources and etc. 
+Depending on availability, either real or numerical experiment should be conducted based on this design to gather measurement or in-silico data. 
+This new data can be the used for the new parameter estimations values with corresponding errors.
+Here, basically, the first iteration ends. 
+After this, using new parameter values, the process can be repeated several times to increase the precision of the parameter estimates till the desired accuracy is achieved.
+
+
+
+
+
+
+
 %
 %
 %
@@ -158,3 +189,4 @@ Christian Fleck\textsuperscript{1,2,3}
 \bibliography{predictive-microbiology-software}
 
 \end{document}
+%%
