@@ -4,14 +4,15 @@
 
 # Compilation
 We assume a working Texlive installation.
-Compile with from within the src folder or use the provided makefile if cloning from the [git repository](https://github.com/Spatial-Systems-Biology-Freiburg/2022-10-Predictive-Microbiology-Softwares)
+Compile with 
 ```bash
-latexmk -pdf
+latexmk -pdf --shell-scape --output-dir=out
 ```
 or simply use
 ```bash
 make
 ```
+if cloning from the [Github](https://github.com/Spatial-Systems-Biology-Freiburg/2022-10-Predictive-Microbiology-Softwares) repository
 # More Functionalities
 ## Bibexport
 Export all bibliography items into a single file.
