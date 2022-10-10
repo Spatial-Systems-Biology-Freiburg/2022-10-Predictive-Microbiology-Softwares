@@ -70,16 +70,20 @@ Christian Fleck\textsuperscript{1,2,3}
 \end{enumerate}
 
 
-Mathematical modeling is a widely used tool to describe, understand and predict further behavior of the living systems.
-In particular, one can find a lot of works that dwell on building models controlled by a certain parameters in the field of the Predictive Biology, e.g., to describe bacteria growth. [cite !]
+Mathematical modeling is a widely used tool to describe, understand and predict further behavior of living systems.
+In particular, one can find a lot of works that dwell on building models controlled by certain parameters in the field of Predictive Biology, e.g., to describe bacteria growth \cite{perez-rodriguezPredictiveMicrobiologyFoods2012, bernaertsConceptsToolsPredictive2004}.
 These parameters vary for different cases and may be estimated from the experimental data for a certain chosen model structure.
-Taking into account that the real experimental data always contains the measurement noise, the parameter estimates can be only provided with some uncertainty. 
-To descrease the error of the parameter values, not only enough experimental data should be gathered but the quality of this data is also pretty sufficient.
-That rises pretty important question of finding the optimal experimental design (OED) to obtain as much information as possible from the data.
-According to this, several algorithms were developed to assess and maximize the informational content of a certain experimental scheme. 
-The experimental design allows to optimize the measurement conditions and times, helps to spare an effort of experimentalists and reduce the number of necessary measurements. 
+Taking into account that the real experimental data always contains measurement noise, the parameter estimates can be only provided with some uncertainty. 
+To decrease the error of the parameter values, not only enough experimental data should be gathered but the quality of this data is also pretty sufficient.
+That rises quite an important question of finding the optimal experimental design (OED) where optimized experimental conditions and/or times allow one to reduce the number of measurements without loss of information thus sparing an effort of experimenters \cite{derlindenImpactExperimentDesign2013, balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}. 
+In general, OED can be used not only for the parameter estimation of the model but also for model discrimination to choose between different model structures \cite{kreutzSystemsBiology2009, stamatiOptimalExperimentalDesign2016}.
+However, in this chapter, we would like to cover more deeply the methods for improving the parameter estimation of the model.
+According to this, several criteria were developed to assess data quality based on statistics tools. [cite !]
+Depending on the goal, the scientist can choose among these sometimes contradicting each other criteria.
+On the other hand, using the multi-objective approach, some attempts were made to improve the experimental design by combining these criteria \cite{telenOptimalExperimentDesign2012, logistRobustMultiobjectiveOptimal2011}.
+In particular, in predictive microbiology one of the promising application of the OED is to optimize the temperature profile with the time of the experiment as well as improve the choice of measurement times \cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008, garciaQualityShelflifePrediction2015, versyckIntroducingOptimal1999}.
 
-The process of the model building is iterative (see Fig. \ref{fig:expdesign_scheme}).
+In the beginning, we would like to briefly describe the whole iterative process of model building (see Fig. \ref{fig:expdesign_scheme}).
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.3]{Figures/scheme.png}
@@ -87,10 +91,10 @@ The process of the model building is iterative (see Fig. \ref{fig:expdesign_sche
     \label{fig:expdesign_scheme}
 \end{figure}
 First of all, based on the literature review or some prior data from pilot experiments  the first parameter estimation of the chosen model structure should be done.
-The obtained values than can be applied to propose the first optimal experimental design accounting different constraints, e.g., the lab limitations, human resources and etc. 
+The obtained values can be applied to propose the first optimal experimental design accounting for different constraints, e.g., the lab limitations, human resources, etc. 
 Depending on availability, either real or numerical experiment should be conducted based on this design to gather measurement or in-silico data. 
-This new data can be the used for the new parameter estimations values with corresponding errors.
-Here, basically, the first iteration ends. 
+This new data can be used for the new parameter estimations values with corresponding errors.
+Here, the first iteration ends. 
 After this, using new parameter values, the process can be repeated several times to increase the precision of the parameter estimates till the desired accuracy is achieved.
 
 
