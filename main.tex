@@ -1,5 +1,6 @@
 \documentclass[10pt,A4paper]{article}
 
+\usepackage{acronym}
 \usepackage{amsmath,amssymb}
 \usepackage[aboveskip=1pt,labelfont=bf,labelsep=period,justification=raggedright,singlelinecheck=off]{caption}
 \usepackage{changepage}
@@ -28,6 +29,11 @@
 
 \newcommand{\etal}{{\textit{et al.}}}
 \providecommand{\keywords}[1]{\textbf{Keywords } #1}
+
+
+% Create acronyms to use in text
+\newacro{ode}[ODE]{Ordinary Differential Equation}
+\newacro{oed}[OED]{optimal experimental design}
 
 
 \begin{document}
@@ -85,14 +91,14 @@ Mathematical modeling is a widely used tool to describe, understand and predict 
 In particular, in the field of Predictive Biology, one can find a large variety of works that dwell on building models of different levels of complexity controlled by model parameters, e.g., to describe bacteria growthBased on a chosen model structure, these parameters can be estimated from the gathered experimental data.
 Taking into account that the real experimental data always contains measurement noise, the parameter estimates can be only provided with some uncertainty. 
 To decrease the error of the parameter values, not only enough experimental data should be gathered but the quality of this data is also pretty sufficient.
-That rises quite an important question of finding the optimal experimental design (OED) where optimized experimental conditions and/or times allow one to reduce the number of measurements without loss of information thus sparing an effort of experimenters \cite{derlindenImpactExperimentDesign2013, balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}. 
-In general, OED can be used not only for the parameter estimation of the model but also for model discrimination to choose between different model structures \cite{kreutzSystemsBiology2009, stamatiOptimalExperimentalDesign2016}.
+That rises quite an important question of finding the \ac{oed} where optimized experimental conditions and/or times allow one to reduce the number of measurements without loss of information thus sparing an effort of experimenters \cite{derlindenImpactExperimentDesign2013, balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}. 
+In general, \ac{oed} can be used not only for the parameter estimation of the model but also for model discrimination to choose between different model structures \cite{kreutzSystemsBiology2009, stamatiOptimalExperimentalDesign2016}.
 However, in this chapter, we would like to cover more deeply the methods for improving the parameter estimation of the model.
 According to this, using tools of Statistics and specifically the Fisher information, several criteria were developed to assess data quality. 
 The review of these different possible criteria the reader can find for example in works \cite{atkinsonDevelopmentsDesignExperiments1982, franceschiniModelbasedDesignExperiments2008}.
 Depending on the goal, a researcher faces an important choice which among these sometimes contradicting each other criteria is the most suitable one for a particular case.
 On the other hand, using the multi-objective approach, some attempts were made to improve the experimental design by combining these criteria \cite{telenOptimalExperimentDesign2012, logistRobustMultiobjectiveOptimal2011}.
-If we are talking about predictive microbiology, one of the promising applications of the OED is to optimize the temperature profile with the time of the experiment as it was done by García \etal \cite{garciaQualityShelflifePrediction2015} and Versyck \etal \cite{versyckIntroducingOptimal1999}.
+If we are talking about predictive microbiology, one of the promising applications of the \ac{oed} is to optimize the temperature profile with the time of the experiment as it was done by García \etal \cite{garciaQualityShelflifePrediction2015} and Versyck \etal \cite{versyckIntroducingOptimal1999}.
 Or, for example, Balsa-Canto \etal compared equidistant and optimized measurement times for such bacteria growth models as Baranyi and Roberts model and Bigelow model and have shown improvement in the latter case \cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}.
 
 \begin{figure}[H]
