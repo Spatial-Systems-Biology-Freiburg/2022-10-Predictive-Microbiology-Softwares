@@ -208,6 +208,22 @@ Based on this model, we would like to optimize the choice of measurement times a
     \item Maximum-Likelihood Estimators
     \item Likelihood Function for Gaussian Noise
 \end{enumerate}
+
+One of the requirements for conducting an Experimental Design is a provision of parameter values by a user.
+Due to this, after the model was defined, the first parameter values should be chosen from the literature or estimated from previously gathered experimental data by maximizing the likelihood function.
+By definition, the likelihood function $L(\mbp)$ is the probability of observing a data $\mby$ in case of a certain parameters $\mbp$:
+\begin{equation}
+    L(\mbp) = p(\mby|\mbp).
+    \label{eq:likelihood_definition}
+\end{equation}
+In the case of the Gaussian white measurement noise with zero mean and variance $\sigma^2$: $\epsilon(t_i) \propto N(0, \sigma_i^2)$, it is convenient to maximize the logarithm of the likelihood function (log-likelihood) instead.
+This is likewise simply minimizing the sum of the squared difference between the measured data and model output:
+\begin{equation}
+    \ln L(\mbp) \propto - \sum_{i}\frac{ \big(\mathbf{g}^{i}(\theta) - \mby^{i}\big)^2}{2 \sigma_{i}^2}.
+    \label{eq:likelihood_Gaussian}
+\end{equation}
+Here $\mby^{i}$ is the $i$-th value of observational data, and $\mathbf{g}^{i}(\theta)$ is a corresponding to it model output.
+
 \subsubsection*{Code}
 \begin{enumerate}
     \item \mintinline[bgcolor=white,style=emacs]{python}{def likelihood_function(fitted_parameter, measurement_data)}
