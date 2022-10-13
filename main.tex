@@ -158,14 +158,19 @@ The first important step a reader should do to conduct their Experimental Design
 In this chapter, we restrict ourselves to a quite popular case in Predictive Microbiology and assume that biological system is described by a system of \acp{ode}
 \begin{equation}
     \begin{cases}
-    \dot \mbx (t) = f(\mbx, t, \mbu, \mbp) \\
+    \dot \mbx (t) = f(\mbx, t, \mbu, \mbp, c) \\
     \mbx (0) = \mbx_0
+    \label{eq:ode_general}
     \end{cases}.
 \end{equation}
-Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is time, $\mbu$ is a vector of an externally controlled inputs and $\mbp$ are the parameters of the system that be want to estimate. 
+Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is time, $\mbu$ is a vector of an externally controlled inputs, $\mbp$ are the parameters of the system that be want to estimate and $c$ are the constants.
+Here, it is important to differentiate between constants and parameters.
+The main difference is that we assume constant values to be known for sure and shouldn't be estimated from experimental data.
+On the other hand, parameters are the quantities of interest, and Experimental Design should be chosen relying on them.
 Another important choice to be done is to define the observables of the system $\mby$, which quantities and at which times $t_i$ should be measured.
 \begin{equation}
-    \mby (t_i) = g(\mbx (t_i), t, \mbu, \mbp) + \epsilon (t_i),
+    \mby (t_i) = g(\mbx (t_i), t, \mbu, \mbp, c) + \epsilon (t_i),
+    \label{eq:observ_general}
 \end{equation}
 where the function $g$ describes the model output and $\epsilon$ is the measurement noise. 
 The observational noise is often assumed to be an independently distributed Gaussian noise.
