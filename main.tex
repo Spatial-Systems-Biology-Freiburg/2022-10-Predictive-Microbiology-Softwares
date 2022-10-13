@@ -28,6 +28,10 @@
 \lfoot{\today}
 
 \newcommand{\etal}{{\textit{et al.}}}
+\newcommand{\mbx}{\mathbf{x}}
+\newcommand{\mbu}{\mathbf{u}}
+\newcommand{\mbp}{\mathbf{p}}
+\newcommand{\mby}{\mathbf{y}}
 \providecommand{\keywords}[1]{\textbf{Keywords } #1}
 
 
@@ -149,6 +153,45 @@ conda install FisInMa
     \item Which parameters are present?
     \item Differnce between Q-Values, P-Values, Const
 \end{enumerate}
+
+The first important step a reader should do to conduct their Experimental Design is to define a model structure.
+In this chapter, we restrict ourselves to a quite popular case in Predictive Microbiology and assume that biological system is described by a system of \acp{ode}
+\begin{equation}
+    \begin{cases}
+    \dot \mbx (t) = f(\mbx, t, \mbu, \mbp) \\
+    \mbx (0) = \mbx_0
+    \end{cases}.
+\end{equation}
+Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is time, $\mbu$ is a vector of an externally controlled inputs and $\mbp$ are the parameters of the system that be want to estimate. 
+Another important choice to be done is to define the observables of the system $\mby$, which quantities and at which times $t_i$ should be measured.
+\begin{equation}
+    \mby (t_i) = g(\mbx (t_i), t, \mbu, \mbp) + \epsilon (t_i),
+\end{equation}
+where the function $g$ describes the model output and $\epsilon$ is the measurement noise. 
+The observational noise is often assumed to be an independently distributed Gaussian noise.
+
+Here, to demonstrate how Experimental Design works, we will refer to a widely used Baranyi and Roberts model (1994) that can be used, for example, to describe bacteria growth.
+The model is introduced by two state variables $\mbx = (x_1, x_2)$, where $x_1(t)$ denotes the cell concentration of a bacterial population at the time $t$ and $x_2(t)$ defines a physiological state of the cells, the process of adjustment (lag-phase):
+\begin{equation}
+    \begin{cases}
+    \dot x_1(t) = \frac{x_2(t)}{x_2(t) + 1} \mu^\text{max} \big(1 - \frac{x_1(t)}{x_1^\text{max}}\big) x(t)  = f_1 \\
+    \dot x_2(t) = \mu^\text{max}  x_2(t) = f_2
+    \end{cases}.
+    \label{eq:ode_BaranyiRoberts}
+\end{equation}
+Here $\mu^\text{max}$ determines the maximum growth rate, and $x_1^\text{max}$ is bacteria concentration at the saturation. 
+To account for the influence of the temperature on the activity of the model, we will use the 'square root' or Ratkowsky-type model for the maximum growth rate
+\begin{equation}
+    \sqrt{\mu^\text{max}} = b (T - T_\text{min}).
+    \label{eq:RatkowskyModel}
+\end{equation} 
+As an observable, it is pretty common to measure the bacteria count $x_1$ or the logarithm of this value. 
+For simplicity, we would consider the prior case $y(t_i) = x_1(t_i)$.
+The system is fully defined by equations (\ref{eq:ode_BaranyiRoberts}), (\ref{eq:RatkowskyModel}).
+Here $x_1^\text{max}, b, T_\text{min}$ are the parameters that we estimate using observational data $y$ at measurement times $t_i$, and temperature $T$ is an input of the system.
+Based on this model, we would like to optimize the choice of measurement times as well as temperatures (inputs) of the system to find the \acl{oed}.
+
+
 \subsubsection*{Code}
 \begin{enumerate}
     \item Write ODE, Jacobian functions in python with Q, P, Const\\
