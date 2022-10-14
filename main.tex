@@ -225,10 +225,10 @@ By definition, the likelihood function $L(\mbp)$ is the probability of observing
 In the case of the Gaussian white measurement noise with zero mean and variance $\sigma_i^2$: $\epsilon(t_i) \propto N(0, \sigma_i^2)$, it is convenient to maximize the logarithm of the likelihood function (log-likelihood) instead.
 This is likewise simply minimizing the sum of the squared difference between the measured data and model output:
 \begin{equation}
-    \ln L(\mbp) \propto - \sum_{i}\frac{ \big(\mathbf{g}^{i}(\theta) - \mby^{i}\big)^2}{2 \sigma_{i}^2}.
+    \ln L(\mbp) \propto - \sum_{i}\frac{ \big(\mathbf{g}^{i}(\mbp) - \mby^{i}\big)^2}{2 \sigma_{i}^2}.
     \label{eq:likelihood_Gaussian}
 \end{equation}
-Here $\mby^{i}$ is the $i$-th value of observational data, and $\mathbf{g}^{i}(\theta)$ is a corresponding to it model output.
+Here $\mby^{i}$ is the $i$-th value of observational data, and $\mathbf{g}^{i}(\mbp)$ is a corresponding to it model output.
 
 \subsubsection*{Code}
 \begin{enumerate}
@@ -243,6 +243,85 @@ Here $\mby^{i}$ is the $i$-th value of observational data, and $\mathbf{g}^{i}(\
     \item Fischer, Sensitivity Matrix
     \item Observables: Determinant, Eigenvalues, etc.
 \end{enumerate}
+
+
+And finally, the reader can now proceed directly to the Experimental Design.
+The methods of the Experimental Design imply maximizing the objective function calculated using one of the properties of the \ac{fim}.
+There are some tricks that help to calculate this so-called \acl{fim}, and we would like to explain one of the methods.
+We assume that \acp{ode} describing the system and the observable function are differentiable functions.
+The first step is to calculate local sensitivities $s^\text{loc}_{ij} = (\partial x_i / \partial p_j )$.
+To do this, we need to solve the following system of the \acp{ode}:
+\begin{equation}\
+    \begin{cases}
+    \dot x_i (t) = f_i(\mbx, t, \mbu, \mbp, c)\\
+    \dot s^\text{loc}_{ij} = \sum_k \frac{\partial f_i}{\partial x_k} s^\text{loc}_{kj} + \frac{\partial f_i}{\partial p_j}
+    \end{cases}.
+\label{eq:ode_and_sensitiv}
+\end{equation} 
+However, the \ac{fim} is composed only with those sensitivity cofficients that correspond to the observables.
+That means that the next step is to calculate $(\partial y / \partial p_k) = s_{ij}$ at a certain times $t_m$ and input $u_n$ using the solutions of $s^\text{loc}_{ij}$:
+\begin{equation}
+    s_{ij} (t_m, u_n) = \sum_k \frac{\partial g_i}{\partial x_k}\bigg|_{t_m, u_n} s_{kj}^\text{loc} (t_m, u_n) + \frac{\partial g_i}{\partial p_j}\bigg|_{t_m, u_n}.
+\label{eq:observ_sensitivities}
+\end{equation}
+These sensitivities should be arranged to be elements of the sensitivity matrix.
+For example, in case of two observables $\mby = (y_1, y_2)$, two different inputs $\mbu = (u_1, u_2)$, $N$ different time and $N_p$ parameters, sensitivity matrix will look in the following way:
+\begin{equation}
+    S = 
+\begin{bmatrix}
+s_{11} (t_1, u_1) & ... & s_{1 N_p}(t_1, u_1) \\
+\vdots  &   & \vdots  \\
+s_{11} (t_{N}, u_1) & ... & s_{1 N_p} (t_{N}, u_1)\\
+s_{11} (t_1, u_2) & ... & s_{1 N_p}(t_1, u_2) \\
+\vdots  &   & \vdots  \\
+s_{11} (t_N, u_2) & ... & s_{1 N_p} (t_N, u_2)\\
+
+s_{21} (t_1, u_1) & ... & s_{2 N_p}(t_1, u_1) \\
+\vdots  &   & \vdots  \\
+s_{21} (t_{N}, u_1) & ... & s_{2 N_p} (t_{N}, u_1)\\
+s_{21} (t_1, u_2) & ... & s_{2 N_p}(t_1, u_2) \\
+\vdots  &   & \vdots  \\
+s_{21} (t_N, u_2) & ... & s_{2 N_p} (t_N, u_2)
+\end{bmatrix}
+\label{eq:sens_matrix}
+\end{equation}
+
+This matrix we will use to directly calculate the \ac{fim} via equation:
+\begin{equation}
+    F = S^T Q^{-1} S,
+\end{equation}
+where $Q$ is the covariance matrix of measurement error that, in the case of the independent measurements, looks like 
+\begin{equation}
+    Q = 
+\begin{pmatrix}
+\sigma_1^2 & 0 & 0 & ... & 0\\
+0 & \sigma_2^2 & 0 & ... & 0\\
+\vdots  & \vdots  & \vdots  &   & \vdots  \\
+0 & 0 & 0 & ... & \sigma_M^2 \\
+\end{pmatrix}
+\end{equation}
+where $\sigma_i$ is the standard deviation of the $i$-th measurements, and $M$ is an effort or the whole number of measurements.
+
+Here, before proceeding with optimization, the reader should take the time and check if the system is identifiable, meaning that it is possible to obtain the unique best scheme. 
+The non-identifiability can be due to the wrong choice of the model structure or observable (structural) or the incorrect choice of gathered data (practical).
+One of the ways to check the system on structural non-identifiability is to calculate the rank of the \ac{fim}.
+For an identifiable system, it should coincide with the number of estimated parameters.
+If this condition is satisfied, we can continue with optimization.
+
+Different optimality criteria choose to maximize different objectives.
+The effects of these objectives on the parameter space can vary so the reader can choose the most suitable one. 
+Some of the most popular criteria we would like to mention:
+\begin{itemize}
+    \item determinant $\det (F)$ (D-optimality criterion)
+    \item the minimal eigenvalue $\lambda_{\min}$ (E-optimality criterion)
+    \item the sum of eigenvalues $\sum_i \lambda_i$ (A-optimality criterion)
+    \item the ratio between the minimal and maximal eigenvalue $\lambda_{\min} / \lambda_{\max}$ (Modified E-optimality)
+\end{itemize}
+
+%% Picture for criteria %%%
+
+
+
 \subsubsection*{Code}
 \begin{enumerate}
     \item How does the user calculate the Fischer Observable?
