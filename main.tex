@@ -38,6 +38,7 @@
 % Create acronyms to use in text
 \newacro{ode}[ODE]{Ordinary Differential Equation}
 \newacro{oed}[OED]{optimal experimental design}
+\newacro{fim}[FIM]{Fisher information matrix}
 
 
 \begin{document}
@@ -163,10 +164,10 @@ In this chapter, we restrict ourselves to a quite popular case in Predictive Mic
     \label{eq:ode_general}
     \end{cases}.
 \end{equation}
-Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is time, $\mbu$ is a vector of an externally controlled inputs, $\mbp$ are the parameters of the system that be want to estimate and $c$ are the constants.
+Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is time, $\mbu$ is a vector of an externally controlled inputs, $\mbp$ are the parameters of the system and $c$ are the constants.
 Here, it is important to differentiate between constants and parameters.
-The main difference is that we assume constant values to be known for sure and shouldn't be estimated from experimental data.
-On the other hand, parameters are the quantities of interest, and Experimental Design should be chosen relying on them.
+The main difference is that we assume constant values to be known for sure, so they shouldn't be estimated from experimental data.
+On the other hand, parameters are the quantities of interest and their estimation is our goal, Experimental Design should be chosen relying on them.
 Another important choice to be done is to define the observables of the system $\mby$, which quantities and at which times $t_i$ should be measured.
 \begin{equation}
     \mby (t_i) = g(\mbx (t_i), t, \mbu, \mbp, c) + \epsilon (t_i),
@@ -221,7 +222,7 @@ By definition, the likelihood function $L(\mbp)$ is the probability of observing
     L(\mbp) = p(\mby|\mbp).
     \label{eq:likelihood_definition}
 \end{equation}
-In the case of the Gaussian white measurement noise with zero mean and variance $\sigma^2$: $\epsilon(t_i) \propto N(0, \sigma_i^2)$, it is convenient to maximize the logarithm of the likelihood function (log-likelihood) instead.
+In the case of the Gaussian white measurement noise with zero mean and variance $\sigma_i^2$: $\epsilon(t_i) \propto N(0, \sigma_i^2)$, it is convenient to maximize the logarithm of the likelihood function (log-likelihood) instead.
 This is likewise simply minimizing the sum of the squared difference between the measured data and model output:
 \begin{equation}
     \ln L(\mbp) \propto - \sum_{i}\frac{ \big(\mathbf{g}^{i}(\theta) - \mby^{i}\big)^2}{2 \sigma_{i}^2}.
