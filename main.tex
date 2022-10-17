@@ -248,11 +248,13 @@ Here $\mby^{i}$ is the $i$-th value of observational data, and $\mathbf{g}^{i}(\
 
 And finally, the reader can now proceed directly to the Experimental Design.
 The methods of the Experimental Design imply maximizing the objective function calculated using one of the properties of the \ac{fim}.
-There are some tricks that help to calculate this so-called \acl{fim}, and we would like to explain one of the methods.
-We assume that \acp{ode} describing the system and the observable function are differentiable functions.
+According to so-called 'Cramer-Rao inequality', the \acl{fim} is inversely proportional to the minimal squared estimation error \cite{friedenExploratoryData2010}. 
+So by maximizing the Fisher information we actually can minimize the uncertainty of the parameter estimates.
+We are going to explain one of the ways to calculate this so-called \acl{fim} for the descibed above system.
+Assume that system \acp{ode} (\ref{eq:ode_general}) and the observable function (\ref{eq:observ_general}) are differentiable functions.
 The first step is to calculate local sensitivities $s^\text{loc}_{ij} = (\partial x_i / \partial p_j )$.
 To do this, we need to solve the following system of the \acp{ode}:
-\begin{equation}\
+\begin{equation}
     \begin{cases}
     \dot x_i (t) = f_i(\mbx, t, \mbu, \mbp, c)\\
     \dot s^\text{loc}_{ij} = \sum_k \frac{\partial f_i}{\partial x_k} s^\text{loc}_{kj} + \frac{\partial f_i}{\partial p_j}
@@ -299,11 +301,12 @@ where $Q$ is the covariance matrix of measurement error that, in the case of the
 0 & \sigma_2^2 & 0 & ... & 0\\
 \vdots  & \vdots  & \vdots  &   & \vdots  \\
 0 & 0 & 0 & ... & \sigma_M^2 \\
-\end{pmatrix}
+\end{pmatrix}.
 \end{equation}
 where $\sigma_i$ is the standard deviation of the $i$-th measurements, and $M$ is an effort or the whole number of measurements.
+Here $\sigma_i$ is the standard deviation of the $i$-th measurements, and $M$ is an effort or the whole number of measurements.
 
-Here, before proceeding with optimization, the reader should take the time and check if the system is identifiable, meaning that it is possible to obtain the unique best scheme. 
+Here, before proceeding with optimization, the reader should take the time and check if the system is identifiable, meaning that if it is possible to obtain the unique solution from the optimization. 
 The non-identifiability can be due to the wrong choice of the model structure or observable (structural) or the incorrect choice of gathered data (practical).
 One of the ways to check the system on structural non-identifiability is to calculate the rank of the \ac{fim}.
 For an identifiable system, it should coincide with the number of estimated parameters.
@@ -313,11 +316,22 @@ Different optimality criteria choose to maximize different objectives.
 The effects of these objectives on the parameter space can vary so the reader can choose the most suitable one. 
 Some of the most popular criteria we would like to mention:
 \begin{itemize}
-    \item determinant $\det (F)$ (D-optimality criterion)
-    \item the minimal eigenvalue $\lambda_{\min}$ (E-optimality criterion)
-    \item the sum of eigenvalues $\sum_i \lambda_i$ (A-optimality criterion)
-    \item the ratio between the minimal and maximal eigenvalue $\lambda_{\min} / \lambda_{\max}$ (Modified E-optimality)
+    \item \textbf{D-optimality criterion} maximizes the determinant $\det (F)$ of the \ac{fim}. 
+    In parameter space it means that we minimize the volume of so-called confidence region, or geometrical mean of the errors.
+    The confidence region at a confidence level of $\alpha$ can be interpreted as there is a $\alpha \cdot 100 \%$ chance that the best parameter fit will belong to this area in case of repeating the experiment and estimations multiple times.
+    It is usually presented as a confidence ellipsoid (see Fig. ...).
+    D-optimality is the most widely used criterion and is suitable even if the parameters have different dimensionalities.
+    
+    \item \textbf{E-optimality criterion} concentrates on maximizing the minimal eigenvalue $\lambda_{\min}$ of the \ac{fim}, which is the same as reducing only the largest estimation error.
+    
+    \item \textbf{A-optimality criterion} takes into account the sum of all eigenvalues $\sum_i \lambda_i$
+    That can be interpreted as minimizing the algebraic mean of all errors.
+    
+    \item \textbf{Modified E-optimality} maximizes the ratio between the minimal and maximal eigenvalue $\lambda_{\min} / \lambda_{\max}$.
+    Here geometrical interpretation is  to make the confidece ellipsoid as spherical as possible.
+    
 \end{itemize}
+Each of the criteria has its pros and cons so the reader can take a closer look at the various properties of these criteria, for instance, in Franceschini's and Macchietto's paper \cite{franceschiniModelbasedDesignExperiments2008}.
 
 %% Picture for criteria %%%
 
