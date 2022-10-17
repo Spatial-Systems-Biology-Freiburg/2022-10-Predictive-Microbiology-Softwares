@@ -66,11 +66,12 @@ Christian Fleck\textsuperscript{1,2,3}
 % ########################################################################
 \section*{Abstract}
 \linenumbers
-Parameter estimation is a significant part of the model building that is always accompanied by quantification uncertainty.
-Experimental design allows optimization of the observation conditions, reduces the uncertainty of the parameter estimation, and descreases the number of measurements. 
-In this chapter, we provide instructions for finding the optimal experimental design using the (Baranyi and Roberts ?) growth model as an example. 
-The guidelines are supposed to clarify the procedure and make it more accessible for a general reader of Systems Biology.
-As an example, we provide a Python-written software that can be used for simple systems (??).
+Parameter estimation is a significant part of the model building that is always accompanied by uncertainty.
+Experimental design allows optimization of the observation conditions and reduces the uncertainty of the parameter estimation as well as the number of measurements required for meaningful model quantification.
+In this chapter, we provide instructions for finding the optimal experimental design using the Baranyi and Roberts growth model with the 'square root' secondary model for the maximum growth rate as a specific example from Predictive Microbiology. 
+The guidelines are supposed to clarify the procedure and make it more accessible for the reader familiar with the field of Systems Biology.
+We provide Python-written software for the \acp{ode}-based models that optimize the measurement times and inputs of the model.
+
 
 \keywords{Optimal experimental design, Parameter estimation, Fisher Information matrix, Identifiability, Uncertainty}
 
