@@ -162,7 +162,7 @@ In this chapter, we restrict ourselves to a quite popular case in Predictive Mic
 \begin{equation}
     \begin{cases}
     \dot \mbx (t) = f(\mbx, t, \mbu, \mbp, c) \\
-    \mbx (0) = \mbx_0
+    \mbx (t_0) = \mbx_0
     \label{eq:ode_general}
     \end{cases}.
 \end{equation}
@@ -262,7 +262,7 @@ To do this, we need to solve the following system of the \acp{ode}:
     \end{cases}.
 \label{eq:ode_and_sensitiv}
 \end{equation} 
-However, the \ac{fim} is composed only with those sensitivity cofficients that correspond to the observables.
+However, the \ac{fim} is composed only with those sensitivity coefficients that correspond to the observables.
 That means that the next step is to calculate $(\partial y / \partial p_k) = s_{ij}$ at a certain times $t_m$ and input $u_n$ using the solutions of $s^\text{loc}_{ij}$:
 \begin{equation}
     s_{ij} (t_m, u_n) = \sum_k \frac{\partial g_i}{\partial x_k}\bigg|_{t_m, u_n} s_{kj}^\text{loc} (t_m, u_n) + \frac{\partial g_i}{\partial p_j}\bigg|_{t_m, u_n}.
