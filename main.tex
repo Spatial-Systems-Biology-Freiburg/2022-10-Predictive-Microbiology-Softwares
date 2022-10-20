@@ -250,21 +250,29 @@ According to so-called 'Cramer-Rao inequality', the Fisher information is invers
 So its maximization actually leads to minimization of the uncertainty of the parameter estimates.
 We are going to explain one of the ways to calculate this so-called \acl{fim} for mentioned above \acp{ode} system (\ref{eq:ode_general}) and the observable function (\ref{eq:observ_general}).
 Assume that functions $f$ and $g$ are differentiable functions with respect to the state varibles $\mbx$ and parameters $\mbp$.
-The first step is to calculate local sensitivities $s^\text{loc}_{ij} = (\partial x_i / \partial p_j )$.
+The first step is to calculate local sensitivities $s^x_{ij} = (\partial x_i / \partial p_j )$.
 To do this, we need to solve the following system of the \acp{ode}:
 \begin{equation}
     \begin{cases}
     \dot x_i (t) = f_i(\mbx, t, \mbu, \mbp, c)\\
-    \dot s^\text{loc}_{ij} = \sum_k \frac{\partial f_i}{\partial x_k} s^\text{loc}_{kj} + \frac{\partial f_i}{\partial p_j}
+    \dot s^x_{ij} = \sum_k \frac{\partial f_i}{\partial x_k} s^x_{kj} + \frac{\partial f_i}{\partial p_j}
     \end{cases}.
 \label{eq:ode_and_sensitiv}
 \end{equation} 
 However, the \ac{fim} is composed only with those sensitivity coefficients that correspond to the observables.
-That means that the next step is to calculate $(\partial y / \partial p_k) = s_{ij}$ at a certain times $t_m$ and input $u_n$ using the solutions of $s^\text{loc}_{ij}$:
+That means that the next step is to calculate $(\partial y_i / \partial p_j) = s_{ij}$ at a certain times $t_m$ and input $u_n$ using the solutions of $s^\text{loc}_{ij}$:
 \begin{equation}
-    s_{ij} (t_m, u_n) = \sum_k \frac{\partial g_i}{\partial x_k}\bigg|_{t_m, u_n} s_{kj}^\text{loc} (t_m, u_n) + \frac{\partial g_i}{\partial p_j}\bigg|_{t_m, u_n}.
+    s_{ij} (t_m, u_n) = \sum_k \frac{\partial g_i}{\partial x_k}\bigg|_{t_m, u_n} s_{kj}^x (t_m, u_n) + \frac{\partial g_i}{\partial p_j}\bigg|_{t_m, u_n}.
 \label{eq:observ_sensitivities}
 \end{equation}
+
+In the case of the parameters with different dimensionalities and values of different orders of magnitude, it makes sense to use the relative sensitivities instead
+\begin{equation}
+    \widetilde{s}_{ij} (t_m, u_n) = \frac{\partial y_i}{\partial p_j} \frac{p_j}{y_i}\bigg|_{t_m, u_n}
+\label{eq:relat_sensitivities}
+\end{equation}
+to improve not the absolute but the relative accuracy of the parameter estimates.
+
 These sensitivities should be arranged to be elements of the sensitivity matrix.
 For example, in case of two observables $\mby = (y_1, y_2)$, two different inputs $\mbu = (u_1, u_2)$, $N$ different time and $N_p$ parameters, sensitivity matrix will look in the following way:
 \begin{equation}
@@ -335,7 +343,7 @@ Each of the criteria has its pros and cons so the reader can take a closer look 
 The described above technique can be used to calculate the objective function (Fisher optimality criterion) for a certain experimental scheme.
 Finding the Experimental Design that corresponds to the global maximum of the objective is a special case of optimal control problem.
 This problem is widely studied, and multiple numerical solution algorithms for both local and global optimization were introduced.
-In the suggested toolbox, three methods were implemented: differential evolution, basin-hopping, and brute force methods.
+In the suggested toolbox, three methods were implemented: differential evolution, basin-hopping, and brute force.
 
 Quite good results can be achieved by the \ac{de} algorithm developed by Storn and Price (1997) \cite{stornDifferentialEvolutionSimple1997}.
 It is one of the stochastic global optimization methods that show rather good results for nonlinear dynamic problems.
@@ -343,14 +351,14 @@ Such approaches help to greatly improve computational times but sacrifice is tha
 Firstly, the initial population of candidate solutions is randomly chosen from the region of available values.
 In our case, these solutions are the vectors of all optimized values (times and inputs) for one Experimental Design.
 Then each solution mutates by mixing with other candidates.
-To a chosen one solution from the initial population $D_0$, we add a weighted difference between two other random solutions from the same set $D_\text{rand1} - D_\text{rand2}$.
-This process is called mutation and a new vector (solution) $D_m$ is obtained.
-Then we want to construct a new trial solution.
+To a chosen one solution from the initial population $D_0$, we add a weighted difference between two other random solutions from the same set $(D_\text{rand1} - D_\text{rand2})$.
+This process is called mutation and a new vector $D_m$ is obtained.
+The next step is to construct a new trial solution.
 This is done by randomly choosing the elements of this vector either from the initial $D_0$ or the mutated $D_m$ solutions.
 For each new element of trial vector, from the segment [0, 1) the number should be randomly picked and compared to the so-called recombination constant.
 If this number is less than a constant, then the new solution element is chosen from mutated vector $D_m$, otherwise from $D_0$.
 So, in general, the degree of mutation can be controlled by changing this recombination constant.
-When the trial candidate is built, it is then compared to initial solution $D_0$, and the best of them is chosen for the next generation.
+When the trial candidate is built, it is compared to initial solution $D_0$, and the best of them is chosen for the next generation.
 This operation is repeated for every solution candidate of the initial population, and the new population generation can be formed.
 The process of population mutation is repeated till the desired accuracy is achieved.
 This method is rather simple, straightforward, does not require the gradient calculation and is able to be parallelized.
@@ -363,8 +371,8 @@ The advantage of this algorithm is that we can be sure that the global minimum i
 However, this technique is rather slow and inefficient.
 Even though the discretization and reduction of the whole number of possible values can improve the performance, the computational time allows optimization only for a small number of optimization times or inputs.
 
-Some optimization methods were developed specifically for the \ac{oed}. 
-The reader could find them in the papers of Banga \etal \cite{BANGA2005407, BANGA2003131}.
+Some other optimization methods for the optimal control problem the reader can find, for example, in the papers of Banga \etal \cite{BANGA2005407, BANGA2003131}.
+
 
 \subsubsection*{Code}
 \begin{enumerate}
