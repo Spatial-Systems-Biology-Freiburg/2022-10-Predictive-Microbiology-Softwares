@@ -27,7 +27,7 @@
 \renewcommand{\footrule}{\hrule height 2pt \vspace{2mm}}
 \lfoot{\today}
 
-\newcommand{\etal}{{\textit{et al.}}}
+\newcommand{\etal}{{\textit{et al. }}}
 \newcommand{\mbx}{\mathbf{x}}
 \newcommand{\mbu}{\mathbf{u}}
 \newcommand{\mbp}{\mathbf{p}}
@@ -104,30 +104,22 @@ In general, \ac{oed} can be used not only for the parameter estimation of the mo
 However, in this chapter, we would like to cover more deeply the methods for improving the parameter estimation of the model.
 According to this, using tools of Statistics and specifically the Fisher information, several criteria were developed to assess data quality. 
 The review of these different possible criteria the reader can find for example in works \cite{atkinsonDevelopmentsDesignExperiments1982, franceschiniModelbasedDesignExperiments2008}.
-Depending on the goal, a researcher faces an important choice which among these sometimes contradicting each other criteria is the most suitable one for a particular case.
+Depending on the goal, a researcher faces an important choice, which among these sometimes contradicting each other criteria is the most suitable one for a particular case.
 On the other hand, using the multi-objective approach, some attempts were made to improve the experimental design by combining these criteria \cite{telenOptimalExperimentDesign2012, logistRobustMultiobjectiveOptimal2011}.
 If we are talking about predictive microbiology, one of the promising applications of the \ac{oed} is to optimize the temperature profile with the time of the experiment as it was done by García \etal \cite{garciaQualityShelflifePrediction2015} and Versyck \etal \cite{versyckIntroducingOptimal1999}.
-Or, for example, Balsa-Canto \etal compared equidistant and optimized measurement times for such bacteria growth models as Baranyi and Roberts model and Bigelow model and have shown improvement in the latter case \cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}.
-
+Or, for example, Balsa-Canto \etal for such bacteria growth models as Baranyi and Roberts model and Bigelow model compared equidistant and optimized measurement times showing an improvement in the latter case \cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}.
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.3]{Figures/scheme.png}
-    \caption{The iterative process of model optimization for parameter estimation.}
+    \includegraphics[scale=0.25]{Figures/scheme.png}
+    \caption{{\footnotesize The iterative process of model optimization for parameter estimation.}}
     \label{fig:expdesign_scheme}
 \end{figure}
 In the beginning, we would like to briefly describe the whole iterative process of model building (see Fig. \ref{fig:expdesign_scheme}).
-First of all, based on the literature review or some prior data from pilot experiments the first parameter estimation of the chosen model structure should be done.
+Firstly, based on the literature review or prior data from pilot experiments, the first parameter estimation of the chosen model structure should be done.
 The obtained values can be applied to propose the first optimal experimental design accounting for different constraints, e.g., the lab limitations, human resources, etc. 
-Depending on availability, either real or numerical experiment should be conducted based on this design to gather measurement or in-silico data. 
+Depending on availability, either real or numerical experiments should be conducted based on this design to gather measurement or in-silico data. 
 This new data can be used for the new parameter estimations values with corresponding uncertainties.
 After this, using new parameter values, the process can be repeated several times to increase the precision of the parameter estimates till the desired accuracy is achieved.
-
-
-
-
-
-
-
 %
 %
 %
@@ -170,14 +162,14 @@ In this chapter, we restrict ourselves to a quite popular case in Predictive Mic
 Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is time, $\mbu$ is a vector of an externally controlled inputs, $\mbp$ are the parameters of the system and $c$ are the constants.
 Here, it is important to differentiate between constants and parameters.
 The main difference is that we assume constant values to be known for sure, so they shouldn't be estimated from experimental data.
-On the other hand, parameters are the quantities of interest and their estimation is our goal, Experimental Design should be chosen relying on them.
+On the other hand, parameters are the quantities of interest, and their estimation is our goal.
 Another important choice to be done is to define the observables of the system $\mby$, which quantities and at which times $t_i$ should be measured.
 \begin{equation}
     \mby (t_i) = g(\mbx (t_i), t, \mbu, \mbp, c) + \epsilon (t_i),
     \label{eq:observ_general}
 \end{equation}
-where the function $g$ describes the model output and $\epsilon$ is the measurement noise. 
-The observational noise is often assumed to be an independently distributed Gaussian noise.
+where the function $g$ describes the model output, and $\epsilon$ is the measurement noise. 
+The observational noise is often assumed to be an independently distributed Gaussian noise with zero mean and variance $\sigma_i^2$: $\epsilon (t_i) \sim N(0, \sigma_i^2)$.
 
 Here, to demonstrate how Experimental Design works, we will refer to a widely used Baranyi and Roberts model (1994) that can be used, for example, to describe bacteria growth.
 The model is introduced by two state variables $\mbx = (x_1, x_2)$, where $x_1(t)$ denotes the cell concentration of a bacterial population at the time $t$ and $x_2(t)$ defines a physiological state of the cells, the process of adjustment (lag-phase):
@@ -191,9 +183,10 @@ The model is introduced by two state variables $\mbx = (x_1, x_2)$, where $x_1(t
 Here $\mu^\text{max}$ determines the maximum growth rate, and $x_1^\text{max}$ is bacteria concentration at the saturation. 
 To account for the influence of the temperature on the activity of the model, we will use the 'square root' or Ratkowsky-type model for the maximum growth rate
 \begin{equation}
-    \sqrt{\mu^\text{max}} = b (T - T_\text{min}).
+    \sqrt{\mu^\text{max}} = b (T - T_\text{min}),
     \label{eq:RatkowskyModel}
 \end{equation} 
+where $b$ is the regression coefficient, and $T_\text{min}$ is the minimum temperature at which the growth can occur.
 As an observable, it is pretty common to measure the bacteria count $x_1$ or the logarithm of this value. 
 For simplicity, we would consider the prior case $y(t_i) = x_1(t_i)$.
 The system is fully defined by equations (\ref{eq:ode_BaranyiRoberts}), (\ref{eq:RatkowskyModel}).
@@ -221,7 +214,7 @@ Based on this model, we would like to optimize the choice of measurement times a
 One of the requirements for conducting an Experimental Design is a provision of parameter values by a user.
 Due to this, after the model was defined, the first parameter values should be chosen from the literature or estimated from previously gathered experimental data by maximizing the likelihood function.
 By definition, the likelihood function $L(\mbp)$ is the probability of observing a data $\mby$ in case of a certain parameters $\mbp$: $L(\mbp) = p(\mby|\mbp)$.
-In the case of the Gaussian white measurement noise with zero mean and variance $\sigma_i^2$: $\epsilon(t_i) \propto N(0, \sigma_i^2)$, it is convenient to maximize the logarithm of the likelihood function (log-likelihood) instead.
+With the assumption of the Gaussian white measurement noise with zero mean and variance $\sigma_i^2$: $\epsilon(t_i) \sim N(0, \sigma_i^2)$, it is convenient to maximize the logarithm of the likelihood function (log-likelihood) instead.
 This is likewise simply minimizing the sum of the squared difference between the measured data and model output:
 \begin{equation}
     \ln L(\mbp) \propto - \sum_{i}\frac{ \big(\mathbf{g}^{i}(\mbp) - \mby^{i}\big)^2}{2 \sigma_{i}^2}.
@@ -246,7 +239,7 @@ Here $\mby^{i}$ is the $i$-th value of observational data, and $\mathbf{g}^{i}(\
 
 And finally, the reader can now proceed directly to the Experimental Design.
 The methods of the Experimental Design imply maximizing the objective function calculated using one of the properties of the \ac{fim}.
-According to so-called 'Cramer-Rao inequality', the Fisher information is inversely proportional to the minimal squared estimation error \cite{friedenExploratoryData2010}. 
+According to the so-called 'Cramer-Rao inequality', the Fisher information is inversely proportional to the minimal squared estimation error \cite{friedenExploratoryData2010}. 
 So its maximization actually leads to minimization of the uncertainty of the parameter estimates.
 We are going to explain one of the ways to calculate this so-called \acl{fim} for mentioned above \acp{ode} system (\ref{eq:ode_general}) and the observable function (\ref{eq:observ_general}).
 Assume that functions $f$ and $g$ are differentiable functions with respect to the state varibles $\mbx$ and parameters $\mbp$.
@@ -260,7 +253,7 @@ To do this, we need to solve the following system of the \acp{ode}:
 \label{eq:ode_and_sensitiv}
 \end{equation} 
 However, the \ac{fim} is composed only with those sensitivity coefficients that correspond to the observables.
-That means that the next step is to calculate $(\partial y_i / \partial p_j) = s_{ij}$ at a certain times $t_m$ and input $u_n$ using the solutions of $s^\text{loc}_{ij}$:
+That means that the next step is to calculate $(\partial y_i / \partial p_j) = s_{ij}$ at a certain times $t_m$ and input $u_n$ using the solutions of $s^x_{ij}$:
 \begin{equation}
     s_{ij} (t_m, u_n) = \sum_k \frac{\partial g_i}{\partial x_k}\bigg|_{t_m, u_n} s_{kj}^x (t_m, u_n) + \frac{\partial g_i}{\partial p_j}\bigg|_{t_m, u_n}.
 \label{eq:observ_sensitivities}
@@ -363,7 +356,7 @@ This operation is repeated for every solution candidate of the initial populatio
 The process of population mutation is repeated till the desired accuracy is achieved.
 This method is rather simple, straightforward, does not require the gradient calculation and is able to be parallelized.
 
-Basin-hopping ...
+The second method is the basin-hopping that combines the Monte-Carlo optimization with Methropolis algorithm and local optimization. ...
 
 And lastly, the brute force method was implemented as well.
 It is a grid search algorithm calculating the objective function value at each point of a multidimensional grid in a chosen region.
