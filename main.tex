@@ -139,6 +139,7 @@ or \mintinline[bgcolor=white,style=emacs]{bash}{conda} to install the desired pa
 \begin{minted}[bgcolor=white]{bash}
 conda install FisInMa
 \end{minted}
+The \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{Documentation} of the package is provided.
 %
 %
 % ########################################################################
@@ -154,7 +155,7 @@ The first important step a reader should do to conduct their Experimental Design
 In this chapter, we restrict ourselves to a quite popular case in Predictive Microbiology and assume that biological system is described by a system of \aclp{ode}
 \begin{equation}
     \begin{cases}
-    \dot \mbx (t) = f(\mbx, t, \mbu, \mbp, c) \\
+    \dot \mbx (t) = f(t, \mbx, \mbu, \mbp, c) \\
     \mbx (t_0) = \mbx_0
     \label{eq:ode_general}
     \end{cases}.
@@ -165,7 +166,7 @@ The main difference is that we assume constant values to be known for sure, so t
 On the other hand, parameters are the quantities of interest, and their estimation is our goal.
 Another important choice to be done is to define the observables of the system $\mby$, which quantities and at which times $t_i$ should be measured.
 \begin{equation}
-    \mby (t_i) = g(\mbx (t_i), t, \mbu, \mbp, c) + \epsilon (t_i),
+    \mby (t_i) = g(t_i, \mbx (t_i), \mbu, \mbp, c) + \epsilon (t_i),
     \label{eq:observ_general}
 \end{equation}
 where the function $g$ describes the model output, and $\epsilon$ is the measurement noise. 
@@ -247,7 +248,7 @@ The first step is to calculate local sensitivities $s^x_{ij} = (\partial x_i / \
 To do this, we need to solve the following system of the \acp{ode}:
 \begin{equation}
     \begin{cases}
-    \dot x_i (t) = f_i(\mbx, t, \mbu, \mbp, c)\\
+    \dot x_i (t) = f_i(t, \mbx, \mbu, \mbp, c)\\
     \dot s^x_{ij} = \sum_k \frac{\partial f_i}{\partial x_k} s^x_{kj} + \frac{\partial f_i}{\partial p_j}
     \end{cases}.
 \label{eq:ode_and_sensitiv}
