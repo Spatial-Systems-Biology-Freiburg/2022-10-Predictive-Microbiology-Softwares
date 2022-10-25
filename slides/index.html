@@ -1,0 +1,385 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+
+		<title>Experimental Design - Concepts and practical Implementation</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/serif.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-markdown>
+					<textarea data-template>
+					<!-- INTRODUCTION -->
+					## Experimental Design:
+					## Concepts and practical Implementation
+
+					---
+					
+					## Outline
+					1) Theory
+						1) Model Formulation
+						2) Parameter Estimation
+						3) Experimental Design
+					
+					2) Implementation
+						1) ...
+					
+					3) Examples
+						1) Baranyi and Roberts
+						2) Pool Model?
+
+					---
+					
+					<!-- THEORY -->
+					## Motivation
+					<style>
+						.container{
+							display: flex;
+						}
+						.col{
+							flex: 1;
+						}
+					</style>
+					<div class="container">
+						<div class="col">
+						<p class="fragment" data-fragment-index="1"><u>Challenges of Experiments</u></p>
+						<ul>
+							<li class="fragment">
+								<p style="margin-top:0cm;margin-bottom:0cm;">Measurement Noise</p>
+								<p style="margin-top:0cm;margin-bottom:0cm;">$\Rightarrow$ Parameter Uncertainty</p>
+								<p style="margin-top:0cm;margin-bottom:0cm;">$\Rightarrow$ More data/experiments</p>
+							</li>
+							<li class="fragment">Measurements are expensive/time-consuming</li>
+						</ul>
+						<p class="fragment" data-fragment-index="1" style="margin-top:1cm;"><u>Goals</u></p>
+						<ul>
+							<li class="fragment" data-fragment-index="2">Improve Parameter Estimation Accuracy</li>
+							<li class="fragment" data-fragment-index="3">Increase Informational Content</li>
+							<li class="fragment" data-fragment-index="4">
+								Find optimal Measurement Conditions
+								<p style="margin-top:0cm;margin-bottom:0cm;" class="fragment" data-fragment-index="5">$\Rightarrow$ Do less, but more efficient Real-World Measurements</p>
+							</li>
+						</ul>
+						</div>
+						<div class="col">
+							<img class="fragment" data-fragment-index="6" data-src="media/experimental-design-flowchart.png">
+						</div>
+					</div>
+
+					---
+					
+					## Mathematical Formulation
+					The System is described by an ODE and an Observable
+					$$
+						\dot{x} = f(t, x(t), u(t), p, c)
+					$$
+					$$
+						y(t_i) = g(t_i, x(t_i), u, p, c) + \epsilon(t_i)
+					$$
+					<table style="font-size:0.75em;">
+						<tr>
+						  <th>Variable</th>
+						  <th>Description</th>
+						</tr>
+						<tr>
+							<td>$x(t)$</td>
+							<td>State Variable</td>
+						</tr>
+						<tr>
+						  <td>$u(t)$</td>
+						  <td>Inputs (External Perturbations)</td>
+						</tr>
+						<tr>
+						  <td>$p$</td>
+						  <td>Parameters</td>
+						</tr>
+						<tr>
+							<td>$c$</td>
+							<td>Constants</td>
+						</tr>
+						<tr>
+							<td>$t_i$</td>
+							<td>Time Points of Measurement</td>
+						</tr>
+						<tr>
+						  <td>$\epsilon(t_i)$</td>
+						  <td>Measurement Noise</td>
+						</tr>
+					  </table>
+					
+					---
+
+					## Parameter Estimation
+					- Parameter Values required for Experimental Design
+						- First Choice: Previous Knowledge
+							- Experiments
+							- Literature
+							- Guessing?
+					- Maximize Log-Likelihood function for Gaussian Measurement Noise
+					$$
+						\log(L(p)) \propto-\sum\limits_i \frac{\left(g^i(p)-y^i\right)^2}{2\sigma_i^2}
+					$$
+					<table>
+						<tr>
+							<td>$g^i(p)$</td>
+							<td>Model Output</td>
+						</tr>
+						<tr>
+							<td>$y^i(p)$</td>
+							<td>Measurement Data</td>
+						</tr>
+					</table>
+					
+					---
+
+					## Experimental Design
+					- Want to maximize Fisher Information
+					- Fisher Matrix $F\propto (\text{minimal error})^{-2}$
+					- Sensitivity Matrix $S$ used as tool to obtain $F$
+					\\[\\begin{aligned}
+						F &= S^TS\\\\
+						S_{ij} &= \frac{\mathrm{d} g_i}{\mathrm{d} p_j}
+					\\end{aligned}\\]
+					- $g(t, x(t), u, p, c)$ is Observable
+
+					$\Rightarrow$ How do we calculate $S_{ij}$?
+				</textarea>
+				</section>
+				<section>
+					<section data-markdown>
+						<textarea data-template>
+							## Calculate $S_{ij}$
+							- Solve combined ODE for local Sensitivities $\partial x_i/\partial p_j$
+							\\[\\begin{aligned}
+								\\begin{cases}
+									\dot{x}(t) &= f(t, x, u, p, c)\\\\
+									\dot{s}^x_{ij} &= \sum\limits_k\frac{\partial f_i}{\partial x_k}s^x_{kj}  + \frac{\partial f_i}{\partial p_j}\\\\
+									x(t_0) &= x_0\\\\
+									s^x_{ij}(t_0) &= 0
+								\end{cases}
+							\\end{aligned}\\]
+							- Obtain Sensitivities via
+							\\[
+								s_{ij}(t_m,u_n) = \bigg(\sum\limits_k\frac{\partial g_i}{\partial x_k} s^x_{kj}\bigg)(t_m,u_n)  + \frac{\partial g_i}{\partial p_j}(t_m,u_n)\\\\
+							\\]
+						</textarea>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							## Relative Sensitivities
+							- We can also use relative Sensitivities to calculate the Fisher Information Matrix
+							\\[
+								\tilde{S}_{ij} = \frac{\mathrm{d}y_i}{\mathrm{d}p_k}\frac{p_j}{y_i}\bigg|_\{t_m,u_n\}
+							\\]
+						</textarea>
+					</section>
+				</section>
+				<section data-markdown style="font-size:0.75em;">
+					<section data-template>
+						## Building the Sensitivity Matrix
+						$N_t$ time points, $N_u$ input values, $N_p$ parameters and $N_o$ observables.
+						\\[
+							S_{ij} = 
+							\begin{bmatrix}
+								\begin{bmatrix}
+									s_{11}(t_1,u_1) & \dots & s_{1N_p}(t_1,u_1)\\\\
+									\vdots & & \vdots\\\\
+									s_{11}(t_{N_t},u_1) & \dots & s_{1N_p}(t_{N_t},u_1)\\\\
+									s_{11}(t_1,u_2) & \dots & s_{1N_p}(t_1,u_2)\\\\
+									\vdots & & \vdots\\\\
+									\vdots & & \vdots\\\\
+									s_{11}(t_{N_t},u_{N_u}) & \dots & s_{1N_p}(t_{N_t},u_{N_u})
+								\end{bmatrix}\\\\
+								\vdots\\\\
+								\begin{bmatrix}
+									s_{11}(t_1,u_1) & \dots & s_{1N_p}(t_1,u_1)\\\\
+									\vdots & & \vdots\\\\
+									s_{11}(t_{N_t},u_1) & \dots & s_{1N_p}(t_{N_t},u_1)\\\\
+									s_{11}(t_1,u_2) & \dots & s_{1N_p}(t_1,u_2)\\\\
+									\vdots & & \vdots\\\\
+									\vdots & & \vdots\\\\
+									s_{N_o1}(t_{N_t},u_{N_u}) & \dots & s_{N_oN_p}(t_{N_t},u_{N_u})
+								\end{bmatrix}
+							\end{bmatrix}
+						\\]
+					</section>
+				</section>
+
+				<section data-markdown>
+					<section data-template>
+						## Optimality Criteria
+						- How do we analyze the Fisher Matrix $F=S^TS$?
+						- Criteria determine Information Content
+							- D-optimality: maximize $\det(F)=\prod_i \lambda_i$
+							- A-optimality: maximize $\sum_i \lambda_i$
+							- E-optimality: maximize $\min_i(\lambda_i)$
+					</section>
+				</section>
+				<section>
+					<h2>Optimality Criteria</h2>
+					<img src="media/model-based-design.jpg">
+				</section>
+				<section data-markdown>
+					## Optimization
+					- Modify input and/or time points
+					- Maximize Criterion of Fisher Information Matrix $F$
+					- Global Optimization
+						- Differential Evolution
+						- Brute Force
+						- Basinhopping
+						- ...
+				</section>
+
+				<!-- IMPLEMENTATION -->
+				<section data-markdown>
+					## Implementation
+					We Developed [FisInMa](https://pypi.org/project/FisInMa/): A python package for numerical optimization of general ODE systems.
+					- [Documentation](https://spatial-systems-biology-freiburg.github.io/FisInMa/) available
+					- Continuous integration vie Github
+					- Automated Testing ($\approx 90\\%$ Test Coverage)
+				</section>
+				<section>
+					<section>
+						<h2>Model Definition</h2>
+						<p>The user defines the model by specifying explicit values or bounds for the optimization algorithm.</p>
+						<table>
+							<tr>
+								<th>Description</th>
+								<th>Required</th>
+								<th>Optional</th>
+							</tr>
+							<tr>
+								<td>ODE</td>
+								<td>
+									$\dot{x}=f(t, x, u, p, c)$<br>
+									$x_0,t_0,\tfrac{\partial f}{\partial x}$, $\tfrac{\partial f}{\partial p}$
+								</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>Observable</td>
+								<td>Default: $g=x$</td>
+								<td>
+									$g(t, x(t), u, p, c)$<br>
+									$\tfrac{\partial g}{\partial x}$, $\tfrac{\partial g}{\partial p}$
+								</td>
+							</tr>
+							<tr>
+								<td>Time Points</td>
+								<td>$t_i$</td>
+								<td>identical_times</td>
+							</tr>
+							<tr>
+								<td>Inputs</td>
+								<td>$u$</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>Parameters</td>
+								<td>$p$</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>Constants</td>
+								<td>$c$</td>
+								<td></td>
+							</tr>
+						</table>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							## Model Definition
+							Define the ODE
+							```python
+							def ode_rhs(t, x, u, p, c):
+								return [- u*p*x +c]
+
+							def ode_dfdx(t, x, u, p, c):
+								return [[- u*p]]
+
+							def ode_dfdp(t, x, u, p, c)
+								return [[- u*x]]
+							```
+							Define numerical values
+							```python
+							if __name__ == "__main__":
+								ode_t0 = 0.0
+								ode_y0 = 10.0
+
+								times = np.linspace(ode_t0, 4.0, 10)
+								inputs = [
+
+								]
+
+							```
+							```python
+								fsm = FisherModel(
+									ode_rhs,
+									ode_dfdx,
+									ode_dfdp,
+									ode_t0,
+									ode_y0,
+									times,
+									inputs,
+									parameters,
+									constants
+								)
+							```
+					</textarea>
+				</section>
+			</section>
+			<section data-markdown>
+				<textarea data-template>
+					## Optimization
+					Simply use the included functionality of the package to find the global optimum with a given optimization routine.
+
+					```python
+					fsr = FisInma.find_optimal(fsm)
+					
+					print(fsr.criterion.__name__)
+					print(fsr.criterion)
+					print(fsr.solutions)
+					print(fsr.S)
+					```
+				</textarea>
+			</section>
+
+				
+
+
+
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				width: 1200,
+				height: 1000,
+
+				navigationMode: "grid",
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX ]
+			});
+		</script>
+	</body>
+</html>
