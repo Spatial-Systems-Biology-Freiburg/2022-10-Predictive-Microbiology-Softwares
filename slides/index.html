@@ -21,7 +21,7 @@
 					<!-- INTRODUCTION -->
 					## Experimental Design:
 					## Concepts and practical Implementation
-					##### 25.10.2022
+					##### 26.10.2022
 
 					---
 					
@@ -148,7 +148,7 @@
 					- Sensitivity Matrix $S$ used as tool to obtain $F$
 					\\[\\begin{aligned}
 						F &= S^TS\\\\
-						S_{ij} &= \frac{\mathrm{d} g_i}{\mathrm{d} p_j}
+						s_{ij} &= \frac{\mathrm{d} g_i}{\mathrm{d} p_j}
 					\\end{aligned}\\]
 					- $g(t, x(t), u, p, c)$ is Observable
 
@@ -168,6 +168,7 @@
 									s^x_{ij}(t_0) &= 0
 								\end{cases}
 							\\end{aligned}\\]
+							$\Rightarrow s^x_{ij}$
 							- Obtain Sensitivities via
 							\\[
 								s_{ij}(t_m,u_n) = \bigg(\sum\limits_k\frac{\partial g_i}{\partial x_k} s^x_{kj}\bigg)(t_m,u_n)  + \frac{\partial g_i}{\partial p_j}(t_m,u_n)\\\\
@@ -184,12 +185,13 @@
 						</textarea>
 					</section>
 				</section>
-				<section data-markdown style="font-size:0.75em;">
+				<section data-markdown style="font-size:0.67em;">
 					<section data-template>
 						## Building the Sensitivity Matrix
-						$N_t$ time points, $N_u$ input values, $N_p$ parameters and $N_o$ observables.
+						$N_t$ time points, $N_u$ input values, $N_p$ parameters and $N_o$ observables. \
+						Reminder: $s_{ij} = \frac{\mathrm{d} g_i}{\mathrm{d} p_j}$
 						\\[
-							S_{ij} = 
+							S = 
 							\begin{bmatrix}
 								\begin{bmatrix}
 									s_{11}(t_1,u_1) & \dots & s_{1N_p}(t_1,u_1)\\\\
