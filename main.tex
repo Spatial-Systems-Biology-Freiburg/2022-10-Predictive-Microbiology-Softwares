@@ -10,6 +10,8 @@
 \usepackage[nopatch=eqnum]{microtype}
 
 \usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{ctable} % for \specialrule command
 
 \usepackage[outputdir=out]{minted}
 \definecolor{bg}{HTML}{282828} % fro https://github.com/kevinsawicki/monokai
@@ -87,15 +89,8 @@ We provide Python-written software for the \acp{ode}-based models that optimize 
 % 	\caption{Sample code written in Python~\cite{rossumPythonLanguageReference2010}.}
 % \end{figure}
 %
-\begin{enumerate}
-	\item Why do we want parameter estimation and experimental design?
-	\item Flow-Chart Experimental Design
-	\item Citations to common methods
-\end{enumerate}
-
-
 Mathematical modeling is a widely used tool to describe, understand and predict further behavior of living systems.
-In particular, in the field of Predictive Biology, one can find a large variety of works that dwell on building models of different levels of complexity controlled by model parameters, e.g., to describe bacteria growth.
+In particular, in the field of Predictive Biology, one can find a large variety of works that dwell on building models of different levels of complexity controlled by model parameters, e.g., to describe bacteria growth \cite{bernaertsConceptsToolsPredictive2004}.
 Based on a chosen model structure, these parameters can be estimated from the gathered experimental data.
 Taking into account that the real experimental data always contains measurement noise, the parameter estimates can be only provided with some uncertainty. 
 To decrease the error of the parameter values, not only enough experimental data should be gathered but the quality of this data is also pretty sufficient.
@@ -155,7 +150,7 @@ The first important step a reader should do to conduct their Experimental Design
 In this chapter, we restrict ourselves to a quite popular case in Predictive Microbiology and assume that biological system is described by a system of \aclp{ode}
 \begin{equation}
     \begin{cases}
-    \dot \mbx (t) = f(t, \mbx, \mbu, \mbp, c) \\
+    \dot \mbx (t) = f(t, \mbx, \mbu, \mbp) \\
     \mbx (t_0) = \mbx_0
     \label{eq:ode_general}
     \end{cases}.
@@ -166,7 +161,7 @@ The main difference is that we assume constant values to be known for sure, so t
 On the other hand, parameters are the quantities of interest, and their estimation is our goal.
 Another important choice to be done is to define the observables of the system $\mby$, which quantities and at which times $t_i$ should be measured.
 \begin{equation}
-    \mby (t_i) = g(t_i, \mbx (t_i), \mbu, \mbp, c) + \epsilon (t_i),
+    \mby (t_i) = g(t_i, \mbx (t_i), \mbu, \mbp) + \epsilon (t_i),
     \label{eq:observ_general}
 \end{equation}
 where the function $g$ describes the model output, and $\epsilon$ is the measurement noise. 
@@ -194,8 +189,32 @@ The system is fully defined by equations (\ref{eq:ode_BaranyiRoberts}), (\ref{eq
 Here $x_1^\text{max}, b, T_\text{min}$ are the parameters that we estimate using observational data $y$ at measurement times $t_i$, and temperature $T$ is an input of the system.
 Based on this model, we would like to optimize the choice of measurement times as well as temperatures (inputs) of the system to find the \acl{oed}.
 
-
 \subsubsection*{Code}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccccc}
+    \specialrule{.1em}{.01em}{.05em} 
+    Description & Formula & Code \\[1ex]
+    \toprule \vspace{1mm} 
+    ODE & $f$                       & \\
+        & $\partial f / \partial x$ & \\[0.5ex]
+        & $\partial f / \partial p$ & \\[0.5ex]
+    \midrule
+    Observable  & $g$                       & \\[0.5ex]
+    (optional)  & $\partial g / \partial x$ & \\[0.5ex]
+                & $\partial g / \partial p$ & \\[0.5ex]
+    \midrule
+    Time points     & $t_i$ & \\[0.5ex]
+    Inputs          & $u$   & \\[0.5ex]
+    Parameters      & $p$   & \\[0.5ex]
+    Other arguments &       & \\[0.5ex]
+    \bottomrule
+    \end{tabular}
+\caption{{\footnotesize }}
+\label{tab:}
+\end{table}
+
 \begin{enumerate}
     \item Write ODE, Jacobian functions in python with Q, P, Const\\
     \mintinline[bgcolor=white,style=emacs]{python}{def ode_func(y, t, Q, P, Const):}\\
@@ -205,13 +224,6 @@ Based on this model, we would like to optimize the choice of measurement times a
 %
 % ########################################################################
 \subsection*{Parameter Estimation}
-\subsubsection*{Theory}
-\begin{enumerate}
-    \item Log-Likelihood Function
-    \item Maximum-Likelihood Estimators
-    \item Likelihood Function for Gaussian Noise
-\end{enumerate}
-
 One of the requirements for conducting an Experimental Design is a provision of parameter values by a user.
 Due to this, after the model was defined, the first parameter values should be chosen from the literature or estimated from previously gathered experimental data by maximizing the likelihood function.
 By definition, the likelihood function $L(\mbp)$ is the probability of observing a data $\mby$ in case of a certain parameters $\mbp$: $L(\mbp) = p(\mby|\mbp)$.
@@ -222,39 +234,28 @@ This is likewise simply minimizing the sum of the squared difference between the
     \label{eq:likelihood_Gaussian}
 \end{equation}
 Here $\mby^{i}$ is the $i$-th value of observational data, and $\mathbf{g}^{i}(\mbp)$ is a corresponding to it model output.
-
-\subsubsection*{Code}
-\begin{enumerate}
-    \item \mintinline[bgcolor=white,style=emacs]{python}{def likelihood_function(fitted_parameter, measurement_data)}
-    \item \mintinline[bgcolor=white,style=emacs]{python}{scipy.optimize.minimize}
-\end{enumerate}
 %
 % ########################################################################
 \subsection*{Experimental Design}
-\subsubsection*{Theory}
-\begin{enumerate}
-    \item Fisher, Sensitivity Matrix
-    \item Observables: Determinant, Eigenvalues, etc.
-\end{enumerate}
-
-
 And finally, the reader can now proceed directly to the Experimental Design.
 The methods of the Experimental Design imply maximizing the objective function calculated using one of the properties of the \ac{fim}.
 According to the so-called 'Cramer-Rao inequality', the Fisher information is inversely proportional to the minimal squared estimation error \cite{friedenExploratoryData2010}. 
 So its maximization actually leads to minimization of the uncertainty of the parameter estimates.
 We are going to explain one of the ways to calculate this so-called \acl{fim} for mentioned above \acp{ode} system (\ref{eq:ode_general}) and the observable function (\ref{eq:observ_general}).
+
+\subsubsection*{Sensitivity Calculation}
 Assume that functions $f$ and $g$ are differentiable functions with respect to the state varibles $\mbx$ and parameters $\mbp$.
-The first step is to calculate local sensitivities $s^x_{ij} = (\partial x_i / \partial p_j )$.
+The first step is to calculate local sensitivities $s^x_{ij} = (\mathrm{d} x_i / \mathrm{d} p_j )$.
 To do this, we need to solve the following system of the \acp{ode}:
 \begin{equation}
     \begin{cases}
-    \dot x_i (t) = f_i(t, \mbx, \mbu, \mbp, c)\\
+    \dot x_i (t) = f_i(t, \mbx, \mbu, \mbp)\\
     \dot s^x_{ij} = \sum_k \frac{\partial f_i}{\partial x_k} s^x_{kj} + \frac{\partial f_i}{\partial p_j}
     \end{cases}.
 \label{eq:ode_and_sensitiv}
 \end{equation} 
 However, the \ac{fim} is composed only with those sensitivity coefficients that correspond to the observables.
-That means that the next step is to calculate $(\partial y_i / \partial p_j) = s_{ij}$ at a certain times $t_m$ and input $u_n$ using the solutions of $s^x_{ij}$:
+That means that the next step is to calculate $(\mathrm{d} y_i / \mathrm{d} p_j) = s_{ij}$ at a certain times $t_m$ and input $u_n$ using the solutions of $s^x_{ij}$:
 \begin{equation}
     s_{ij} (t_m, u_n) = \sum_k \frac{\partial g_i}{\partial x_k}\bigg|_{t_m, u_n} s_{kj}^x (t_m, u_n) + \frac{\partial g_i}{\partial p_j}\bigg|_{t_m, u_n}.
 \label{eq:observ_sensitivities}
@@ -262,7 +263,7 @@ That means that the next step is to calculate $(\partial y_i / \partial p_j) = s
 
 In the case of the parameters with different dimensionalities and values of different orders of magnitude, it makes sense to use the relative sensitivities instead
 \begin{equation}
-    \widetilde{s}_{ij} (t_m, u_n) = \frac{\partial y_i}{\partial p_j} \frac{p_j}{y_i}\bigg|_{t_m, u_n}
+    \tilde{s}_{ij} (t_m, u_n) = \frac{\mathrm{d} y_i}{\mathrm{d} p_j} \frac{p_j}{y_i}\bigg|_{t_m, u_n}
 \label{eq:relat_sensitivities}
 \end{equation}
 to improve not the absolute but the relative accuracy of the parameter estimates.
@@ -305,12 +306,14 @@ where $Q$ is the covariance matrix of measurement error that, in the case of the
 \end{equation}
 Here $\sigma_i$ is the standard deviation of the $i$-th measurements, and $M$ is an effort or the whole number of measurements.
 
+\subsubsection*{Identifiability}
 Here, before proceeding with optimization, the reader should take the time and check if the system is identifiable, meaning that if it is possible to obtain the unique solution from the optimization. 
 The non-identifiability can be due to the wrong choice of the model structure or observable (structural) or the incorrect choice of gathered data (practical).
-One of the ways to check the system on structural non-identifiability is to calculate the rank of the \ac{fim}.
+The quick and easy way to check the system on structural non-identifiability is to calculate the rank of the sensitivity matrix.
 For an identifiable system, it should coincide with the number of estimated parameters.
 If this condition is satisfied, we can continue with optimization.
 
+\subsubsection*{Optimality Criteria}
 Different optimality criteria choose to maximize different objectives.
 The effects of these objectives on the parameter space can vary so the reader can choose the most suitable one. 
 Some of the most popular criteria we would like to mention:
@@ -334,6 +337,7 @@ Each of the criteria has its pros and cons so the reader can take a closer look 
 
 %%% Picture for criteria %%%
 
+\subsubsection*{Optimization}
 The described above technique can be used to calculate the objective function (Fisher optimality criterion) for a certain experimental scheme.
 Finding the Experimental Design that corresponds to the global maximum of the objective is a special case of optimal control problem.
 This problem is widely studied, and multiple numerical solution algorithms for both local and global optimization were introduced.
