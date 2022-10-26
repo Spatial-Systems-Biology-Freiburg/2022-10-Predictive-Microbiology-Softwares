@@ -152,7 +152,7 @@
 					\\end{aligned}\\]
 					- $g(t, x(t), u, p, c)$ is Observable
 
-					$\Rightarrow$ How do we calculate $S_{ij}$?
+					$\Rightarrow$ How do we calculate $s_{ij}$?
 				</textarea>
 				</section>
 				<section>
@@ -180,7 +180,7 @@
 							## Relative Sensitivities
 							- We can also use relative Sensitivities to calculate the Fisher Information Matrix
 							\\[
-								\tilde{S}_{ij} = \frac{\mathrm{d}y_i}{\mathrm{d}p_k}\frac{p_j}{y_i}\bigg|_\{t_m,u_n\}
+								\tilde{s}_{ij} = \frac{\mathrm{d}y_i}{\mathrm{d}p_k}\frac{p_j}{y_i}\bigg|_\{t_m,u_n\}
 							\\]
 						</textarea>
 					</section>
@@ -204,10 +204,10 @@
 								\end{bmatrix}\\\\
 								\vdots\\\\
 								\begin{bmatrix}
-									s_{11}(t_1,u_1) & \dots & s_{1N_p}(t_1,u_1)\\\\
+									s_{N_o1}(t_1,u_1) & \dots & s_{N_oN_p}(t_1,u_1)\\\\
 									\vdots & & \vdots\\\\
-									s_{11}(t_{N_t},u_1) & \dots & s_{1N_p}(t_{N_t},u_1)\\\\
-									s_{11}(t_1,u_2) & \dots & s_{1N_p}(t_1,u_2)\\\\
+									s_{N_o1}(t_{N_t},u_1) & \dots & s_{N_oN_p}(t_{N_t},u_1)\\\\
+									s_{N_o1}(t_1,u_2) & \dots & s_{N_oN_p}(t_1,u_2)\\\\
 									\vdots & & \vdots\\\\
 									\vdots & & \vdots\\\\
 									s_{N_o1}(t_{N_t},u_{N_u}) & \dots & s_{N_oN_p}(t_{N_t},u_{N_u})
