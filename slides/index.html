@@ -229,7 +229,7 @@
 				</section>
 				<section>
 					<h2>Optimality Criteria</h2>
-					<img src="media/model-based-design.jpg">
+					<img width="800" height="auto" src="media/model-based-design.jpg">
 				</section>
 				<section data-markdown>
 					## Optimization
@@ -246,8 +246,8 @@
 				<section data-markdown>
 					## Implementation
 					We Developed [FisInMa](https://pypi.org/project/FisInMa/): A python package for numerical optimization of general ODE systems.
-					- [Documentation](https://spatial-systems-biology-freiburg.github.io/FisInMa/) available
-					- Continuous integration vie Github
+					- [Documentation](https://spatial-systems-biology-freiburg.github.io/FisInMa/) is available
+					- Continuous integration via Github
 					- Automated Testing ($\approx 90\\%$ Test Coverage)
 				</section>
 				<section>
@@ -298,64 +298,145 @@
 							</tr>
 						</table>
 					</section>
-					<section data-markdown>
-						<textarea data-template>
-							## Model Definition
-							Define the ODE
-							```python
-							def ode_rhs(t, x, u, p, c):
-								return [- u*p*x +c]
-
-							def ode_dfdx(t, x, u, p, c):
-								return [[- u*p]]
-
-							def ode_dfdp(t, x, u, p, c)
-								return [[- u*x]]
-							```
-							Define numerical values
-							```python
-							if __name__ == "__main__":
-								ode_t0 = 0.0
-								ode_y0 = 10.0
-
-								times = np.linspace(ode_t0, 4.0, 10)
-								inputs = [
-
-								]
-
-							```
-							```python
-								fsm = FisherModel(
-									ode_rhs,
-									ode_dfdx,
-									ode_dfdp,
-									ode_t0,
-									ode_y0,
-									times,
-									inputs,
-									parameters,
-									constants
-								)
-							```
-					</textarea>
 				</section>
-			</section>
-			<section data-markdown>
-				<textarea data-template>
-					## Optimization
-					Simply use the included functionality of the package to find the global optimum with a given optimization routine.
+				<section data-markdown>
+					<textarea data-template>
+						## Model Definition - Example
+						Define the ODE
+						\\[
+							\dot{x} = -\frac{(aT+b)}{cH}x
+						\\]
+						```python
+						def ode_rhs(t, x, inputs, parameters, constants):
+							(a,b,c) = parameters
+							(T, H) = inputs
+							return [-(a*T+b)/(c*H)*x]
+						```
+						Define derivatives $\tfrac{\partial f}{\partial x}$ and $\tfrac{\partial f}{\partial p}$
+						```python
+						def ode_dfdx(t, x, inputs, parameters, constants):
+							(a,b,c) = parameters
+							(T, H) = inputs
+							return [[-(a*T+b)/(c*H)]]
 
-					```python
-					fsr = FisInma.find_optimal(fsm)
+						def ode_dfdp(t, x, inputs, parameters, constants):
+							(a,b,c) = parameters
+							(T, H) = inputs
+							return [[
+								-T/(c*H)*x,
+								-1/(c*H)*x,
+								(a*T+b)/(c**2*H)*x
+							]]
+						```
+						
+						---
+						
+						## Model Definition - Example
+						Define numerical values in `__main__` function.
+						- Fixed time points and inputs `T` at index 0
+						- Sample input values `H` at position 1
+
+						```python
+						if __name__ == "__main__":
+							ode_t0 = 0.0
+							ode_y0 = 10.0
+
+							times = np.linspace(ode_t0, 4.0, 10)
+							inputs = [
+								# Fixed values are indicated by lists, and numpy arrays
+								[1.0, 3.3, 4.98],
+								# Ranges with sampling are written as tuples with (low, high, n)
+								(0.0, 5.0, 3)
+							]
+							# Parameters (a, b, c)
+							parameters = (0.1, 2.0, 3.56)
+							# We do not have any constants here
+							constants = None
+						```
+						
+						---
+
+						## Model Definition - Example
+						- Initialize the model from these Definitions.
+						- Find the optimal configuration for every value that is sampled
+						
+						```python
+							fsm = FisInMa.FisherModel(
+								ode_rhs,
+								ode_dfdx,
+								ode_dfdp,
+								ode_t0,
+								ode_y0,
+								times,
+								inputs,
+								parameters,
+								constants
+							)
+						
+						fsr = FisInMa.find_optimal(fsm)
+						```
+
+						---
+
+						## Optimization
+						- By default use `scipy.optimize.differential_evolution`
+						```python
+						fsr = FisInma.find_optimal(fsm)
+						```
+						- We can pass parameters directly to `differential_evolution`
+						```python
+						fsr = FisInMa.find_optimal(fsm, maxiter=100, workers=42)
+						```
+						- Other implemented methods
+						```python
+						fsr = FisInMa.find_optimal(fsm, method="scipy_brute_force")
+						fsr = FisInMa.find_optimal(fsm, method="scipy_basinhopping")
+						```
+						- Result contains all information about the optimal solution
+						```python
+						# By default determinant
+						print(fsr.criterion)
+						# Sensitivity Matrix
+						print(fsr.S)
+						# Results of the solved ODE of optimal run
+						print(fsr.individual_results)
+						```
+
+						---
+
+						## Plotting
+						```python
+						FisInMa.plot_all_odes(fsr)
+						```
+						- Still lacking functionality
+							- but simple to develop
+							- mostly the users responsibility
+
+						---
+
+						## Example Results
+						### Pool Model
+						<div class="r-stack">
+							<img width="1000" data-src="media/Result_pool_model_000.svg">
+							<img class="fragment" width="1000" data-src="media/Result_pool_model_001.svg">
+							<img class="fragment" width="1000" data-src="media/Result_pool_model_002.svg">
+						</div>
+					</textarea>
 					
-					print(fsr.criterion.__name__)
-					print(fsr.criterion)
-					print(fsr.solutions)
-					print(fsr.S)
-					```
-				</textarea>
-			</section>
-
+				</section>
+				<section>
+					<h2>Outlook</h2>
+					<ul>
+					<li class="fragment">Already implemented many features</li>
+					<li class="fragment">Still some minor quirks</li>
+						<ul>
+							<li class="fragment">eg. <code data-trim data-noescape>return [...]</code> vs <code data-trim data-noescape>return [[...]]</code> in <code data-trim data-noescape>ode_rhs</code></li>
+							<li class="fragment">Try to account for most (reasonable) input styles</li>
+							<li class="fragment">...</li>
+						</ul>
+					<li class="fragment">More unit- and covergence-testing necessary</li>
+					</ul>
+				</section>
 				
 
 
