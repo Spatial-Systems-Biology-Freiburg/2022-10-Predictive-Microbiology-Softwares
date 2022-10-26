@@ -1,3 +1,6 @@
 [submodule "model-design-fischer-information-matrix"]
 	path = model-design-fischer-information-matrix
 	url = git@github.com:spatial-systems-biology-freiburg/model-design-fischer-information-matrix
+[submodule "slides/reveal.js"]
+	path = slides/reveal.js
+	url = https://github.com/hakimel/reveal.js/
