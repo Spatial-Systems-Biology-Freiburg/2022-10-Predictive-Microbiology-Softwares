@@ -197,13 +197,13 @@ Based on this model, we would like to optimize the choice of measurement times a
     \specialrule{.1em}{.01em}{.05em} 
     Description & Formula & Code \\[1ex]
     \toprule \vspace{1mm} 
-    ODE & $f$                       & \\
-        & $\partial f / \partial x$ & \\[0.5ex]
-        & $\partial f / \partial p$ & \\[0.5ex]
+    ODE & $f$                       & \mintinline[bgcolor=white,style=emacs]{python}{def pool_model(t, y, Q, P, Const):} \\
+        & $\partial f / \partial x$ & \mintinline[bgcolor=white,style=emacs]{python}{def dfdx(t, y, Q, P, Const):} \\[0.5ex]
+        & $\partial f / \partial p$ & \mintinline[bgcolor=white,style=emacs]{python}{def dfdp(t, y, Q, P, Const):} \\[0.5ex]
     \midrule
-    Observable  & $g$                       & \\[0.5ex]
-    (optional)  & $\partial g / \partial x$ & \\[0.5ex]
-                & $\partial g / \partial p$ & \\[0.5ex]
+    Observable  & $g$                       &  \\[0.5ex]
+    (optional)  & $\partial g / \partial x$ &  \\[0.5ex]
+                & $\partial g / \partial p$ &  \\[0.5ex]
     \midrule
     Time points     & $t_i$ & \\[0.5ex]
     Inputs          & $u$   & \\[0.5ex]
