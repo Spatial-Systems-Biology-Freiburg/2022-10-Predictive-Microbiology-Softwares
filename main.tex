@@ -219,7 +219,7 @@ Based on this model, we would like to optimize the choice of measurement times a
     \item Write ODE, Jacobian functions in python with Q, P, Const\\
     \mintinline[bgcolor=white,style=emacs]{python}{def ode_func(y, t, Q, P, Const):}\\
     \mintinline[bgcolor=white,style=emacs]{python}{def jacobian(y, t, Q, P, Const):}
-    \item Define initial values \mintinline[bgcolor=white,style=emacs]{python}{(y0, t0)}
+    \item Define initial values \mintinline[bgcolor=white,style=emacs]{python}{(x0, t0)}
 \end{enumerate}
 %
 % ########################################################################
@@ -379,7 +379,7 @@ Some other optimization methods for the optimal control problem the reader can f
         def calculate_Fischer_observable(
             parameter_combinations,
             sensitivity_ode_function,
-            y0_t0,
+            x0_t0,
             jacobi,
             observable):
     \end{minted}
