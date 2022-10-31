@@ -534,26 +534,34 @@ However, this technique is rather slow and inefficient.
 Even though the discretization and reduction of the whole number of possible values can improve the performance, the computational time allows optimization only for a small number of optimization times or inputs.
 
 Some other optimization methods for the optimal control problem the reader can find, for example, in the papers of Banga \etal \cite{BANGA2005407, BANGA2003131}.
-
-
+%
+% ########################################################################
 \subsubsection*{Code}
-\begin{enumerate}
-    \item How does the user calculate the Fischer Observable?
-    \begin{minted}{python}
-        def calculate_Fischer_observable(
-            parameter_combinations,
-            sensitivity_ode_function,
-            x0_t0,
-            jacobi,
-            observable):
-    \end{minted}
-    \item How do we optimize for best results?
-    \begin{minted}{python}
-        def optimize_parameters(
-            parameter_combinations,
-            observable):
-    \end{minted}
-\end{enumerate}
+
+\begin{minted}{python}
+    fsr = find_optimal(
+        fsm,
+        optimization_strategy="differential_evolution",
+        criterion=fisher_determinant,
+        relative_sensitivities=False,
+        maxiter=500,
+        popsize=15,
+    )
+\end{minted}
+%
+% ########################################################################
+\subsubsection*{Plotting, Json, etc.}
+\begin{minted}{python}
+    # Plot all ODE results with chosen time points
+    # for different data points
+    plot_all_solutions(fsr, outdir="out")
+
+    # Dump all information into a json file
+    json_dump(fsr, "baranyi.json")
+
+    # Dumps all information to a string
+    output = json_dumps(fsr)
+\end{minted}
 %
 %
 %
