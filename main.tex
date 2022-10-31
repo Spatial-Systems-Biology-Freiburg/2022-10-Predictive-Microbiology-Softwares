@@ -123,6 +123,8 @@ After this, using new parameter values, the process can be repeated several time
 \section*{Materials and Methods}
 This tutorial expects a working installation of the popular scripting language Python $\geq3.7$~\cite{rossumPythonLanguageReference2010}.
 For installation instructions, please refer to the website \href{https://www.python.org/downloads/}{python.org}.
+We also expect users, to be able to write, execute and display output of scripts.
+This tutorial can also be followed using jupyter notebooks.
 We have developed \mintinline[bgcolor=white,style=emacs]{bash}{FisInMa}, which is a set of tools to calculate the Sensitivity and Fischer Information Matrix and do parameter space exploration in order to find optimal results.
 Users can obtain it by installing \mintinline[bgcolor=white,style=emacs]{bash}{FisInMa} from \href{https://pypi.org/project/FisInMa/0.0.1/}{pypi.org}.
 The python website has guides for installing packages \href{https://packaging.python.org/en/latest/tutorials/installing-packages/}{packaging.python.org/}.
@@ -134,7 +136,19 @@ or \mintinline[bgcolor=white,style=emacs]{bash}{conda} to install the desired pa
 \begin{minted}[bgcolor=white]{bash}
 conda install FisInMa
 \end{minted}
-The \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{Documentation} of the package is provided.
+The \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{Documentation} of the package is continuously updated.
+After the installation of the package is complete, we open a file with a text editor of choice and simply start writing code.
+We begin by writing a so-called she-bang which is responsible to signalize that this file is to be executed with python.
+Afterwards, we import the needed packages.
+\begin{minted}[firstnumber=1]{python}
+#!/usr/bin/env python3
+
+import numpy as np
+from FisInMa import *
+\end{minted}
+This will serve as the starting point for our script.
+In the following, we will append more code to it and utilize the methods developed in FisInMa~\cite{}.% TODO add citation which points to github repository
+If line numbers are missing, these should be filled by blank lines for better readability.
 %
 %
 % ########################################################################
