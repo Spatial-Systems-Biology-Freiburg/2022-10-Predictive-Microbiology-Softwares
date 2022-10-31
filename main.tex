@@ -366,8 +366,8 @@ respectively.
 Similarly, the derivatives $\partial f/\partial x_i$ are
 \begin{alignat}{7}
     % TODO
-    \frac{\partial f_1}{\partial x_1}(t) &= \mu^\text{max} \frac{x_2(t)}{x_2(t) + 1} \left(1 - \frac{x_1(t)}{x_1^\text{max}}\right) x(t)\\
-    \frac{\partial f_1}{\partial x_2}(t) &= 
+    \frac{\partial f_1}{\partial x_1}(t) &= \mu^\text{max} &\frac{x_2(t)}{x_2(t) + 1} && \left(-\frac{1}{x_1^\text{max}}\right) &&x(t)\\
+    \frac{\partial f_1}{\partial x_2}(t) &= \mu^\text{max} &\left(\frac{1}{x_2(t) + 1} - \frac{x_2(t)}{(x_2(t) + 1)^2}\right) && \left(1 - \frac{x_1(t)}{x_1^\text{max}}\right) &&x(t)
     % TODO
 \end{alignat}
 The readers are encouraged to calculate the components $\partial f_2/\partial p_i$ and $\partial f_2/\partial x_i$ by themselves since these are still missing for a complete set.
@@ -410,7 +410,7 @@ Assuming, we carried out the necessary mathematical derivation, the implemented 
             ]
         ]
     \end{minted}
-    \caption{Code Example: Derivatives of the function $f$ defining the Baranyi-Roberts model.}
+    \caption{Code Example: Derivatives of the function $f$ of the Baranyi-Roberts model \ac{ode}.}
     \label{fig:code_baranyi_roberts_ode_fun_derivatives}
 \end{figure}
 %
