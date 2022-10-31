@@ -546,7 +546,7 @@ Some other optimization methods for the optimal control problem the reader can f
 % ########################################################################
 \subsubsection*{Code}
 
-\begin{minted}{python}
+\begin{minted}[autogobble=false,firstnumber=90]{python}
     fsr = find_optimal(
         fsm,
         optimization_strategy="differential_evolution",
@@ -555,11 +555,24 @@ Some other optimization methods for the optimal control problem the reader can f
         maxiter=500,
         popsize=15,
     )
+
+    print(fsr.criterion)
+    for sol in fsr.individual_results:
+        print("Times for inputs", sol.inputs)
+        print(" >> ", sol.times)
 \end{minted}
 %
 % ########################################################################
 \subsubsection*{Plotting, Json, etc.}
-\begin{minted}{python}
+\begin{minted}[autogobble=false,firstnumber=92]{python}
+    # Print the result for the criterion (default=determinant)
+    print(fsr.criterion)
+    
+    # Print time points which were chosen by optimization routine
+    for sol in fsr.individual_results:
+        print("Times for inputs", sol.inputs)
+        print(" >> ", sol.times)
+
     # Plot all ODE results with chosen time points
     # for different data points
     plot_all_solutions(fsr, outdir="out")
