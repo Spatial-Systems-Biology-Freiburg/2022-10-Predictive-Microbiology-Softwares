@@ -275,7 +275,8 @@ The methods of the Experimental Design imply maximizing the objective function c
 According to the so-called 'Cramer-Rao inequality', the Fisher information is inversely proportional to the minimal squared estimation error \cite{friedenExploratoryData2010}. 
 So its maximization actually leads to minimization of the uncertainty of the parameter estimates.
 We are going to explain one of the ways to calculate this so-called \acl{fim} for mentioned above \acp{ode} system (\ref{eq:ode_general}) and the observable function (\ref{eq:observ_general}).
-
+%
+% ########################################################################
 \subsubsection*{Sensitivity Calculation}
 Assume that functions $f$ and $g$ are differentiable functions with respect to the state varibles $\mbx$ and parameters $\mbp$.
 The first step is to calculate local sensitivities $s^x_{ij} = (\mathrm{d} x_i / \mathrm{d} p_j )$.
@@ -338,14 +339,143 @@ where $Q$ is the covariance matrix of measurement error that, in the case of the
 \end{pmatrix}.
 \end{equation}
 Here $\sigma_i$ is the standard deviation of the $i$-th measurements, and $M$ is an effort or the whole number of measurements.
+%
+% ########################################################################
+\subsection*{Numerical Sensitivity Calculation}
+To calculate the sensitivities numerically as just explained, we additionally need to supply the derivatives of $f$ with respect to the parameters and state variables used in equation \ref{eq:observ_sensitivities}.
+Thus, we need to define functions for these derivatives as well.
+Firstly, we calculate the mathematical derivatives $\partial f_i/\partial p_j$ and $\partial f_i/\partial x_j$ and then implement the functions.
+In our case, the first component of the Baranyi-Roberts model reads
+\begin{equation}
+    \dot x_1(t) = f_1(t, x) = \mu^\text{max} \frac{x_2(t)}{x_2(t) + 1} \left(1 - \frac{x_1(t)}{x_1^\text{max}}\right) x(t)
+\end{equation}
+where $\sart{\mu^\text{max}}=b(T-T_\text{min})$.
+Since the later quantitiy $\mu^\text{max}$ depends on $b$ and $T_\text{min}$, we also need to take into account their derivatives.
+\begin{alignat}{4}
+    \frac{\partial\mu^\text{max}}{\partial p_1} &= 0\\
+    \frac{\partial\mu^\text{max}}{\partial p_2} &= 2b(T-T_\text{min})^2 &= \frac{2\mu^\text{max}}{b}\\
+    \frac{\partial\mu^\text{max}}{\partial p_3} &= -2b^2(T-T_\text{min}) &= \frac{2\mu^\text{max}}{T-T_\text{min}}
+\end{alignat}
+Thus the derivatives of the first component of $f$ with respect to $p_1=x_{max}$, $p_2=b$ and $p_3=T_\text{min}$ are
+\begin{alignat}{7}
+    \frac{\partial f_1}{\partial p_1}(t) &= - \mu^\text{max} &&\frac{x_2(t)}{x_2(t) + 1} &\frac{x_1(t)}{\left(x_1^\text{max}\right)^2} &&x(t)\\
+    \frac{\partial f_1}{\partial p_2}(t) &= \frac{2\mu^\text{max}}{b} &&\frac{x_2(t)}{x_2(t) + 1} &\left(1 - \frac{x_1(t)}{x_1^\text{max}}\right) &&x(t)\\
+    \frac{\partial f_1}{\partial p_3}(t) &= \frac{2\mu^\text{max}}{T-T_\text{min}} &&\frac{x_2(t)}{x_2(t) + 1} &\left(1 - \frac{x_1(t)}{x_1^\text{max}}\right) &&x(t)
+\end{alignat}
+respectively.
+Similarly, the derivatives $\partial f/\partial x_i$ are
+\begin{alignat}{7}
+    % TODO
+    \frac{\partial f_1}{\partial x_1}(t) &= \mu^\text{max} \frac{x_2(t)}{x_2(t) + 1} \left(1 - \frac{x_1(t)}{x_1^\text{max}}\right) x(t)\\
+    \frac{\partial f_1}{\partial x_2}(t) &= 
+    % TODO
+\end{alignat}
+The readers are encouraged to calculate the components $\partial f_2/\partial p_i$ and $\partial f_2/\partial x_i$ by themselves since these are still missing for a complete set.
+Assuming, we carried out the necessary mathematical derivation, the implemented functions in python can be seen in figure~\ref{fig:code_baranyi_roberts_ode_fun_derivatives}.
+\begin{figure}[H]
+    \begin{minted}{python}
+    def ode_dfdp(t, x, u, p, ode_args):
+        (x1, x2) = x
+        (Temp, ) = u
+        (x_max, b, Temp_min) = p
+        mu_max = b**2 * (Temp - Temp_min)**2
+        return [
+            [
+                mu_max * (x2/(x2 + 1)) * (x1/x_max)**2,
+                2 * b * (Temp - Temp_min)**2 * (x2/(x2 + 1))
+                    * (1 - x1/x_max)*x1,
+                -2 * b**2 * (Temp - Temp_min) * (x2/(x2 + 1))
+                    * (1 - x1/x_max)*x1
+            ],
+            [
+                0,
+                2 * b * (Temp - Temp_min)**2 * x2,
+                2 * b**2 * (Temp - Temp_min) * x2
+            ] 
+        ]
 
+    def ode_dfdx(t, x, u, p, ode_args):
+        (x1, x2) = x
+        (Temp, ) = u
+        (x_max, b, Temp_min) = p
+        mu_max = b**2 * (Temp - Temp_min)**2
+        return [
+            [
+                mu_max * (x2/(x2 + 1)) * (1 - 2*x1/x_max),
+                mu_max * 1/(x2 + 1)**2 * (1 - x1/x_max)*x1
+            ], 
+            [
+                0,
+                mu_max
+            ]
+        ]
+    \end{minted}
+    \caption{Code Example: Derivatives of the function $f$ defining the Baranyi-Roberts model.}
+    \label{fig:code_baranyi_roberts_ode_fun_derivatives}
+\end{figure}
+%
+% ########################################################################
+\subsection*{Define numerical values}
+\begin{minted}{python}
+# Define parameters
+p = (np.exp(21.1), 0.038, 2)
+
+# Define ode_args
+c = ()
+
+# Define initial conditions
+x0 = np.array([np.exp(2.36), 1 / (np.exp(2.66)-1)])
+
+# Define bounds and number of sampling points for times, inputs
+times = (0.0, 1500.0, 4)
+
+Temp_low = 4.0
+Temp_high = 8.0
+n_Temp = 3
+inputs = [
+    np.linspace(Temp_low, Temp_high, n_Temp)
+]
+\end{minted}
+\subsubsection*{Explicit values and sampling}
+\begin{minted}{python}
+asdf
+\end{minted}
+
+\begin{minted}{python}
+asdfg
+\end{minted}
+%
+% ########################################################################
+\subsection*{Define Model}
+\begin{minted}{python}
+    fsm = FisherModel(
+        # Required arguments
+        ode_x0=x0,
+        ode_t0=0.0,
+        ode_fun=ode_fun,
+        ode_dfdx=ode_dfdx,
+        ode_dfdp=ode_dfdp,
+        ode_initial=x0,
+        times=times,
+        inputs=inputs,
+        parameters=p,
+        ode_args=c,
+        # Optional observable arguments
+        obs_fun=obs_fun,#=None
+        obs_dfdx=obs_dgdx,#=None
+        obs_dfdp=obs_dgdp,#=None
+    )
+\end{minted}
+%
+% ########################################################################
 \subsubsection*{Identifiability}
 Here, before proceeding with optimization, the reader should take the time and check if the system is identifiable, meaning that if it is possible to obtain the unique solution from the optimization. 
 The non-identifiability can be due to the wrong choice of the model structure or observable (structural) or the incorrect choice of gathered data (practical).
 The quick and easy way to check the system on structural non-identifiability is to calculate the rank of the sensitivity matrix.
 For an identifiable system, it should coincide with the number of estimated parameters.
 If this condition is satisfied, we can continue with optimization.
-
+%
+% ########################################################################
 \subsubsection*{Optimality Criteria}
 Different optimality criteria choose to maximize different objectives.
 The effects of these objectives on the parameter space can vary so the reader can choose the most suitable one. 
