@@ -253,8 +253,8 @@ The result of equation \ref{eq:ode_BaranyiRoberts} is then given by \mintinline[
 \mintinline[bgcolor=white,style=emacs]{python}{mu_max * x2} respectively.
 We store these results in a list (denoted by \mintinline[bgcolor=white,style=emacs]{python}{[ ... ]}) and return it.
 \begin{figure}
-    \begin{minted}{python}
-    def example_model(t, x, u, p, ode_args):
+    \begin{minted}[firstnumber=6]{python}
+    def baranyi_roberts_ode(t, x, u, p, ode_args):
         (x1, x2) = x
         (Temp, ) = u
         (x_max, b, Temp_min) = p
@@ -387,7 +387,7 @@ Similarly, the derivatives $\partial f/\partial x_i$ are
 The readers are encouraged to calculate the components $\partial f_2/\partial p_i$ and $\partial f_2/\partial x_i$ by themselves since these are still missing for a complete set.
 Assuming, we carried out the necessary mathematical derivation, the implemented functions in python can be seen in figure~\ref{fig:code_baranyi_roberts_ode_fun_derivatives}.
 \begin{figure}[H]
-    \begin{minted}{python}
+    \begin{minted}[firstnumber=20]{python}
     def ode_dfdp(t, x, u, p, ode_args):
         (x1, x2) = x
         (Temp, ) = u
@@ -430,54 +430,48 @@ Assuming, we carried out the necessary mathematical derivation, the implemented 
 %
 % ########################################################################
 \subsection*{Define numerical values}
-\begin{minted}{python}
-# Define parameters
-p = (np.exp(21.1), 0.038, 2)
+Now that we have defined the structure of our \ac{ode}, we can begin to specify numerical values.
+It is good practice, to gather such definitions in the main function of our program.
+\begin{minted}[firstnumber=57]{python}
+if __name__ == "__main__":
+    # Define parameters
+    p = (np.exp(21.1), 0.038, 2)
 
-# Define ode_args
-c = ()
+    # Define initial conditions
+    x0 = np.array([np.exp(2.36), 1 / (np.exp(2.66)-1)])
 
-# Define initial conditions
-x0 = np.array([np.exp(2.36), 1 / (np.exp(2.66)-1)])
+    # Define bounds and number of sampling points for times, inputs
+    times = (0.0, 1500.0, 4)
 
-# Define bounds and number of sampling points for times, inputs
-times = (0.0, 1500.0, 4)
-
-Temp_low = 4.0
-Temp_high = 8.0
-n_Temp = 3
-inputs = [
-    np.linspace(Temp_low, Temp_high, n_Temp)
-]
+    Temp_low = 4.0
+    Temp_high = 8.0
+    n_Temp = 3
+    inputs = [
+        np.linspace(Temp_low, Temp_high, n_Temp)
+    ]
 \end{minted}
 \subsubsection*{Explicit values and sampling}
-\begin{minted}{python}
+\begin{minted}[linenos=false]{python}
 asdf
 \end{minted}
 
-\begin{minted}{python}
+\begin{minted}[linenos=false]{python}
 asdfg
 \end{minted}
 %
 % ########################################################################
 \subsection*{Define Model}
-\begin{minted}{python}
+\begin{minted}[autogobble=false,firstnumber=81]{python}
     fsm = FisherModel(
-        # Required arguments
         ode_x0=x0,
         ode_t0=0.0,
-        ode_fun=ode_fun,
+        ode_fun=baranyi_roberts_ode,
         ode_dfdx=ode_dfdx,
         ode_dfdp=ode_dfdp,
         ode_initial=x0,
         times=times,
         inputs=inputs,
-        parameters=p,
-        ode_args=c,
-        # Optional observable arguments
-        obs_fun=obs_fun,#=None
-        obs_dfdx=obs_dgdx,#=None
-        obs_dfdp=obs_dgdp,#=None
+        parameters=p
     )
 \end{minted}
 %
