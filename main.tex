@@ -170,10 +170,11 @@ The observational noise is often assumed to be an independently distributed Gaus
 Here, to demonstrate how Experimental Design works, we will refer to a widely used Baranyi and Roberts model (1994) that can be used, for example, to describe bacteria growth.
 The model is introduced by two state variables $\mbx = (x_1, x_2)$, where $x_1(t)$ denotes the cell concentration of a bacterial population at the time $t$ and $x_2(t)$ defines a physiological state of the cells, the process of adjustment (lag-phase):
 \begin{equation}
-    \begin{cases}
-    \dot x_1(t) = \frac{x_2(t)}{x_2(t) + 1} \mu^\text{max} \big(1 - \frac{x_1(t)}{x_1^\text{max}}\big) x(t)  = f_1 \\
-    \dot x_2(t) = \mu^\text{max}  x_2(t) = f_2
-    \end{cases}.
+    \left\{
+    \begin{alignat}{3}
+        \dot x_1(t) &= \frac{x_2(t)}{x_2(t) + 1} \mu^\text{max} \big(1 - \frac{x_1(t)}{x_1^\text{max}}\big) x(t)  &=& f_1 \\
+        \dot x_2(t) &= \mu^\text{max}  x_2(t) &=& f_2
+    \end{alignat}\right.
     \label{eq:ode_BaranyiRoberts}
 \end{equation}
 Here $\mu^\text{max}$ determines the maximum growth rate, and $x_1^\text{max}$ is bacteria concentration at the saturation. 
