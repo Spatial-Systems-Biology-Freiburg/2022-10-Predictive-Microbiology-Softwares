@@ -433,44 +433,100 @@ Assuming, we carried out the necessary mathematical derivation, the implemented 
             ]
         ]
     \end{minted}
-    \caption{Code Example: Derivatives of the function $f$ of the Baranyi-Roberts model \ac{ode}.}
-    \label{fig:code_baranyi_roberts_ode_fun_derivatives}
-\end{figure}
+    \caption{Derivatives of the function $f$ of the Baranyi-Roberts model \ac{ode}.}
+    \label{code:code_baranyi_roberts_ode_fun_derivatives}
+\end{code}
 %
 % ########################################################################
 \subsection*{Define numerical values}
 Now that we have defined the structure of our \ac{ode}, we can begin to specify numerical values.
-It is good practice, to gather such definitions in the main function of our program.
-\begin{minted}[firstnumber=57]{python}
-if __name__ == "__main__":
-    # Define parameters
-    p = (np.exp(21.1), 0.038, 2)
+It is good practice, to gather such definitions in the \mintinline[bgcolor=white,style=emacs]{python}{__main__} method of our program as was done in figure~\ref{code:code_write_main_function_start}.
+We start by defining the parameters (line 59) of our ßac{ode} and afterwards the initial values of the \ac{ode} (line 62).
+Next, we want to tell the program to choose the best possible time points in the interval $t_i\in\left[t_\text{low},t_\text{high}\right]$ in the optimization routine later on.
+To do this, we write the times as a tuple with $(t_\text{low}, t_\text{high}, n_t)$ where $n_t$ is the number of time points which we want to sample (line 65).
+In contrast, if we wanted to specify explicit values for the time points, we would have needed to supply a list of time values or a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} directly.
+One can see this aproach when we define the inputs in line 70.
+Here, we supply a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} with explicit values, thus fixing them for the optimization routine.
+\begin{code}[h]
+    \begin{minted}[firstnumber=57]{python}
+    if __name__ == "__main__":
+        # Define parameters
+        p = (np.exp(21.1), 0.038, 2)
 
-    # Define initial conditions
-    x0 = np.array([np.exp(2.36), 1 / (np.exp(2.66)-1)])
+        # Define initial conditions
+        x0 = np.array([np.exp(2.36), 1 / (np.exp(2.66)-1)])
 
-    # Define bounds and number of sampling points for times, inputs
-    times = (0.0, 1500.0, 4)
+        # Define interval and number of sampling points for times
+        times = (0.0, 1500.0, 4)
 
-    Temp_low = 4.0
-    Temp_high = 8.0
-    n_Temp = 3
+        # Define explicit temperature points
+        Temp_low = 4.0
+        Temp_high = 8.0
+        n_Temp = 3
+
+        # Summarize all input definitions in list (only temperatures)
+        inputs = [
+            np.linspace(Temp_low, Temp_high, n_Temp)
+        ]
+    \end{minted}
+    \caption{The main function contains the actual values for our model definition.}
+    \label{code:code_write_main_function_start}
+\end{code}
+\subsubsection*{Defining Explicit Values and Sampling}
+The difference between choosing explicit values and specifying a sampling range may be subtle to see at first glance, but in turn allows to very easily switch between fixed values and sampling.
+For example, suppose we wanted to also sample temperature points, which means we let the optimization algorithm pick the optimal temperature points such that the information gathered from the system is maximized.
+Then the difference between explicit values for the temperatures and sampled ones can be seen in code sample~\ref{code:difference_explicit_sampling}.\newline
+\begin{code}[h]
+    \begin{minted}[linenos=false]{python}
+    # This will choose values explicitly
     inputs = [
         np.linspace(Temp_low, Temp_high, n_Temp)
     ]
-\end{minted}
-\subsubsection*{Explicit values and sampling}
-\begin{minted}[linenos=false]{python}
-asdf
-\end{minted}
+    # >>> inputs
+    # [array([4., 6., 8.])]
 
-\begin{minted}[linenos=false]{python}
-asdfg
-\end{minted}
+
+    # This will sample in the interval
+    inputs = [
+        (Temp_low, Temp_high, n_Temp)
+    ]
+    # >>> inputs
+    # [(4.0, 8.0, 3)]
+
+
+    \end{minted}
+    \caption{Difference between choosing explicit values and sampling over a given interval.}
+    \label{code:difference_explicit_sampling}
+\end{code}%
+This distinction can be done for individual inputs as well.
+Suppose, we have a system with temperatures and humidity as input variables.
+We could decide to pick the best temperature points, but fix the humidity explicitly.
+This can be beneficial, if one of the variables can be controlled (ie. temperature in the lab) but the other is more difficult to fix (ie. humidity).
+In our code, we simply would mix explicit and sampled definitions for individual inputs (see code sample~\ref{code:mix_sampling_explicit}).
+\begin{code}[h]
+    \begin{minted}[linenos=false]{python}
+        inputs = [
+            # These values will be sampled
+            (Temp_low, Temp_high, n_Temp),
+            # These are fixed
+            np.array([0.4, 0.45, 0.5, 0.55])
+        ]
+    \end{minted}
+    \caption{Mixing of explicit and sampling for inputs.}
+    \label{code:mix_sampling_explicit}
+\end{code}
 %
 % ########################################################################
 \subsection*{Define Model}
-\begin{minted}[autogobble=false,firstnumber=81]{python}
+After we have decided on the numerical values for our model, we need to supply them to the program.
+The \mintinline[bgcolor=white,style=emacs]{python}{FisherModel} class serves as the entry point.
+Here, we simply supply every previously made definition of variables and methods.
+When using the syntax as shown in code sample~\ref{code:model_definition}, the order of arguments does not matter.
+However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherModel(x0, 0.0, ...)}, please pay attention to the order of arguments.
+\begin{code}[H]
+    \begin{minted}[autogobble=false,firstnumber=77]{python}
+    # Create the FisherModel which serves as the entry point
+    #  for the solving and optimization algorithms
     fsm = FisherModel(
         ode_x0=x0,
         ode_t0=0.0,
@@ -482,7 +538,14 @@ asdfg
         inputs=inputs,
         parameters=p
     )
-\end{minted}
+    \end{minted}
+    \caption{Define the full model.}
+    \label{code:model_definition}
+\end{code}
+There are some optional arguments which can be set if desired ...
+% TODO
+% TODO
+For a full list of optional arguments, we refer to the \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{documentation} of the package.
 %
 % ########################################################################
 \subsubsection*{Identifiability}
