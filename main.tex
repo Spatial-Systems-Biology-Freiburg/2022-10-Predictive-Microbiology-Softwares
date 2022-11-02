@@ -36,6 +36,10 @@
 \newcommand{\mby}{\mathbf{y}}
 \providecommand{\keywords}[1]{\textbf{Keywords } #1}
 
+% Create a new environment for code samples.
+\newfloat{code}{tbp}{lop}
+\floatname{code}{Code Sample}
+
 
 % Create acronyms to use in text
 \newacro{ode}[ODE]{Ordinary Differential Equation}
@@ -140,12 +144,17 @@ The \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{Documenta
 After the installation of the package is complete, we open a file with a text editor of choice and simply start writing code.
 We begin by writing a so-called she-bang which is responsible to signalize that this file is to be executed with python.
 Afterwards, we import the needed packages.
-\begin{minted}[firstnumber=1]{python}
-#!/usr/bin/env python3
+\begin{code}[h]
+    \begin{minted}[firstnumber=1]{python}
+    #!/usr/bin/env python3
 
-import numpy as np
-from FisInMa import *
-\end{minted}
+    import numpy as np
+    from FisInMa import *
+    \end{minted}
+    \caption{Import statements to use FisInMa}
+    \label{code:import_statements}
+    % TODO make this FisInMa into a link
+\end{code}
 This will serve as the starting point for our script.
 In the following, we will append more code to it and utilize the methods developed in FisInMa~\cite{}.% TODO add citation which points to github repository
 If line numbers are missing, these should be filled by blank lines for better readability.
@@ -239,7 +248,7 @@ In the following, we will gradually explain how to specify all variables needed 
 \end{table}
 \paragraph{Defining the \acs{ode}} First, we must define a few functions in python.
 The first function will be the right-hand side of equation \ref{eq:ode_general}, which means for the Baranyi-Roberts model, we can simply copy equation \ref{eq:ode_BaranyiRoberts} into a function.
-The complete function can be seen in figure \ref{fig:code_baranyi_roberts_ode_fun}.
+The complete function can be seen in figure \ref{code:code_baranyi_roberts_ode_fun}.
 We explain the individual steps to recreate this function.
 The order of required function arguments is fixed by the signature
 \mintinline[bgcolor=white,style=emacs]{python}{def ode_fun(t, x, u, P, ode_args)} whereas the function name can be given freely and should represent the model in which we are interested.
@@ -252,7 +261,7 @@ In our example, we calculate the maximum growth rate via \mintinline[bgcolor=whi
 The result of equation \ref{eq:ode_BaranyiRoberts} is then given by \mintinline[bgcolor=white,style=emacs]{python}{mu_max * (x2/(x2 + 1)) * (1 - x1/x_max) * x1} and 
 \mintinline[bgcolor=white,style=emacs]{python}{mu_max * x2} respectively.
 We store these results in a list (denoted by \mintinline[bgcolor=white,style=emacs]{python}{[ ... ]}) and return it.
-\begin{figure}
+\begin{code}[h]
     \begin{minted}[firstnumber=6]{python}
     def baranyi_roberts_ode(t, x, u, p, ode_args):
         (x1, x2) = x
@@ -265,9 +274,9 @@ We store these results in a list (denoted by \mintinline[bgcolor=white,style=ema
             mu_max * x2
         ]
     \end{minted}
-    \caption{Code Example: Definition of the Baranyi-Roberts \ac{ode} model.}
-    \label{fig:code_baranyi_roberts_ode_fun}
-\end{figure}
+    \caption{Definition of the Baranyi-Roberts \ac{ode} model.}
+    \label{code:code_baranyi_roberts_ode_fun}
+\end{code}
 %
 % ########################################################################
 \subsection*{Parameter Estimation}
@@ -385,8 +394,8 @@ Similarly, the derivatives $\partial f/\partial x_i$ are
     % TODO
 \end{alignat}
 The readers are encouraged to calculate the components $\partial f_2/\partial p_i$ and $\partial f_2/\partial x_i$ by themselves since these are still missing for a complete set.
-Assuming, we carried out the necessary mathematical derivation, the implemented functions in python can be seen in figure~\ref{fig:code_baranyi_roberts_ode_fun_derivatives}.
-\begin{figure}[H]
+Assuming, we carried out the necessary mathematical derivation, the implemented functions in python can be seen in figure~\ref{code:code_baranyi_roberts_ode_fun_derivatives}.
+\begin{code}[H]
     \begin{minted}[firstnumber=20]{python}
     def ode_dfdp(t, x, u, p, ode_args):
         (x1, x2) = x
