@@ -587,7 +587,7 @@ Finding the Experimental Design that corresponds to the global maximum of the ob
 This problem is widely studied, and multiple numerical solution algorithms for both local and global optimization were introduced.
 In the suggested toolbox, three methods were implemented: differential evolution, basin-hopping, and brute force.
 
-Quite good results can be achieved by the \ac{de} algorithm developed by Storn and Price (1997) \cite{stornDifferentialEvolutionSimple1997}.
+Quite good results can be achieved by the \ac{de} algorithm developed by Storn and Price (1996) \cite{stornDifferentialEvolutionSimple1997}.
 It is one of the stochastic global optimization methods that show rather good results for nonlinear dynamic problems.
 Such approaches help to greatly improve computational times but sacrifice is that one cannot be sure that the absolute optimum is reached.
 Firstly, the initial population of candidate solutions is randomly chosen from the region of available values.
@@ -605,7 +605,12 @@ This operation is repeated for every solution candidate of the initial populatio
 The process of population mutation is repeated till the desired accuracy is achieved.
 This method is rather simple, straightforward, does not require the gradient calculation and is able to be parallelized.
 
-The second method is the basin-hopping that combines the Monte-Carlo optimization with Methropolis algorithm and local optimization. ...
+The second method is the basin-hopping developed by David Wales and Jonathan Doye \cite{walesGlobalOptimizationBasinHopping1997}. 
+It combines the Monte-Carlo and local optimization and works as follows. 
+The classic Monte-Carlo algorithm implies that the values of the optimized vector are perturbed and are either accepted or rejected.
+However, in this modified strategy, after perturbation, the vector is additionally subjected to local minimization.
+And only after this procedure the move is accepted according to the Metropolis criterion.
+
 
 And lastly, the brute force method was implemented as well.
 It is a grid search algorithm calculating the objective function value at each point of a multidimensional grid in a chosen region.
