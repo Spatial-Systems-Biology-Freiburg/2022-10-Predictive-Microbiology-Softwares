@@ -12,6 +12,8 @@
 \usepackage{xcolor}
 \usepackage{multirow}
 \usepackage{ctable} % for \specialrule command
+\usepackage{graphicx}
+\usepackage{subcaption}
 
 \usepackage[outputdir=out]{minted}
 \definecolor{bg}{HTML}{282828} % fro https://github.com/kevinsawicki/monokai
@@ -672,6 +674,32 @@ Some other optimization methods for the optimal control problem the reader can f
     \item Performance (scaling, limitations, etc.)
     \item 
 \end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.45]{Figures/Observables_Result_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_v20_000_x_00.pdf}
+    \caption{{\footnotesize The example of the output of the Experimental Design optimization procedure for Baranyi and Roberts model.}}
+    \label{fig:baranyi_roberts_observable}
+\end{figure}
+
+\begin{figure}[H]
+    \begin{subfigure}{.48\textwidth}
+      \centering
+      \includegraphics[scale=0.38]{Figures/Sensitivities_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_v20_000_x_00_p_00.pdf}
+    \end{subfigure}
+    \begin{subfigure}{.48\textwidth}
+      \centering
+      \includegraphics[scale=0.38]{Figures/Sensitivities_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_v20_000_x_00_p_01.pdf}
+    \end{subfigure}
+
+    \begin{subfigure}{.48\textwidth}
+        \centering
+        \includegraphics[scale=0.38]{Figures/Sensitivities_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_v20_000_x_00_p_01.pdf}
+    \end{subfigure}
+    \caption{{\footnotesize The example of the sensitivities calculated for the Experimental Design optimization procedure for Baranyi and Roberts model.}} 
+    \label{fig:baranyi_roberts_sensitivities}
+    \end{figure}
+
 %
 %
 %
