@@ -690,13 +690,27 @@ Some other optimization methods for the optimal control problem the reader can f
     \item 
 \end{enumerate}
 
+Summarizing the above tutorial, we would like to present the resulting output of our package.
+For this, consider the following example.
+One wants to study a real-life system and describe it with the Baranyi and Roberts model \ref{eq:ode_BaranyiRoberts, eq:RatkowskyModel}.
+However, experimenters claim that they can conduct only one experimental series for one constant temperature value and measure the first component of the state variable vector $y = x_1$.
+The refrigerating chambers available in operation can maintain the temperature only in the range from 3 to 12 degrees.
+After some literature search, it was found that for the similar systems the approximate parameter values are $x_1^\text{max}=10^8$, $b=0.2$, $T_\text{min}=1.0$,
+and the initial conditions for the system of \acp{ode} are about $x_1(0) = 10^3$, $x_2(0)=0.01$.
+Moreover, all the measurements contain constant error $\gamma_\text{abs}=0.3$ and in addition an error term proportional to observable value $\gamma_\text{rel}=0.1$.
+And the task is to propose at which temperature and times it will be better to measure from the modeling point of view.
+
+To solve this problem, we performed the Experimental Design using the D-optimality criterion, relative sensitivities, and the differential evolution optimization method.
+The resulting \ac{oed} is presented in Fig. \ref{fig:baranyi_roberts_observable, fig:baranyi_roberts_sensitivities}
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.45]{Figures/Observables_Result_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_v20_000_x_00.pdf}
-    \caption{{\footnotesize The example of the output of the Experimental Design optimization procedure for Baranyi and Roberts model.}}
+    \includegraphics[scale=0.43]{Figures/Observables_Result_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_v20_000_x_00.pdf}
+    \caption{{\footnotesize The example of the output of the Experimental Design optimization procedure for the Baranyi and Roberts model. 
+    The line plot presents the model solution for the observable, and the scatter plot determines the time points chosen by Experimental Design.}}
     \label{fig:baranyi_roberts_observable}
 \end{figure}
-
+As can be noticed, the algorithm chooses three different time points.
+Each of these time points corresponds to an extreme of one sensitivity meaning that we obtained one time point for each parameter.
 \begin{figure}[H]
     \begin{subfigure}{.48\textwidth}
       \centering
@@ -709,9 +723,10 @@ Some other optimization methods for the optimal control problem the reader can f
 
     \begin{subfigure}{.48\textwidth}
         \centering
-        \includegraphics[scale=0.38]{Figures/Sensitivities_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_v20_000_x_00_p_01.pdf}
+        \includegraphics[scale=0.38]{Figures/Sensitivities_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_v20_000_x_00_p_02.pdf}
     \end{subfigure}
-    \caption{{\footnotesize The example of the sensitivities calculated for the Experimental Design optimization procedure for Baranyi and Roberts model.}} 
+    \caption{{\footnotesize The example of the sensitivities calculated for the Experimental Design optimization procedure for the Baranyi and Roberts model.
+    The line plots present the model solution for the sensitivitied, and the scatter plots determine the time points chosen by Experimental Design.}} 
     \label{fig:baranyi_roberts_sensitivities}
     \end{figure}
 
