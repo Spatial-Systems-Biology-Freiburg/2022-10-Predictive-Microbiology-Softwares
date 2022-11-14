@@ -353,17 +353,32 @@ This matrix we will use to directly calculate the \ac{fim} via equation:
 \begin{equation}
     F = S^T Q^{-1} S,
 \end{equation}
-where $Q$ is the covariance matrix of measurement error that, in the case of the independent measurements, looks like 
+where $Q$ is the covariance matrix of measurement error.
+If all measurements are considered independent, then only diagonal elements of the matrix are non-zero: 
 \begin{equation}
     Q = 
 \begin{pmatrix}
-\sigma_1^2 & 0 & 0 & ... & 0\\
-0 & \sigma_2^2 & 0 & ... & 0\\
-\vdots  & \vdots  & \vdots  &   & \vdots  \\
-0 & 0 & 0 & ... & \sigma_M^2 \\
+    \sigma_{1}^2(t_1, u_1) & 0                      & 0                      & \dots  & 0                     \\
+    0                      & \sigma_{1}^2(t_2, u_1) & 0                      & \dots  & 0                     \\
+    0                      & 0                      & \sigma_{1}^2(t_1, u_2) & \dots  & 0                     \\
+    \vdots                 & \vdots                 & \vdots                 & \ddots & \vdots                \\
+    0                      & 0                      & 0                      & \dots  & \sigma_{2}^2(t_N, u_2)
 \end{pmatrix}.
+\label{eq:covar_matrix}
 \end{equation}
-Here $\sigma_i$ is the standard deviation of the $i$-th measurements, and $M$ is an effort or the whole number of measurements.
+Here $\sigma_{i}^2 (t_m, u_n)$ is the variance obtained from the measurement of observable $y_i$ at time point $t_m$ with input $u_n$.
+The variance value can be either calculated from the real data or approximated by some error model.
+For example, one may consider that the error contribution consists of an absolute part that stays constant and a relative part that is proportional to observable value.
+Then the diagonal elements of the covariance matrix take form:
+\begin{equation}
+    \sigma_{i}^2 (t_m, u_n) = \gamma_\text{abs} + \gamma_\text{rel} \cdot y_i(t_m, u_n),
+\end{equation}
+where $\gamma_\text{abs}$ and $\gamma_\text{rel}$ are the coefficients determining the absolute and the relative error contribution, relatively.
+In case of relative sensitivities $\tilde{s}_{ij} (t_m, u_n)$, it makes sence to talk also about relative covariance matrix.
+The elements of such a relative matrix can be calculated as:
+\begin{equation}
+    \tilde{\sigma}_{i}^2 (t_m, u_n) = \frac{\sigma_{i}^2 (t_m, u_n)}{y^2_i(t_m, u_n)}.
+\end{equation} 
 %
 % ########################################################################
 \subsection*{Numerical Sensitivity Calculation}
