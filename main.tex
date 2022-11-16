@@ -637,44 +637,41 @@ Even though the discretization and reduction of the whole number of possible val
 Some other optimization methods for the optimal control problem the reader can find, for example, in the papers of Banga \etal \cite{BANGA2005407, bangaImprovingFoodProcessing2003}.
 %
 % ########################################################################
-\subsubsection*{Code}
-
-\begin{minted}[autogobble=false,firstnumber=90]{python}
-    fsr = find_optimal(
-        fsm,
-        optimization_strategy="differential_evolution",
-        criterion=fisher_determinant,
-        relative_sensitivities=False,
-        maxiter=500,
-        popsize=15,
-    )
-
-    print(fsr.criterion)
-    for sol in fsr.individual_results:
-        print("Times for inputs", sol.inputs)
-        print(" >> ", sol.times)
+\subsubsection*{Optimization Code}
+The usage of these optimization methods is greatly simplified in our approach.
+\begin{minted}[linenos=false]{python}
+fsr = find_optimal(fsm)
 \end{minted}
+However, we retain their full functionality.
+Any optmization argument that could be specified to any of the aforementioned routines, can be specified here and will be applied to the optimization.
+\begin{minted}[autogobble=false,firstnumber=98]{python}
+    fsr = find_optimal(
+        # Required argument: The model to optimize
+        fsm,
+        # Our custom options
+        criterion=fisher_determinant,
+        relative_sensitivities=True,
+        # Options from scipy.optimize.differential_evolution
+        recombination=0.7,
+        mutation=(0.1, 0.8),
+        workers=-1,
+        popsize=10,
+        polish=False,
+    )
+\end{minted}
+A full list of optional arguments can be seen in the \href{https://docs.scipy.org/doc/scipy/reference/optimize.html#global-optimization}{scipy documentation}~\cite{virtanenSciPyFundamentalAlgorithms2020}.
+In addition, there are some interesting optimization options such as the optional arguments \mintinline[bgcolor=white,style=emacs]{python}{relative_sensitivities,criterion}, which are responsible for using relative sensitivities $\tfrac{dy}{dp}\tfrac{p}{y}$ and specifying the optimality criterion as explained in the previous section.
+Please view the \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{full documentation} for explanation.
+The resulting class is a \mintinline[bgcolor=white,style=emacs]{python}{FisherResult} containing all definitions, current values and information on the optimization process.
 %
 % ########################################################################
 \subsubsection*{Plotting, Json, etc.}
+Our package also provides the option to save results as a Json file and automatically plot results for the ode solutions, observables and sensitivities.
+
 \begin{minted}[autogobble=false,firstnumber=92]{python}
-    # Print the result for the criterion (default=determinant)
-    print(fsr.criterion)
-    
-    # Print time points which were chosen by optimization routine
-    for sol in fsr.individual_results:
-        print("Times for inputs", sol.inputs)
-        print(" >> ", sol.times)
-
-    # Plot all ODE results with chosen time points
-    # for different data points
-    plot_all_solutions(fsr, outdir="out")
-
-    # Dump all information into a json file
+    plot_all_observables(fsr)
+    plot_all_sensitivities(fsr)
     json_dump(fsr, "baranyi.json")
-
-    # Dumps all information to a string
-    output = json_dumps(fsr)
 \end{minted}
 %
 %
