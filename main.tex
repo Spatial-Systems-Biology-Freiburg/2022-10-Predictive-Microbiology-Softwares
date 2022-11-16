@@ -459,7 +459,7 @@ Now that we have defined the structure of our \ac{ode}, we can begin to specify 
 It is good practice, to gather such definitions in the \mintinline[bgcolor=white,style=emacs]{python}{__main__} method of our program as was done in figure~\ref{code:code_write_main_function_start}.
 We start by defining the parameters (line 59) of our ßac{ode} and afterwards the initial values of the \ac{ode} (line 62).
 Next, we want to tell the program to choose the best possible time points in the interval $t_i\in\left[t_\text{low},t_\text{high}\right]$ in the optimization routine later on.
-To do this, we write the times as a tuple with $(t_\text{low}, t_\text{high}, n_t)$ where $n_t$ is the number of time points which we want to sample (line 65).
+To do this, we write the times as a dictionary with entries \mintinline[bgcolor=white,style=emacs]{python}{{"lb":t_low, "ub":t_high, "n":n_times}} where \mintinline[bgcolor=white,style=emacs]{python}{n_times} is the number of time points which we want to sample (line 65).
 In contrast, if we wanted to specify explicit values for the time points, we would have needed to supply a list of time values or a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} directly.
 One can see this aproach when we define the inputs in line 70.
 Here, we supply a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} with explicit values, thus fixing them for the optimization routine.
@@ -473,7 +473,7 @@ Here, we supply a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} wit
         x0 = np.array([np.exp(2.36), 1 / (np.exp(2.66)-1)])
 
         # Define interval and number of sampling points for times
-        times = (0.0, 1500.0, 4)
+        times = {"lb":0.0, "ub":1500.0, "n":4}
 
         # Define explicit temperature points
         Temp_low = 4.0
@@ -504,10 +504,10 @@ Then the difference between explicit values for the temperatures and sampled one
 
     # This will sample in the interval
     inputs = [
-        (Temp_low, Temp_high, n_Temp)
+        {"lb":Temp_low, "ub":Temp_high, "n":n_Temp}
     ]
     # >>> inputs
-    # [(4.0, 8.0, 3)]
+    # [{'lb': 4.0, 'ub': 8.0, 'n': 3}]
 
 
     \end{minted}
@@ -523,7 +523,7 @@ In our code, we simply would mix explicit and sampled definitions for individual
     \begin{minted}[linenos=false]{python}
         inputs = [
             # These values will be sampled
-            (Temp_low, Temp_high, n_Temp),
+            {"lb":Temp_low, "ub":Temp_high, "n":n_Temp},
             # These are fixed
             np.array([0.4, 0.45, 0.5, 0.55])
         ]
