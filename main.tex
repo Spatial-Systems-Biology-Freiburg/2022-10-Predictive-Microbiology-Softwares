@@ -67,7 +67,7 @@ Christian Fleck\textsuperscript{1,2,3}
 \bigskip
 \textbf{1} \href{https://www.fdm.uni-freiburg.de/spatsysbio}{University of Freiburg}\\
 \textbf{2} \href{https://www.fdm.uni-freiburg.de/spatsysbio}{Freiburg Center for Data Analysis and Modeling}\\
-\textbf{3} \href{https://tsenso.com/en/}{Tsenso}\\
+\textbf{3} \href{https://tsenso.com/en/}{tsenso GmbH}\\
 \bigskip
 
 \end{flushleft}
@@ -79,7 +79,7 @@ Parameter estimation is a significant part of the model building that is always 
 Experimental design allows optimization of the observation conditions and reduces the uncertainty of the parameter estimation as well as the number of measurements required for meaningful model quantification.
 In this chapter, we provide instructions for finding the optimal experimental design using the Baranyi and Roberts growth model with the 'square root' secondary model for the maximum growth rate as a specific example from Predictive Microbiology. 
 The guidelines are supposed to clarify the procedure and make it more accessible for the reader familiar with the field of Systems Biology.
-We provide Python-written software for the \acp{ode}-based models that optimize the measurement times and inputs of the model.
+We provide Python-written software FisInMa for the \acp{ode}-based models that optimize the measurement times and inputs of the model.
 
 
 \keywords{Optimal experimental design, Parameter estimation, Fisher Information matrix, Identifiability, Uncertainty}
@@ -101,7 +101,7 @@ Based on a chosen model structure, these parameters can be estimated from the ga
 Taking into account that the real experimental data always contains measurement noise, the parameter estimates can be only provided with some uncertainty. 
 To decrease the error of the parameter values, not only enough experimental data should be gathered but the quality of this data is also pretty sufficient.
 That rises quite an important question of finding the \ac{oed} where optimized experimental conditions and/or times allow one to reduce the number of measurements without loss of information thus sparing an effort of experimenters \cite{derlindenImpactExperimentDesign2013, balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}. 
-In general, \ac{oed} can be used not only for the parameter estimation of the model but also for model discrimination to choose between different model structures \cite{kreutzSystemsBiology2009, stamatiOptimalExperimentalDesign2016}.
+In general, the Experimental Design procedure can be used not only for the parameter estimation of the model but also for model discrimination to choose between different model structures \cite{kreutzSystemsBiology2009, stamatiOptimalExperimentalDesign2016}.
 However, in this chapter, we would like to cover more deeply the methods for improving the parameter estimation of the model.
 According to this, using tools of Statistics and specifically the Fisher information, several criteria were developed to assess data quality. 
 The review of these different possible criteria the reader can find for example in works \cite{atkinsonDevelopmentsDesignExperiments1982, franceschiniModelbasedDesignExperiments2008}.
@@ -112,7 +112,7 @@ Or, for example, Balsa-Canto \etal for such bacteria growth models as Baranyi an
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.25]{Figures/scheme.png}
-    \caption{{\footnotesize The iterative process of model optimization for parameter estimation.}}
+    \caption{{\footnotesize The workflow of the iterative process of model optimization for parameter estimation.}}
     \label{fig:expdesign_scheme}
 \end{figure}
 In the beginning, we would like to briefly describe the whole iterative process of model building (see Fig. \ref{fig:expdesign_scheme}).
@@ -165,12 +165,6 @@ If line numbers are missing, these should be filled by blank lines for better re
 % ########################################################################
 \subsection*{Model Formulation}
 \subsubsection*{Theory}
-\begin{enumerate}
-    \item Define ODE, Jacobian
-    \item Which parameters are present?
-    \item Differnce between Q-Values, P-Values, Const
-\end{enumerate}
-
 The first important step a reader should do to conduct their Experimental Design is to define a model structure.
 In this chapter, we restrict ourselves to a quite popular case in Predictive Microbiology and assume that biological system is described by a system of \aclp{ode}
 \begin{equation}
@@ -180,10 +174,8 @@ In this chapter, we restrict ourselves to a quite popular case in Predictive Mic
     \label{eq:ode_general}
     \end{cases}.
 \end{equation}
-Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is time, $\mbu$ is a vector of an externally controlled inputs, $\mbp$ are the parameters of the system and $c$ are the constants.
-Here, it is important to differentiate between constants and parameters.
-The main difference is that we assume constant values to be known for sure, so they shouldn't be estimated from experimental data.
-On the other hand, parameters are the quantities of interest, and their estimation is our goal.
+Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is a time, $\mbu$ is a vector of an externally controlled inputs and $\mbp$ are the parameters of the system.
+The parameters of the system are unknown and can be estimated from the data.
 Another important choice to be done is to define the observables of the system $\mby$, which quantities and at which times $t_i$ should be measured.
 \begin{equation}
     \mby (t_i) = g(t_i, \mbx (t_i), \mbu, \mbp) + \epsilon (t_i),
@@ -201,7 +193,7 @@ The model is introduced by two state variables $\mbx = (x_1, x_2)$, where $x_1(t
     \end{cases}.
     \label{eq:ode_BaranyiRoberts}
 \end{equation}
-Here $\mu^\text{max}$ determines the maximum growth rate, and $x_1^\text{max}$ is bacteria concentration at the saturation. 
+Here $\mu^\text{max}$ determines the maximum growth rate, and $x_1^\text{max}$ is the bacteria concentration at the saturation. 
 To account for the influence of the temperature on the activity of the model, we will use the 'square root' or Ratkowsky-type model for the maximum growth rate
 \begin{equation}
     \sqrt{\mu^\text{max}} = b (T - T_\text{min}),
@@ -217,11 +209,11 @@ Based on this model, we would like to optimize the choice of measurement times a
 % ########################################################################
 \subsubsection*{Code}
 In order, to be able to solve these equations numerically, we first need to define the \ac{ode} system in python.
-As was explained in the previous sections, this system consists of the equation \ref{eq:ode_general} with initial values $t_0,x_0$.
+As was explained in the previous sections, this system consists of the equation (\ref{eq:ode_general}) with initial values $t_0,x_0$.
 Next, we need to define all numerical values which the system needs to be actually solvable.
 We distinguish between time points $t_i$ at which the result of the \ac{ode} is evaluated, inputs $u$, which alter our systems behaviour (for example Temperature, Humidity, etc.), parameters $p$, which are the quantities that we want to measure and other arguments which might be needed to solve the \ac{ode}.
-Table\ref{tab:fsm-variables} summarizes them and gives representations in the code.
-In the following, we will gradually explain how to specify all variables needed by using the example of the Baranyi-Roberts Model as given in equations \ref{eq:ode_BaranyiRoberts}.
+Table \ref{tab:fsm-variables} summarizes them and gives representations in the code.
+In the following, we will gradually explain how to specify all variables needed by using the example of the Baranyi-Roberts Model as given in equations (\ref{eq:ode_BaranyiRoberts}).
 \begin{table}[H]
     \centering
     \begin{tabular}{ccccc}
@@ -248,8 +240,8 @@ In the following, we will gradually explain how to specify all variables needed 
 \label{tab:fsm-variables}
 \end{table}
 \paragraph{Defining the \acs{ode}} First, we must define a few functions in python.
-The first function will be the right-hand side of equation \ref{eq:ode_general}, which means for the Baranyi-Roberts model, we can simply copy equation \ref{eq:ode_BaranyiRoberts} into a function.
-The complete function can be seen in figure \ref{code:code_baranyi_roberts_ode_fun}.
+The first function will be the right-hand side of equation (\ref{eq:ode_general}), which means for the Baranyi-Roberts model, we can simply copy equation (\ref{eq:ode_BaranyiRoberts}) into a function.
+The complete function can be seen in Figure \ref{code:code_baranyi_roberts_ode_fun}.
 We explain the individual steps to recreate this function.
 The order of required function arguments is fixed by the signature
 \mintinline[bgcolor=white,style=emacs]{python}{def ode_fun(t, x, u, P, ode_args)} whereas the function name can be given freely and should represent the model in which we are interested.
@@ -312,7 +304,7 @@ To do this, we need to solve the following system of the \acp{ode}:
     \end{cases}.
 \label{eq:ode_and_sensitiv}
 \end{equation} 
-However, the \ac{fim} is composed only with those sensitivity coefficients that correspond to the observables.
+The \ac{fim} is composed only with those sensitivity coefficients that correspond to the observables.
 That means that the next step is to calculate $(\mathrm{d} y_i / \mathrm{d} p_j) = s_{ij}$ at a certain times $t_m$ and input $u_n$ using the solutions of $s^x_{ij}$:
 \begin{equation}
     s_{ij} (t_m, u_n) = \sum_k \frac{\partial g_i}{\partial x_k}\bigg|_{t_m, u_n} s_{kj}^x (t_m, u_n) + \frac{\partial g_i}{\partial p_j}\bigg|_{t_m, u_n}.
@@ -381,7 +373,7 @@ The elements of such a relative matrix can be calculated as:
 %
 % ########################################################################
 \subsection*{Numerical Sensitivity Calculation}
-To calculate the sensitivities numerically as just explained, we additionally need to supply the derivatives of $f$ with respect to the parameters and state variables used in equation \ref{eq:observ_sensitivities}.
+To calculate the sensitivities numerically as just explained, we additionally need to supply the derivatives of $f$ with respect to the parameters and state variables used in equation (\ref{eq:observ_sensitivities}).
 Thus, we need to define functions for these derivatives as well.
 Firstly, we calculate the mathematical derivatives $\partial f_i/\partial p_j$ and $\partial f_i/\partial x_j$ and then implement the functions.
 In our case, the first component of the Baranyi-Roberts model reads
@@ -410,7 +402,7 @@ Similarly, the derivatives $\partial f/\partial x_i$ are
     % TODO
 \end{alignat}
 The readers are encouraged to calculate the components $\partial f_2/\partial p_i$ and $\partial f_2/\partial x_i$ by themselves since these are still missing for a complete set.
-Assuming, we carried out the necessary mathematical derivation, the implemented functions in python can be seen in figure~\ref{code:code_baranyi_roberts_ode_fun_derivatives}.
+Assuming, we carried out the necessary mathematical derivation, the implemented functions in python can be seen in Figure~\ref{code:code_baranyi_roberts_ode_fun_derivatives}.
 \begin{code}[H]
     \begin{minted}[firstnumber=20]{python}
     def ode_dfdp(t, x, u, p, ode_args):
@@ -456,8 +448,8 @@ Assuming, we carried out the necessary mathematical derivation, the implemented 
 % ########################################################################
 \subsection*{Define numerical values}
 Now that we have defined the structure of our \ac{ode}, we can begin to specify numerical values.
-It is good practice, to gather such definitions in the \mintinline[bgcolor=white,style=emacs]{python}{__main__} method of our program as was done in figure~\ref{code:code_write_main_function_start}.
-We start by defining the parameters (line 59) of our ßac{ode} and afterwards the initial values of the \ac{ode} (line 62).
+It is good practice, to gather such definitions in the \mintinline[bgcolor=white,style=emacs]{python}{__main__} method of our program as was done in Figure~\ref{code:code_write_main_function_start}.
+We start by defining the parameters (line 59) of our \ac{ode} and afterwards the initial values of the \ac{ode} (line 62).
 Next, we want to tell the program to choose the best possible time points in the interval $t_i\in\left[t_\text{low},t_\text{high}\right]$ in the optimization routine later on.
 To do this, we write the times as a dictionary with entries \mintinline[bgcolor=white,style=emacs]{python}{{"lb":t_low, "ub":t_high, "n":n_times}} where \mintinline[bgcolor=white,style=emacs]{python}{n_times} is the number of time points which we want to sample (line 65).
 In contrast, if we wanted to specify explicit values for the time points, we would have needed to supply a list of time values or a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} directly.
@@ -517,7 +509,7 @@ Then the difference between explicit values for the temperatures and sampled one
 This distinction can be done for individual inputs as well.
 Suppose, we have a system with temperatures and humidity as input variables.
 We could decide to pick the best temperature points, but fix the humidity explicitly.
-This can be beneficial, if one of the variables can be controlled (ie. temperature in the lab) but the other is more difficult to fix (ie. humidity).
+This can be beneficial, if one of the variables can be controlled (i.e. temperature in the lab) but the other is more difficult to fix (ie. humidity).
 In our code, we simply would mix explicit and sampled definitions for individual inputs (see code sample~\ref{code:mix_sampling_explicit}).
 \begin{code}[h]
     \begin{minted}[linenos=false]{python}
@@ -580,7 +572,7 @@ Some of the most popular criteria we would like to mention:
     \item \textbf{D-optimality criterion} maximizes the determinant $\det (F)$ of the \ac{fim}. 
     In parameter space it means that we minimize the volume of so-called confidence region, or geometrical mean of the errors.
     The confidence region at a confidence level of $\alpha$ can be interpreted as there is a $\alpha \cdot 100 \%$ chance that the best parameter fit will belong to this area in case of repeating the experiment and estimations multiple times.
-    It is usually presented as a confidence ellipsoid (see Fig. ...).
+    It is usually presented as a confidence ellipsoid.
     D-optimality is the most widely used criterion and is suitable even if the parameters have different dimensionalities.
     
     \item \textbf{E-optimality criterion} concentrates on maximizing the minimal eigenvalue $\lambda_{\min}$ of the \ac{fim}, which is the same as reducing only the largest estimation error.
@@ -679,16 +671,9 @@ Our package also provides the option to save results as a Json file and automati
 % ########################################################################
 % ########################################################################
 \section*{Conclusion}
-\begin{enumerate}
-    \item Plots: Optimized time points
-    \item Observable vs number of measurements
-    \item Performance (scaling, limitations, etc.)
-    \item 
-\end{enumerate}
-
 Summarizing the above tutorial, we would like to present the resulting output of our package.
 For this, consider the following example.
-One wants to study a real-life system and describe it with the Baranyi and Roberts model \ref{eq:ode_BaranyiRoberts},\ref{eq:RatkowskyModel}.
+One wants to study a real-life system and describe it with the Baranyi and Roberts model (\ref{eq:ode_BaranyiRoberts},\ref{eq:RatkowskyModel}).
 However, experimenters claim that they can conduct only one experimental series for one constant temperature value and measure the first component of the state variable vector $y = x_1$.
 The refrigerating chambers available in operation can maintain the temperature only in the range from 3 to 12 degrees.
 After some literature search, it was found that for the similar systems the approximate parameter values are $x_1^\text{max}=10^8$, $b=0.2$, $T_\text{min}=1.0$,
@@ -700,7 +685,7 @@ To solve this problem, we performed the Experimental Design using the D-optimali
 The resulting \ac{oed} is presented in Fig. \ref{fig:baranyi_roberts_observable},\ref{fig:baranyi_roberts_sensitivities}
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.43]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_000_x_00.pdf}
+    \includegraphics[scale=0.4]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_000_x_00.pdf}
     \caption{{\footnotesize The example of the output of the Experimental Design optimization procedure for the Baranyi and Roberts model. 
     The line plot presents the model solution for the observable, and the scatter plot determines the time points chosen by Experimental Design.}}
     \label{fig:baranyi_roberts_observable}
@@ -711,24 +696,35 @@ The times 2.9 and 3.0 sample the lag-phase, where the growth still did not start
 The value 6.8 characterizes the growth rate of the model.
 Finally, the measurement times 9.9 and 10.0 are responsible for the saturation phase $x_1^\text{max}$.
 \begin{figure}[H]
-    \begin{subfigure}{.48\textwidth}
+    \begin{subfigure}{.9\textwidth}
       \centering
-      \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_000_x_00_p_00.pdf}
+      \includegraphics[scale=0.35]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_000_x_00_p_00.pdf}
     \end{subfigure}
-    \begin{subfigure}{.48\textwidth}
+    \begin{subfigure}{.9\textwidth}
       \centering
-      \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_000_x_00_p_01.pdf}
+      \includegraphics[scale=0.35]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_000_x_00_p_01.pdf}
     \end{subfigure}
 
-    \begin{subfigure}{.48\textwidth}
+    \begin{subfigure}{.9\textwidth}
         \centering
-        \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_000_x_00_p_02.pdf}
+        \includegraphics[scale=0.35]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_000_x_00_p_02.pdf}
     \end{subfigure}
     \caption{{\footnotesize The example of the sensitivities calculated for the Experimental Design optimization procedure for the Baranyi and Roberts model.
     The line plots present the model solution for the sensitivitied, and the scatter plots determine the time points chosen by Experimental Design.}} 
     \label{fig:baranyi_roberts_sensitivities}
     \end{figure}
 
+Based on the results of the Experimental Design, one may claim that the optimal number of measurement times is 3.
+Indeed, consider how the determinant increases with the number of measurement times in the logarithmic scale (see Fig. \ref{fig:det_vs_ntimes}).
+It can be noticed that the slope of the curve between values 2 and 3 is much more significant (approximately fifteen orders of magnitude) than in the case of the further increase of measurement points.
+For a higher number of times, informational profit stays at the same order of magnitude.
+As a result, the researcher can significantly reduce the experimental workload without a noticeable loss of information.
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{Figures/det_vs_ntimes.pdf}
+    \caption{{\footnotesize The determinant of the Fisher information matrix as a function of the number of measurement times.}}
+    \label{fig:det_vs_ntimes}
+\end{figure}
 %
 %
 %
