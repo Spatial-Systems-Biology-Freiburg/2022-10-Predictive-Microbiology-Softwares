@@ -691,7 +691,7 @@ Some other optimization methods for the optimal control problem the reader can f
 
 Summarizing the above tutorial, we would like to present the resulting output of our package.
 For this, consider the following example.
-One wants to study a real-life system and describe it with the Baranyi and Roberts model \ref{eq:ode_BaranyiRoberts, eq:RatkowskyModel}.
+One wants to study a real-life system and describe it with the Baranyi and Roberts model \ref{eq:ode_BaranyiRoberts},\ref{eq:RatkowskyModel}.
 However, experimenters claim that they can conduct only one experimental series for one constant temperature value and measure the first component of the state variable vector $y = x_1$.
 The refrigerating chambers available in operation can maintain the temperature only in the range from 3 to 12 degrees.
 After some literature search, it was found that for the similar systems the approximate parameter values are $x_1^\text{max}=10^8$, $b=0.2$, $T_\text{min}=1.0$,
@@ -700,7 +700,7 @@ Moreover, all the measurements contain constant error $\gamma_\text{abs}=0.3$ an
 And the task is to propose at which temperature and times it will be better to measure from the modeling point of view.
 
 To solve this problem, we performed the Experimental Design using the D-optimality criterion, relative sensitivities, and the differential evolution optimization method.
-The resulting \ac{oed} is presented in Fig. \ref{fig:baranyi_roberts_observable, fig:baranyi_roberts_sensitivities}
+The resulting \ac{oed} is presented in Fig. \ref{fig:baranyi_roberts_observable},\ref{fig:baranyi_roberts_sensitivities}
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.43]{Figures/Observables_Result_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_6times_1temps_v20_000_x_00.pdf}
