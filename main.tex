@@ -131,6 +131,7 @@ This tutorial expects a working installation of the popular scripting language P
 For installation instructions, please refer to the website \href{https://www.python.org/downloads/}{python.org}.
 We also expect users, to be able to write, execute and display output of scripts.
 This tutorial can also be followed using jupyter notebooks.
+
 We have developed \mintinline[bgcolor=white,style=emacs]{bash}{FisInMa}, which is a set of tools to calculate the Sensitivity and Fischer Information Matrix and do parameter space exploration in order to find optimal results.
 Users can obtain it by installing \mintinline[bgcolor=white,style=emacs]{bash}{FisInMa} from \href{https://pypi.org/project/FisInMa/0.0.1/}{pypi.org}.
 The python website has guides for installing packages \href{https://packaging.python.org/en/latest/tutorials/installing-packages/}{packaging.python.org/}.
@@ -208,10 +209,10 @@ Based on this model, we would like to optimize the choice of measurement times a
 %
 % ########################################################################
 \subsubsection*{Code}
-In order, to be able to solve these equations numerically, we first need to define the \ac{ode} system in python.
+In order to be able to solve these equations numerically, we first need to define the \ac{ode} system in python.
 As was explained in the previous sections, this system consists of the equation (\ref{eq:ode_general}) with initial values $t_0,x_0$.
-Next, we need to define all numerical values which the system needs to be actually solvable.
-We distinguish between time points $t_i$ at which the result of the \ac{ode} is evaluated, inputs $u$, which alter our systems behaviour (for example Temperature, Humidity, etc.), parameters $p$, which are the quantities that we want to measure and other arguments which might be needed to solve the \ac{ode}.
+Next, we need to define all numerical values present in the system.
+We distinguish between time points $t_i$ at which the result of the \ac{ode} is evaluated, inputs $u$, which alter the behaviour of our system (for example temperature, humidity, etc.), parameters $p$, which are the quantities that we want to measure and other arguments which might be needed to solve the \ac{ode}.
 Table \ref{tab:fsm-variables} summarizes them and gives representations in the code.
 In the following, we will gradually explain how to specify all variables needed by using the example of the Baranyi-Roberts Model as given in equations (\ref{eq:ode_BaranyiRoberts}).
 \begin{table}[H]
@@ -247,9 +248,9 @@ The order of required function arguments is fixed by the signature
 \mintinline[bgcolor=white,style=emacs]{python}{def ode_fun(t, x, u, P, ode_args)} whereas the function name can be given freely and should represent the model in which we are interested.
 Since the state variable \mintinline[bgcolor=white,style=emacs]{python}{x} is a $2D$ vector, we can use python notation to unpack this vector to two individual variables
 \mintinline[bgcolor=white,style=emacs]{python}{(x1, x2) = x}.
-In General, we can have multiple inputs, which is why \mintinline[bgcolor=white,style=emacs]{python}{u} is also a vector and needs to be unpacked in order to use it directly \mintinline[bgcolor=white,style=emacs]{python}{(Temp,) = u}.
+In general, we can have multiple inputs, which is why \mintinline[bgcolor=white,style=emacs]{python}{u} is also a vector and needs to be unpacked in order to use it directly \mintinline[bgcolor=white,style=emacs]{python}{(Temp,) = u}.
 The same procedure is carried out for the parameters \mintinline[bgcolor=white,style=emacs]{python}{(x_max, b, Temp_min) = p}.
-We can now do some mathematical calculation of intermediate values that we will use in the final output.
+We can now do some mathematical calculations of intermediate values that we will use in the final output.
 In our example, we calculate the maximum growth rate via \mintinline[bgcolor=white,style=emacs]{python}{mu_max = b**2 * (Temp - Temp_min)**2}.
 The result of equation \ref{eq:ode_BaranyiRoberts} is then given by \mintinline[bgcolor=white,style=emacs]{python}{mu_max * (x2/(x2 + 1)) * (1 - x1/x_max) * x1} and 
 \mintinline[bgcolor=white,style=emacs]{python}{mu_max * x2} respectively.
@@ -509,7 +510,7 @@ Then the difference between explicit values for the temperatures and sampled one
 This distinction can be done for individual inputs as well.
 Suppose, we have a system with temperatures and humidity as input variables.
 We could decide to pick the best temperature points, but fix the humidity explicitly.
-This can be beneficial, if one of the variables can be controlled (i.e. temperature in the lab) but the other is more difficult to fix (ie. humidity).
+This can be beneficial, if one of the variables can be controlled (i.e. temperature in the lab) but the other is more difficult to fix (i.e. humidity).
 In our code, we simply would mix explicit and sampled definitions for individual inputs (see code sample~\ref{code:mix_sampling_explicit}).
 \begin{code}[h]
     \begin{minted}[linenos=false]{python}
