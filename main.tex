@@ -754,6 +754,72 @@ As a result, the researcher can significantly reduce the experimental workload w
     \caption{{\footnotesize The determinant of the Fisher information matrix as a function of the number of measurement times for the Experimental Design consisted of two measured temperatures.}}
     \label{fig:det_vs_ntimes}
 \end{figure}
+
+\section*{Two-species resource competition}
+For the second example we extend the previous example of bacteria growth to the system where two species are present.
+Moreover, these species interact with each other due to competition over the common resource.
+Analogously to the previous example, denote concentrations of two different species as $x_1$ and $y_1$.
+Then the system can be described by the following system of \acp{ode}:
+\begin{equation}
+    \begin{cases}
+        \dot x_1 = \alpha_x R x_1 \\
+        \dot y_1 = \alpha_y R y_1
+    \end{cases}
+    \label{eq:Lotka_Volterra_2species}
+\end{equation}
+where $\alpha_x, \alpha_y$ are the time and temperature dependent growth rates for population $x_1$ and $y_1$, respectively.
+The resource pool concentration $R$ change with time can be described via
+\begin{equation}
+    R = 1 - \frac{x_1 + y_1}{n^\text{max}}
+    \label{eq:reource_pool}
+\end{equation}  
+where $n^\text{max}$ is the capacity of the resource pool.
+Moreover, according to the Baranyi and Roberts primary model with Ratkowsky-type secondary model, the growth rates are described as
+\begin{equation}
+    \alpha_x (t, T) = b_x^2 (T - T_{\text{min}, x})^2 \frac{x_2(t)}{x_2(t) + 1}
+    \label{eq:growth_rate_2species}
+\end{equation}
+Combining equations (\ref{eq:Lotka_Volterra_2species}, \ref{eq:reource_pool}, \ref{eq:growth_rate_2species}), we get the system of four differential equations:
+\begin{equation}
+    \begin{cases}
+        \dot x_1 = b_x^2 (T - T_{\text{min}, x})^2 \frac{x_2}{x_2 + 1} x_1 (1 - \frac{x_1 + y_1}{n^\text{max}})\\
+        \dot x_2 = b_x^2 (T - T_{\text{min}, x})^2 x_2 \\
+        \dot y_1 = b_y^2 (T - T_{\text{min}, y})^2 \frac{y_2}{y_2 + 1} y_1 (1 - \frac{x_1 + y_1}{n^\text{max}})\\
+        \dot y_2 = b_y^2 (T - T_{\text{min}, y})^2 y_2 \\
+    \end{cases}
+    \label{eq:model_2species_resource}
+\end{equation}
+where $x_2, y_2$ are the physiological states of the species $x_1$ and $y_1$, respectively.
+This system is described with five different parameters with the following values: $(n^\text{max}, b_x, T_{\text{min}, x}, b_y, T_{\text{min}, y}) = (10^8, 0.1, 1.0, 0.3, 1.0)$.
+The initial values for two species are $(x_{10}, x_{20}, y_{10}, y_{20}) = (10^5, 0.1, 10^3, 0.1)$. 
+Other optimization arguments were taken the same as in previous example to get the new Optimal Experimental Design for shown in Fig. \ref{fig:baranyi_roberts_2species_observable}.
+\begin{figure}[H]
+    \begin{subfigure}{.9\textwidth}
+        \centering
+        \includegraphics[scale=0.35]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_00.pdf}
+      \end{subfigure}    
+      \begin{subfigure}{.9\textwidth}
+        \centering
+        \includegraphics[scale=0.35]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_01.pdf}
+      \end{subfigure}
+    \end{figure}%
+    \begin{figure}[H]\ContinuedFloat      
+      \begin{subfigure}{.9\textwidth}
+        \centering
+        \includegraphics[scale=0.35]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_00.pdf}
+      \end{subfigure}      
+      \begin{subfigure}{.9\textwidth}
+        \centering
+        \includegraphics[scale=0.35]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_01.pdf}
+      \end{subfigure}   
+    \caption{{\footnotesize The Optimal Experimental Design for the Baranyi and Roberts model with two different species. 
+    The line plot presents the model solution for the observable, and the scatter plot determines the time points chosen by Experimental Design.}}
+    \label{fig:baranyi_roberts_2species_observable}
+\end{figure}
+The presented Design shows that the least needed number of experiments is two with temperatures of 4.6 and 12.0.
+Here in each experiment two observables were measured that correspond to the concentrations of two bacteria types.
+For the first temperature one timepoint is needed while for the second one at least two measurement times were chosen.
+With these experimental conditions the system is identifiable so the date is enough to perform parameter estimation.
 %
 %
 %
