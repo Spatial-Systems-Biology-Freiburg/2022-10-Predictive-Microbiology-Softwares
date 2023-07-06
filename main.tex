@@ -78,7 +78,7 @@ Parameter estimation is a significant part of the model building that is always 
 Experimental design allows optimization of the observation conditions and reduces the uncertainty of the parameter estimation as well as the number of measurements required for meaningful model quantification.
 In this chapter, we provide instructions for finding the optimal experimental design using the Baranyi and Roberts growth model with the 'square root' secondary model for the maximum growth rate as a specific example from Predictive Microbiology. 
 The guidelines are supposed to clarify the procedure and make it more accessible for the reader familiar with the field of Systems Biology.
-We provide Python-written software FisInMa for the \acp{ode}-based models that optimize the measurement times and inputs of the model.
+We provide Python-written software Fishi for the \acp{ode}-based models that optimize the measurement times and inputs of the model.
 
 
 \keywords{Optimal experimental design, Parameter estimation, Fisher Information matrix, Identifiability, Uncertainty}
@@ -131,18 +131,18 @@ For installation instructions, please refer to the website \href{https://www.pyt
 We also expect users, to be able to write, execute and display output of scripts.
 This tutorial can also be followed using jupyter notebooks.
 
-We have developed \mintinline[bgcolor=white,style=emacs]{bash}{FisInMa}, which is a set of tools to calculate the Sensitivity and Fischer Information Matrix and do parameter space exploration in order to find optimal results.
-Users can obtain it by installing \mintinline[bgcolor=white,style=emacs]{bash}{FisInMa} from \href{https://pypi.org/project/FisInMa/0.0.1/}{pypi.org}.
+We have developed \mintinline[bgcolor=white,style=emacs]{bash}{Fishi}, which is a set of tools to calculate the Sensitivity and Fischer Information Matrix and do parameter space exploration in order to find optimal results.
+Users can obtain it by installing \mintinline[bgcolor=white,style=emacs]{bash}{Fishi} from \href{https://pypi.org/project/Fishi/0.0.1/}{pypi.org}.
 The python website has guides for installing packages \href{https://packaging.python.org/en/latest/tutorials/installing-packages/}{packaging.python.org/}.
 Most Unix-Based systems (eg. GNU/Linux) and Mac-OS can use \mintinline[bgcolor=white,style=emacs]{bash}{pip}
 \begin{minted}[bgcolor=white]{bash}
-pip install FisInMa
+pip install Fishi
 \end{minted}
 or \mintinline[bgcolor=white,style=emacs]{bash}{conda} to install the desired package.
 \begin{minted}[bgcolor=white]{bash}
-conda install FisInMa
+conda install Fishi
 \end{minted}
-The \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{Documentation} of the package is continuously updated.
+The \href{https://spatial-systems-biology-freiburg.github.io/Fishi/}{Documentation} of the package is continuously updated.
 After the installation of the package is complete, we open a file with a text editor of choice and simply start writing code.
 We begin by writing a so-called she-bang which is responsible to signalize that this file is to be executed with python.
 Afterwards, we import the needed packages.
@@ -151,14 +151,14 @@ Afterwards, we import the needed packages.
     #!/usr/bin/env python3
 
     import numpy as np
-    from FisInMa import *
+    from Fishi import *
     \end{minted}
-    \caption{Import statements to use FisInMa}
+    \caption{Import statements to use Fishi}
     \label{code:import_statements}
-    % TODO make this FisInMa into a link
+    % TODO make this Fishi into a link
 \end{code}
 This will serve as the starting point for our script.
-In the following, we will append more code to it and utilize the methods developed in FisInMa~\cite{}.% TODO add citation which points to github repository
+In the following, we will append more code to it and utilize the methods developed in Fishi~\cite{}.% TODO add citation which points to github repository
 If line numbers are missing, these should be filled by blank lines for better readability.
 %
 %
@@ -553,7 +553,7 @@ However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherMo
 There are some optional arguments which can be set if desired ...
 % TODO
 % TODO
-For a full list of optional arguments, we refer to the \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{documentation} of the package.
+For a full list of optional arguments, we refer to the \href{https://spatial-systems-biology-freiburg.github.io/Fishi/}{documentation} of the package.
 %
 % ########################################################################
 \subsubsection*{Identifiability}
@@ -661,7 +661,7 @@ Any optmization argument that could be specified to any of the aforementioned ro
 \end{minted}
 A full list of optional arguments can be seen in the \href{https://docs.scipy.org/doc/scipy/reference/optimize.html#global-optimization}{scipy documentation}~\cite{virtanenSciPyFundamentalAlgorithms2020}.
 In addition, there are some interesting optimization options such as the optional arguments \mintinline[bgcolor=white,style=emacs]{python}{relative_sensitivities,criterion}, which are responsible for using relative sensitivities $\tfrac{dy}{dp}\tfrac{p}{y}$ and specifying the optimality criterion as explained in the previous section.
-Please view the \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{full documentation} for explanation.
+Please view the \href{https://spatial-systems-biology-freiburg.github.io/Fishi/}{full documentation} for explanation.
 The resulting class is a \mintinline[bgcolor=white,style=emacs]{python}{FisherResult} containing all definitions, current values and information on the optimization process.
 %
 % ########################################################################

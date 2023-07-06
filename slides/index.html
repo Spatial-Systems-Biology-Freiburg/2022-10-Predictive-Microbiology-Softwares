@@ -242,8 +242,8 @@
 				<!-- IMPLEMENTATION -->
 				<section data-markdown>
 					## Implementation
-					We Developed [FisInMa](https://pypi.org/project/FisInMa/): A python package for numerical optimization of general ODE systems.
-					- [Documentation](https://spatial-systems-biology-freiburg.github.io/FisInMa/) is available
+					We Developed [Fishi](https://pypi.org/project/Fishi/): A python package for numerical optimization of general ODE systems.
+					- [Documentation](https://spatial-systems-biology-freiburg.github.io/Fishi/) is available
 					- Continuous integration via Github
 					- Automated Testing ($\approx 90\\%$ Test Coverage)
 				</section>
@@ -358,7 +358,7 @@
 						- Find the optimal configuration for every value that is sampled
 						
 						```python
-							fsm = FisInMa.FisherModel(
+							fsm = Fishi.FisherModel(
 								ode_rhs,
 								ode_dfdx,
 								ode_dfdp,
@@ -370,7 +370,7 @@
 								constants
 							)
 						
-						fsr = FisInMa.find_optimal(fsm)
+						fsr = Fishi.find_optimal(fsm)
 						```
 
 						---
@@ -378,16 +378,16 @@
 						## Optimization
 						- By default use `scipy.optimize.differential_evolution`
 						```python
-						fsr = FisInma.find_optimal(fsm)
+						fsr = Fishi.find_optimal(fsm)
 						```
 						- We can pass parameters directly to `differential_evolution`
 						```python
-						fsr = FisInMa.find_optimal(fsm, maxiter=100, workers=42)
+						fsr = Fishi.find_optimal(fsm, maxiter=100, workers=42)
 						```
 						- Other implemented methods
 						```python
-						fsr = FisInMa.find_optimal(fsm, method="scipy_brute_force")
-						fsr = FisInMa.find_optimal(fsm, method="scipy_basinhopping")
+						fsr = Fishi.find_optimal(fsm, method="scipy_brute_force")
+						fsr = Fishi.find_optimal(fsm, method="scipy_basinhopping")
 						```
 						- Result contains all information about the optimal solution
 						```python
@@ -403,7 +403,7 @@
 
 						## Plotting
 						```python
-						FisInMa.plot_all_odes(fsr)
+						Fishi.plot_all_odes(fsr)
 						```
 						- Still lacking functionality
 							- but simple to develop
