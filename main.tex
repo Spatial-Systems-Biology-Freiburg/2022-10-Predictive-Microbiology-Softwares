@@ -74,11 +74,11 @@ Christian Fleck\textsuperscript{1,2}
 % ########################################################################
 \section*{Abstract}
 \linenumbers
-The aim of predictive microbiology is to provide tools and methods for predicting the growth, survival, and death of microorganisms in different food matrices, under a range of environmental conditions. 
+The aim of predictive microbiology is to provide tools and methods for predicting the growth, survival, and death of microorganisms in different food matrices under a range of environmental conditions. 
 The parametrised mathematical models need to be calibrated using dedicated experimental data. 
-To efficiently  plan experiments model-based experimental design is used. 
+To efficiently plan experiments model-based experimental design is used. 
 In this chapter, we explain model-based experimental and provide step-by-step instructions for finding the optimal design using the well-known Baranyi\&Roberts growth model as an example. 
-To make this chapter self-consistence we provide a Python software {\it eDPM} for Ordinary Differential Equation-based models.\\
+To make this chapter self-consistent we provide a Python software {\it eDPM} for \ac{ode} -based models.\\
 \keywords{Optimal experimental design, Parameter estimation, Fisher Information matrix, Identifiability, Uncertainty}
 
 %
@@ -129,7 +129,7 @@ To test the scheme one can also perform numerical experiments and obtain {\it in
 % ########################################################################
 % ########################################################################
 \section*{Materials and Methods}
-There are several software packages available for model-based experimental design \cite{}. 
+There are several software packages available for model-based experimental design~\cite{balsa-canto_amigo2_2016, zhang_optimal_2018, busetto_near-optimal_2013}. 
 These packages comprise a large number of tools and due to this require some time to understand how to use them. to make this tutorial self-contained, we developed \mintinline[bgcolor=white,style=emacs]{bash}{eDPM} (Experimental Design for Predictive Microbiology), which is a set of tools to calculate the Sensitivity and Fischer Information Matrix and do parameter space exploration in order to find optimal results. 
 We expect a working installation of the popular scripting language Python $\geq3.7$~\cite{rossumPythonLanguageReference2010}.
 For installation instructions, please refer to the website \href{https://www.python.org/downloads/}{python.org}. 
@@ -137,7 +137,7 @@ We also expect users, to be able to write, execute and display output of scripts
 This tutorial can also be followed using jupyter notebooks \cite{jupyterteamJupyterNotebook}.
 Users can obtain it by installing \mintinline[bgcolor=white,style=emacs]{bash}{eDPM} from \href{https://pypi.org/project/FisInMa/0.0.1/}{pypi.org}.
 The python website has guides for installing packages \href{https://packaging.python.org/en/latest/tutorials/installing-packages/}{packaging.python.org/}.
-Most Unix-Based systems (eg. GNU/Linux) and Mac-OS can use \mintinline[bgcolor=white,style=emacs]{bash}{pip}
+Most Unix-Based systems (e.g. GNU/Linux) and Mac-OS can use \mintinline[bgcolor=white,style=emacs]{bash}{pip}
 \begin{minted}[bgcolor=white]{bash}
 pip install eDPM
 \end{minted}
@@ -145,7 +145,7 @@ or \mintinline[bgcolor=white,style=emacs]{bash}{conda} to install the desired pa
 \begin{minted}[bgcolor=white]{bash}
 conda install eDPM
 \end{minted}
-The \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{Documentation} of the package is continuously updated.
+The \href{https://spatial-systems-biology-freiburg.github.io/Fishi/}{Documentation} of the package is continuously updated.
 After the installation of the package is complete, we open a file with a text editor of choice and simply start writing code.
 We begin by writing a so-called she-bang which is responsible to signalize that this file is to be executed with python.
 Afterwards, we import the needed packages.
@@ -161,7 +161,7 @@ Afterwards, we import the needed packages.
     % TODO make this FisInMa into a link
 \end{code}
 This will serve as the starting point for our script. 
-In the following, we will append more code to it and utilise the methods developed in eDPM~\cite{}.
+In the following, we will append more code to it and utilise the methods developed in eDPM~\cite{edpm2023}.
 % TODO add citation which points to github repository
 If line numbers are missing, these should be filled by blank lines for better readability.
 %
