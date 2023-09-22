@@ -306,8 +306,8 @@ The method of maximum likelihood consist in searching for the parameter vector $
 % ########################################################################
 \subsection*{Experimental Design}
 After defining the model and setting the initial parameter vector $\mbp_0$ we can proceed to the Experimental Design. 
-In essence Experimental Design comprises maximizing an objective function depending on the model, the initial parameter vector $\mbp_0$, external input $\mbu$ into the system, and a set of discrete observation times $t_i$ at which the potential measurements should be performed. 
-The objective function needs to quantifies the information the observation $\mby$ has about the parameter vector $\mbp$. 
+In essence, Experimental Design comprises maximizing an objective function depending on the model, the initial parameter vector $\mbp_0$, external input $\mbu$ into the system, and a set of discrete observation times $t_i$ at which the potential measurements should be performed. 
+The objective function needs to quantify the information the observation $\mby$ has about the parameter vector $\mbp$. 
 A common choice here is constructing objective functions based on the \ac{fim} \cite{lyTutorialFisher2017}. 
 According to the so-called 'Cramer-Rao inequality', the Fisher information is inversely proportional to the minimal squared estimation error \cite{friedenExploratoryData2010}. 
 Due to this relationship maximization of the information leads to a minimization of the variance or uncertainty in the parameters. 
@@ -365,7 +365,7 @@ This matrix we will use to directly calculate the \ac{fim} via equation:
 \begin{equation}
     F = S^T Q^{-1} S,
 \end{equation}
-where $Q$ is the covariance matrix of measurement error \cite{}. 
+where $Q$ is the covariance matrix of measurement error~\cite{a_l_lloyd_sensitivity_2009, balsa-cantoComputationalProcedures2008}. 
 If the measurements are independent, then only the diagonal elements of the matrix are non-zero: 
 \begin{equation}
     Q = 
@@ -391,7 +391,7 @@ In case one uses relative sensitivities $\tilde{s}_{ij} (t_m, u_n)$, one needs t
 \begin{equation}
     \tilde{\sigma}_{i}^2 (t_m, u_n) = \frac{\sigma_{i}^2 (t_m, u_n)}{y^2_i(t_m, u_n)}.
 \end{equation} 
-Note that this approach is heuristic and the matrix $F$ is not the Fisher information matrix \cite{}.
+Note that this approach is heuristic and the matrix $F$ is not the Fisher information matri~\cite{versyckIntroducingOptimal1999, banks_generalized_2010}.
 %
 % ########################################################################
 \subsection*{Numerical Sensitivity Calculation}
@@ -406,8 +406,8 @@ The first component of the Baranyi-Roberts model reads:
 where $\sqrt{\mu^\text{max}}=b(T-T_\text{min})$. It follows:
 \begin{alignat}{4}
     \frac{\partial\mu^\text{max}}{\partial p_1} &= 0\\
-    \frac{\partial\mu^\text{max}}{\partial p_2} &= 2b(T-T_\text{min})^2 &= \frac{2\mu^\text{max}}{b}\\
-    \frac{\partial\mu^\text{max}}{\partial p_3} &= -2b^2(T-T_\text{min}) &= \frac{2\mu^\text{max}}{T-T_\text{min}}
+    \frac{\partial\mu^\text{max}}{\partial p_2} &= 2b(T-T_\text{min})^2 &=& \frac{2\mu^\text{max}}{b}\\
+    \frac{\partial\mu^\text{max}}{\partial p_3} &= -2b^2(T-T_\text{min}) &=& \frac{2\mu^\text{max}}{T-T_\text{min}}
 \end{alignat}
 and consequently:
 \begin{alignat}{7}
@@ -423,7 +423,7 @@ Similarly, the derivatives $\partial f/\partial x_i$ are given by:
     % TODO
 \end{alignat}
 The readers are encouraged to calculate the components $\partial f_2/\partial p_i$ and $\partial f_2/\partial x_i$ as an exercise. 
-The resulting implemented functions in python can be seen in Figure~\ref{code:code_baranyi_roberts_ode_fun_derivatives}.
+The resulting implemented functions in python can be seen in Code Sample~\ref{code:code_baranyi_roberts_ode_fun_derivatives}.
 \begin{code}[H]
     \begin{minted}[firstnumber=20]{python}
     def ode_dfdp(t, x, u, p, ode_args):
