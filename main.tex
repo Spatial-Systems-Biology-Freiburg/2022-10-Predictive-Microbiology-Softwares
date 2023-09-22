@@ -316,9 +316,9 @@ In the following we explain one of the ways to calculate the \acl{fim} for an \a
 %
 % ########################################################################
 \subsubsection*{Sensitivity Calculation}
-An important ingredient into the \ac{fim} are local sensitivities. 
-Assume that functions $f$ and $g$ are differentiable functions with respect to the state variables $\mbx$ and parameters $\mbp$. 
-The local sensitivities are defined by $s^x_{ij} = (\mathrm{d} x_i / \mathrm{d} p_j )$. 
+An important ingredient into the \ac{fim} are local sensitivities.
+Assume that functions $f$ and $g$ are differentiable functions with respect to the state variables $\mbx$ and parameters $\mbp$.
+The local sensitivities are defined by $s^x_{ij} = (\mathrm{d} x_i / \mathrm{d} p_j )$.
 These can be calculated using an enhanced system of the \acp{ode}:
 \begin{equation}
     \begin{cases}
@@ -327,19 +327,19 @@ These can be calculated using an enhanced system of the \acp{ode}:
     \end{cases}.
 \label{eq:ode_and_sensitiv}
 \end{equation} 
-For the \ac{fim} we need the sensitivities of observables functions $(\mathrm{d} y_i / \mathrm{d} p_j) = s_{ij}$. 
+For the \ac{fim} we need the sensitivities of observables functions $(\mathrm{d} y_i / \mathrm{d} p_j) = s_{ij}$.
 We determine these at a certain times $t_m$ and input $u_n$ using the solutions of $s^x_{ij}$:
 \begin{equation}
     s_{ij} (t_m, u_n) = \sum_k \frac{\partial g_i}{\partial x_k}\bigg|_{t_m, u_n} s_{kj}^x (t_m, u_n) + \frac{\partial g_i}{\partial p_j}\bigg|_{t_m, u_n}.
 \label{eq:observ_sensitivities}
 \end{equation}
 
-In the case the parameters are of very different scale (e.g., on the second and on the day scale), it may be advisable to use the relative or normalised sensitivities to improve not the absolute but the relative accuracy of the parameter estimates.: 
+In the case the parameters are of very different scale (e.g., on the second and on the day scale), it may be advisable to use the relative or normalised sensitivities to improve not the absolute but the relative accuracy of the parameter estimates.:
 \begin{equation}
     \tilde{s}_{ij} (t_m, u_n) =\frac{\mathrm{d}\ln(y_i)}{\mathrm{d}\ln(p_j)} = \frac{\mathrm{d} y_i}{\mathrm{d} p_j} \frac{p_j}{y_i}\bigg|_{t_m, u_n}.
 \label{eq:relat_sensitivities}
 \end{equation}
-These sensitivities are the elements of the sensitivity matrix \cite{stigterObservabilityComplex2017}. 
+These sensitivities are the elements of the sensitivity matrix \cite{stigterObservabilityComplex2017}.
 For example, in case of two observables $\mby = (y_1, y_2)$, two different inputs $\mbu = (u_1, u_2)$, $N$ different measurement times and $N_p$ parameters, sensitivity matrix reads:
 
 \begin{equation}
@@ -365,8 +365,8 @@ This matrix we will use to directly calculate the \ac{fim} via equation:
 \begin{equation}
     F = S^T Q^{-1} S,
 \end{equation}
-where $Q$ is the covariance matrix of measurement error~\cite{a_l_lloyd_sensitivity_2009, balsa-cantoComputationalProcedures2008}. 
-If the measurements are independent, then only the diagonal elements of the matrix are non-zero: 
+where $Q$ is the covariance matrix of measurement error~\cite{a_l_lloyd_sensitivity_2009, balsa-cantoComputationalProcedures2008}.
+If the measurements are independent, then only the diagonal elements of the matrix are non-zero:
 \begin{equation}
     Q = 
 \begin{pmatrix}
@@ -379,14 +379,14 @@ If the measurements are independent, then only the diagonal elements of the matr
 \label{eq:covar_matrix}
 \end{equation}
 Here $\sigma_{i}^2 (t_m, u_n)$ is the error of the measurements of observable $y_i$ at time point $t_m$ with input $u_n$.
-The error can be either estimated from data or approximated by some error model. 
+The error can be either estimated from data or approximated by some error model.
 For example, one may consider that the error contribution consists of an absolute part that stays constant and a relative part that is proportional to observable value.
 Then the diagonal elements of the covariance matrix take form:
 \begin{equation}
 \label{eq:error_model}
     \sigma_{i}^2 (t_m, u_n) = \gamma_\text{abs} + \gamma_\text{rel} \cdot y_i(t_m, u_n),
 \end{equation}
-where $\gamma_\text{abs}$ and $\gamma_\text{rel}$ are the coefficients determining the absolute and the relative error contribution, respectively. 
+where $\gamma_\text{abs}$ and $\gamma_\text{rel}$ are the coefficients determining the absolute and the relative error contribution, respectively.
 In case one uses relative sensitivities $\tilde{s}_{ij} (t_m, u_n)$, one needs to use relative measurements errors for the matrix $Q$:
 \begin{equation}
     \tilde{\sigma}_{i}^2 (t_m, u_n) = \frac{\sigma_{i}^2 (t_m, u_n)}{y^2_i(t_m, u_n)}.
@@ -395,9 +395,9 @@ Note that this approach is heuristic and the matrix $F$ is not the Fisher inform
 %
 % ########################################################################
 \subsection*{Numerical Sensitivity Calculation}
-For the calculation of the sensitivities (Eq. \ref{eq:ode_and_sensitiv}) we need to supply the derivatives of $f$ with respect to the parameters and state variables. 
-We define $\mbx=(x_1,x_2,x_3)$ and $\mbp=(p_1,p_2,p_3)$ with $p_1=x_{max}$, $p_2=b$ and $p_3=T_\text{min}$. 
-Firstly, we calculate the mathematical derivatives $\partial f_i/\partial p_j$ and $\partial f_i/\partial x_j$ and then implement the corresponding functions. 
+For the calculation of the sensitivities (Eq. \ref{eq:ode_and_sensitiv}) we need to supply the derivatives of $f$ with respect to the parameters and state variables.
+We define $\mbx=(x_1,x_2,x_3)$ and $\mbp=(p_1,p_2,p_3)$ with $p_1=x_{max}$, $p_2=b$ and $p_3=T_\text{min}$.
+Firstly, we calculate the mathematical derivatives $\partial f_i/\partial p_j$ and $\partial f_i/\partial x_j$ and then implement the corresponding functions.
 The first component of the Baranyi-Roberts model reads:
 \begin{equation}
 \label{eq:rob_bar_model}
@@ -422,7 +422,7 @@ Similarly, the derivatives $\partial f/\partial x_i$ are given by:
     \frac{\partial f_1}{\partial x_2}(t) &= \mu^\text{max} &\left(\frac{1}{x_2(t) + 1} - \frac{x_2(t)}{(x_2(t) + 1)^2}\right) && \left(1 - \frac{x_1(t)}{x_1^\text{max}}\right) &&x_1(t).
     % TODO
 \end{alignat}
-The readers are encouraged to calculate the components $\partial f_2/\partial p_i$ and $\partial f_2/\partial x_i$ as an exercise. 
+The readers are encouraged to calculate the components $\partial f_2/\partial p_i$ and $\partial f_2/\partial x_i$ as an exercise.
 The resulting implemented functions in python can be seen in Code Sample~\ref{code:code_baranyi_roberts_ode_fun_derivatives}.
 \begin{code}[H]
     \begin{minted}[firstnumber=20]{python}
@@ -468,13 +468,13 @@ The resulting implemented functions in python can be seen in Code Sample~\ref{co
 %
 % ########################################################################
 \subsection*{Define numerical values}
-After the definition of the structure of the \ac{ode}, we need to specify numerical values. 
-It is good practice, to gather such definitions in the \mintinline[bgcolor=white,style=emacs]{python}{__main__} method of the python program as it was done in Figure~\ref{code:code_write_main_function_start}. 
-We start by defining the parameters of the \ac{ode} (line 59) and afterwards the initial values (line 62). 
-Next, we constrain the optimisation routine to find the best possible time points in the interval $t_i\in\left[t_\text{low},t_\text{high}\right]$. 
-To do this, we write the times as a dictionary with entries \mintinline[bgcolor=white,style=emacs]{python}{{"lb":t_low, "ub":t_high, "n":n_times}} where \mintinline[bgcolor=white,style=emacs]{python}{n_times} is the number of discrete time points at which we want to sample the system (line 65). 
-In contrast, if we wanted to specify explicit values for the sampling points, we would have needed to supply a list of time values or a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} directly. 
-One can see this approach  in line 70 of the code example. 
+After the definition of the structure of the \ac{ode}, we need to specify numerical values.
+It is good practice, to gather such definitions in the \mintinline[bgcolor=white,style=emacs]{python}{__main__} method of the python program as it was done in Figure~\ref{code:code_write_main_function_start}.
+We start by defining the parameters of the \ac{ode} (line 59) and afterwards the initial values (line 62).
+Next, we constrain the optimisation routine to find the best possible time points in the interval $t_i\in\left[t_\text{low},t_\text{high}\right]$.
+To do this, we write the times as a dictionary with entries \mintinline[bgcolor=white,style=emacs]{python}{{"lb":t_low, "ub":t_high, "n":n_times}} where \mintinline[bgcolor=white,style=emacs]{python}{n_times} is the number of discrete time points at which we want to sample the system (line 65).
+In contrast, if we wanted to specify explicit values for the sampling points, we would have needed to supply a list of time values or a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} directly.
+One can see this approach  in line 70 of the code example.
 Here, we supply a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} with explicit values, thus fixing the sampling points them for the optimisation routine.
 \begin{code}[h]
     \begin{minted}[firstnumber=57]{python}
@@ -502,8 +502,8 @@ Here, we supply a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} wit
     \label{code:code_write_main_function_start}
 \end{code}
 \subsubsection*{Defining Explicit Values and Sampling}
-The difference between choosing explicit values and specifying a sampling range may be subtle at first glance, but in turn allows to very easily switch between fixed values and optimised sampling points. 
-For example, suppose we want to optimise the temperature at which the experiments are performed, which means we let the optimisation algorithm pick the optimal temperature points such that the information gathered from the system is maximised. 
+The difference between choosing explicit values and specifying a sampling range may be subtle at first glance, but in turn allows to very easily switch between fixed values and optimised sampling points.
+For example, suppose we want to optimise the temperature at which the experiments are performed, which means we let the optimisation algorithm pick the optimal temperature points such that the information gathered from the system is maximised.
 Then the difference between defining explicit values for the temperatures and defining an interval for optimisation can be understood in code sample~\ref{code:difference_explicit_sampling}.\newline
 \begin{code}[h]
     \begin{minted}[linenos=false]{python}
@@ -527,10 +527,10 @@ Then the difference between defining explicit values for the temperatures and de
     \caption{Difference between choosing explicit values and sampling over a given interval.}
     \label{code:difference_explicit_sampling}
 \end{code}%
-The different variables can be treated individually as needed. 
+The different variables can be treated individually as needed.
 Suppose, we have a system with temperatures and humidity as input variables.
-We could decide to have the temperature optimised, but fix the humidity explicitly, because experimentally one can change the temperature continuously (or in discrete steps) but is restricted regarding the humidity. 
-In our code, we simply would mix explicit and sampled definitions for individual inputs (see code sample~\ref{code:mix_sampling_explicit}). 
+We could decide to have the temperature optimised, but fix the humidity explicitly, because experimentally one can change the temperature continuously (or in discrete steps) but is restricted regarding the humidity.
+In our code, we simply would mix explicit and sampled definitions for individual inputs (see code sample~\ref{code:mix_sampling_explicit}).
 [MIR IST DIES NICHT GANZ KLAR, WIR MÜSSEN DARÜBER REDEN].
 \begin{code}[h]
     \begin{minted}[linenos=false]{python}
@@ -547,10 +547,10 @@ In our code, we simply would mix explicit and sampled definitions for individual
 %
 % ########################################################################
 \subsection*{Define Model}
-After we have decided on the numerical values for our model, we need to put everything together. 
-The \mintinline[bgcolor=white,style=emacs]{python}{FisherModel} class serves as the entry point. 
-Here, we simply supply every previously made definition of variables and methods. 
-When using the syntax as shown in code sample~\ref{code:model_definition}, the order of arguments does not matter. 
+After we have decided on the numerical values for our model, we need to put everything together.
+The \mintinline[bgcolor=white,style=emacs]{python}{FisherModel} class serves as the entry point.
+Here, we simply supply every previously made definition of variables and methods.
+When using the syntax as shown in code sample~\ref{code:model_definition}, the order of arguments does not matter.
 However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherModel(x0, 0.0, ...)}, please pay attention to the order of arguments.
 \begin{code}[H]
     \begin{minted}[autogobble=false,firstnumber=77]{python}
@@ -579,32 +579,32 @@ For a full list of optional arguments, we refer to the \href{https://spatial-sys
 %
 % ########################################################################
 \subsubsection*{Identifiability}
-Before proceeding with the optimisation, the reader need to check if the parameters of the system are identifiable, i.e, to examine if it is possible to obtain a unique solution for the parameters from the optimisation. 
-It can happen that a subset of the parameters are non-identifiable. 
-The non-identifiability can be due to the model structure or observables (structural non-identifiability) or insufficient data (practical non-identifiability) \cite{}. 
-Structural non-identifiability should be avoided as it results in at least one parameter which could be freely chosen meaning there is no optimal value for this parameter. 
-Fortunately, there is a quick and easy way to check whether the system is structural non-identifiable by calculating the rank of the sensitivity matrix \cite{}. 
-For an identifiable system, the rank should coincide with the number of estimated parameters. 
-Only if this condition is satisfied, we can continue with optimisation. 
-In case the rank of the sensitivity matrix is less than the number of parameters it is necessary to change the structure of the model or change or increase the number of observables. 
+Before proceeding with the optimisation, the reader need to check if the parameters of the system are identifiable, i.e, to examine if it is possible to obtain a unique solution for the parameters from the optimisation.
+It can happen that a subset of the parameters are non-identifiable.
+The non-identifiability can be due to the model structure or observables (structural non-identifiability) or insufficient data (practical non-identifiability) \cite{}.
+Structural non-identifiability should be avoided as it results in at least one parameter which could be freely chosen meaning there is no optimal value for this parameter.
+Fortunately, there is a quick and easy way to check whether the system is structural non-identifiable by calculating the rank of the sensitivity matrix \cite{}.
+For an identifiable system, the rank should coincide with the number of estimated parameters.
+Only if this condition is satisfied, we can continue with optimisation.
+In case the rank of the sensitivity matrix is less than the number of parameters it is necessary to change the structure of the model or change or increase the number of observables.
 Practical non-identifiability results in large confidence intervals \cite{} \newline
 
 [STELLEN WIR DENN KEINE ROUTINE DAZU BEREIT?]
 %
 % ########################################################################
 \subsubsection*{Optimality Criteria}
-The Fisher Information matrix needs to be mapped on an objective function. There are several ways to do this resulting in different objectives also called criteria. 
+The Fisher Information matrix needs to be mapped on an objective function. There are several ways to do this resulting in different objectives also called criteria.
 Optimisation of the different objectives result in different experimental design, some of the most popular criteria are \cite{}:
 \begin{itemize}
  \item \textbf{D-optimality criterion} maximises the determinant $\det (F)$ of the \ac{fim}. 
- Translated to the parameter space it means that the volume of the confidence region (see Fig. \ref{fig:opt_criteria}) (or the geometric mean of all errors) is minimised. 
- The confidence region at a confidence level of $\alpha$ [WHAT IS $\alpha$?] can be interpreted as there is a $\alpha \cdot 100 \%$ chance that the best parameter fit will belong to this area in case of repeating the experiment and estimations multiple times. 
- It is usually presented as a confidence ellipsoid. D-optimality is the most widely used criterion and is suitable even if the parameters have different dimensionalities [WHAT DOES THIS MEAN EXACTLY? THE OTHER CRITERIA ARE NOT SUITED IN THIS CASE? AND WHAT DOES DIMENSIONALITY MEAN?].    
-\item \textbf{E-optimality criterion} maximises the smallest eigenvalue $\lambda_{\min}$ of the \ac{fim}, which is the same as reducing only the largest estimation error. 
+ Translated to the parameter space it means that the volume of the confidence region (see Fig. \ref{fig:opt_criteria}) (or the geometric mean of all errors) is minimised.
+ The confidence region at a confidence level of $\alpha$ [WHAT IS $\alpha$?] can be interpreted as there is a $\alpha \cdot 100 \%$ chance that the best parameter fit will belong to this area in case of repeating the experiment and estimations multiple times.
+ It is usually presented as a confidence ellipsoid. D-optimality is the most widely used criterion and is suitable even if the parameters have different dimensionalities [WHAT DOES THIS MEAN EXACTLY? THE OTHER CRITERIA ARE NOT SUITED IN THIS CASE? AND WHAT DOES DIMENSIONALITY MEAN?].
+\item \textbf{E-optimality criterion} maximises the smallest eigenvalue $\lambda_{\min}$ of the \ac{fim}, which is the same as reducing only the largest estimation error.
 \item \textbf{A-optimality criterion} maximises the sum of all eigenvalues $\sum_i \lambda_i$, which can be interpreted as minimising the algebraic mean of all errors.
  \item \textbf{Modified E-optimality criterion} maximises the ratio between the minimal and maximal eigenvalue $\lambda_{\min} / \lambda_{\max}$ [INTERPRETATION?].
 \end{itemize}
-Each of the criteria has its pros and cons so the reader should have a closer look at the various properties of these criteria, for instance, in Franceschini's and Macchietto's paper \cite{franceschiniModelbasedDesignExperiments2008}. 
+Each of the criteria has its pros and cons so the reader should have a closer look at the various properties of these criteria, for instance, in Franceschini's and Macchietto's paper \cite{franceschiniModelbasedDesignExperiments2008}.
 For the geometrical interpretation of the criteria using the confidence region shown in Fig. \ref{fig:opt_criteria}.
 
 \begin{figure}[H]
@@ -620,41 +620,42 @@ For the geometrical interpretation of the criteria using the confidence region s
 %
 % ########################################################################
 \subsubsection*{Optimization}
-After defining the objective function based on the Fisher Information matrix the next step is to optimise the chosen optimality criteria. 
-Finding the Experimental Design corresponds to finding the global maximum of the objective, which is a special case of optimal control problem \cite{}. 
-This problem has been widely studied, and multiple numerical solution algorithms for both local and global optimisation were introduced \cite{}. 
-In the supplied toolbox {\it eDPM}  [In the suggested toolbox DO YOU MEAN THE SOFTWARE YOU SUPPLY?], three methods were implemented: differential evolution, basin-hopping, and brute force [WHAT DO YOU MEAN BY THIS?]. 
-Quite good results [WHAT ARE QUIZE GOOD RESULTS? FAST CONVERGENCE?] can be achieved by the \ac{de} algorithm developed by Storn and Price (1996) \cite{stornDifferentialEvolutionSimple1997}. 
-It is one of the stochastic global optimisation methods appropriate for nonlinear dynamic problems. 
-These algorithms have mild computational load but one cannot be sure that the absolute optimum is reached \cite{}. 
-We give in the following a brief summary of the implemented methods. 
-For more information the reader should turn to the available literature, e.g., \cite{}. 
+After defining the objective function based on the Fisher Information matrix the next step is to optimise the chosen optimality criteria.
+Finding the Experimental Design corresponds to finding the global maximum of the objective, which is a special case of optimal control problem \cite{}.
+This problem has been widely studied, and multiple numerical solution algorithms for both local and global optimisation were introduced \cite{}.
+In the supplied toolbox {\it eDPM}  [In the suggested toolbox DO YOU MEAN THE SOFTWARE YOU SUPPLY?], three methods were implemented: differential evolution, basin-hopping, and brute force [WHAT DO YOU MEAN BY THIS?].
+Quite good results [WHAT ARE QUIZE GOOD RESULTS? FAST CONVERGENCE?] can be achieved by the \ac{de} algorithm developed by Storn and Price (1996) \cite{stornDifferentialEvolutionSimple1997}.
+It is one of the stochastic global optimisation methods appropriate for nonlinear dynamic problems.
+These algorithms have mild computational load but one cannot be sure that the absolute optimum is reached \cite{}.
+We give in the following a brief summary of the implemented methods.
+For more information the reader should turn to the available literature, e.g., \cite{}.
 \newline
 
-For differential evolution an initial population of candidate vectors for the Experimental Design (sampling times and inputs) is randomly chosen from the region of available values. 
-Then each vector mutates by mixing with other candidate vector. 
-To a chosen vector from the initial population $D_0$, we add a weighted difference between two other randomly chosen vectors from the same set $(D_\text{rand1} - D_\text{rand2})$. 
+For differential evolution an initial population of candidate vectors for the Experimental Design (sampling times and inputs) is randomly chosen from the region of available values.
+Then each vector mutates by mixing with other candidate vector.
+To a chosen vector from the initial population $D_0$, we add a weighted difference between two other randomly chosen vectors from the same set $(D_\text{rand1} - D_\text{rand2})$.
 This process is called mutation and a new vector $D_m$ is obtained. The next step is to construct a new trial solution.
 This is done by choosing the elements of the trial vector either from the initial $D_0$ or the mutated $D_m$ vectors. 
-For each new element of trial vector, a random number drawn uniformly from the interval [0, 1) and compared to the so-called recombination constant. 
-If this random number is less than the recombination constant, then the trial vector element is chosen from the vector $D_m$, otherwise from $D_0$. 
-The degree of mutation can be controlled by changing the recombination constant; the larger this constant is, the more often vector elements are chosen from $D_m$. 
-Subsequently, the objective function is calculated using the trial vector and the result is compared to result obtained using the initial solution $D_0$; and the best of them is chosen for the next generation. 
-This procedure is repeated for every solution candidate of the initial population, by means of which the new generation is build. 
-The process of population mutation is repeated till the desired accuracy is achieved [UNKLAR; WAS IST DENN MIT "ACCURACY" GEMEINT?]. 
+For each new element of trial vector, a random number drawn uniformly from the interval [0, 1) and compared to the so-called recombination constant.
+If this random number is less than the recombination constant, then the trial vector element is chosen from the vector $D_m$, otherwise from $D_0$.
+The degree of mutation can be controlled by changing the recombination constant; the larger this constant is, the more often vector elements are chosen from $D_m$.
+Subsequently, the objective function is calculated using the trial vector and the result is compared to result obtained using the initial solution $D_0$; and the best of them is chosen for the next generation.
+This procedure is repeated for every solution candidate of the initial population, by means of which the new generation is build.
+The process of population mutation is repeated till the desired accuracy is achieved [UNKLAR; WAS IST DENN MIT "ACCURACY" GEMEINT?].
 This method is rather simple and straightforward, and does not require any gradient calculation and is easy to parallelise \cite{}.
 \newline
 
-The second implemented method is basin-hopping developed by David Wales and Jonathan Doye \cite{walesGlobalOptimizationBasinHopping1997}. 
-It combines the Monte-Carlo and local optimisation and works as follows. [DIE FOLGENDEN SÄTZE SIND LEIDER VÖLLIG UNVERSTÄNDLICH; BITTE NEU FORMULIEREN] The classic Monte-Carlo algorithm implies that the values of the optimised vector are perturbed and are either accepted or rejected. 
+The second implemented method is basin-hopping developed by David Wales and Jonathan Doye \cite{walesGlobalOptimizationBasinHopping1997}.
+It combines the Monte-Carlo and local optimisation and works as follows. [DIE FOLGENDEN SÄTZE SIND LEIDER VÖLLIG UNVERSTÄNDLICH; BITTE NEU FORMULIEREN]
+The classic Monte-Carlo algorithm implies that the values of the optimised vector are perturbed and are either accepted or rejected.
 However, in this modified strategy, after perturbation, the vector is additionally subjected to local minimisation. And only after this procedure the move is accepted according to the Metropolis criterion.
 \newline
 
-And lastly, a simple brute force method was implemented as well. 
-It is a grid search algorithm calculating the objective function value at each point of a multidimensional grid in a chosen region. 
-The advantage of this algorithm is that we can be sure that the global minimum is achieved [DAS STIMMT NICHT; DAS GITTER-OPTIMUM WIRD GEFUNDEN] because all possibilities are checked. 
-However, the downside of this technique is that rather slow and inefficient. 
-Even though discretisation and reduction of the whole number of possible values [GRID SEARCH ALREADY IMPLIES DISCRETISATION; WAS IHR MEINT IST WOHL EIN GRÖBERES GITTER?] can improve the performance, the computational time of this method allows optimisation only for a small number of optimisation times or inputs. 
+And lastly, a simple brute force method was implemented as well.
+It is a grid search algorithm calculating the objective function value at each point of a multidimensional grid in a chosen region.
+The advantage of this algorithm is that we can be sure that the global minimum is achieved [DAS STIMMT NICHT; DAS GITTER-OPTIMUM WIRD GEFUNDEN] because all possibilities are checked.
+However, the downside of this technique is that rather slow and inefficient.
+Even though discretisation and reduction of the whole number of possible values [GRID SEARCH ALREADY IMPLIES DISCRETISATION; WAS IHR MEINT IST WOHL EIN GRÖBERES GITTER?] can improve the performance, the computational time of this method allows optimisation only for a small number of optimisation times or inputs.
 Some other methods for the optimal control problem the reader can find, for example, in the papers of Banga \etal \cite{BANGA2005407, bangaImprovingFoodProcessing2003}.
 %
 % ########################################################################
@@ -680,8 +681,8 @@ However, we retain their full functionality. Any optimisation argument of the af
         polish=False,
     )
 \end{minted}
-A full list of optional arguments can be seen in the \href{https://docs.scipy.org/doc/scipy/reference/optimize.html#global-optimization}{scipy documentation}~\cite{virtanenSciPyFundamentalAlgorithms2020}. 
-In addition, there are some interesting optimisation options such as the optional arguments \mintinline[bgcolor=white,style=emacs]{python}{relative_sensitivities,criterion}, which are responsible for using relative sensitivities $\tfrac{dy}{dp}\tfrac{p}{y}$ and specifying the optimality criterion as explained in the previous section [WAS SIND DIE DEFAULT PARAMETER?. 
+A full list of optional arguments can be seen in the \href{https://docs.scipy.org/doc/scipy/reference/optimize.html#global-optimization}{scipy documentation}~\cite{virtanenSciPyFundamentalAlgorithms2020}.
+In addition, there are some interesting optimisation options such as the optional arguments \mintinline[bgcolor=white,style=emacs]{python}{relative_sensitivities,criterion}, which are responsible for using relative sensitivities $\tfrac{dy}{dp}\tfrac{p}{y}$ and specifying the optimality criterion as explained in the previous section [WAS SIND DIE DEFAULT PARAMETER?.
 Please view the \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{full documentation} for explanation.
 The resulting class \mintinline[bgcolor=white,style=emacs]{python}{fsr} contains all definitions, current values and information on the optimisation process.
 %
@@ -699,16 +700,19 @@ Our package also provides the option to save results into Json file and automati
 % ########################################################################
 % ########################################################################
 \section*{Results}
-As a summary of this tutorial, we would like to present the resulting output of our package. 
-To this end we study the growth of a bacterial colony consisting of a single specie and describe it mathematically using the Baranyi and Roberts model given by Eqs. (\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}). 
-We would like to estimate the parameters of the model with as few experiments as possible to minimise the experimental effort. 
+As a summary of this tutorial, we would like to present the resulting output of our package.
+To this end we study the growth of a bacterial colony consisting of a single specie and describe it mathematically using the Baranyi and Roberts model given by Eqs. (\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}).
+We would like to estimate the parameters of the model with as few experiments as possible to minimise the experimental effort.
 The observable is the bacterial count, i.e., the first component of the state variable vector $y = x_1$.
-As an additional constraint we need to consider that the available climate chambers can only operate the temperature in the range from 3 to 12 degrees. 
-For the starting values of the parameters we take from literature $x_1^\text{max}=10^8$, $b=0.2$, $T_\text{min}=1.0$, and the initial conditions of the \acp{ode} are chosen to be $x_1(0) = 10^3$, $x_2(0)=0.01$. 
-Moreover, we choose for all the measurements points the error model given by Eq. (\ref{eq:error_model}) with $\gamma_\text{abs}=0.3$ and $\gamma_\text{rel}=0.1$. The task is to propose at which temperatures to perform the experiments and which sampling times to choose. 
-The number of different temperatures of the experiments is not specified yet, but we aim to chose the lowest possible number. To solve this problem, we performed the Experimental Design using the D-optimality criterion, relative sensitivities, and the differential evolution optimisation method. 
-To ensure the identifiability of the system, the rank of the sensitivity matrix should be equal to the number of parameters [WIE SOLL DER LESER DAS TESTEN?]. 
-This condition is satisfied if at least two temperatures are measured and two time points for each temperature are measured, e.g., in total four experiments need to be performed [IST DAS WIRKLICH RICHTIG? DAS SCHEINT MIR EINE SEHR GERINGE ANZAHL AN EXPERIMENTEN ZU SEIN. BITTE MAL MIT DEN EXPERIMENTEN IN DER LITERATUR VERGLEICHEN, Z.B. HIER: 1. Gospavic, R., Kreyenschmidt, J., Bruckner, S., Popov, V. + Haque, N. Mathematical modelling for predicting the growth of Pseudomonas spp. in poultry under variable temperature conditions. International Journal of Food Microbiology 127, 290–297 (2008).] 
+As an additional constraint we need to consider that the available climate chambers can only operate the temperature in the range from 3 to 12 degrees.
+For the starting values of the parameters we take from literature $x_1^\text{max}=10^8$, $b=0.2$, $T_\text{min}=1.0$, and the initial conditions of the \acp{ode} are chosen to be $x_1(0) = 10^3$, $x_2(0)=0.01$.
+Moreover, we choose for all the measurements points the error model given by Eq. (\ref{eq:error_model}) with $\gamma_\text{abs}=0.3$ and $\gamma_\text{rel}=0.1$.
+The task is to propose at which temperatures to perform the experiments and which sampling times to choose.
+The number of different temperatures of the experiments is not specified yet, but we aim to chose the lowest possible number.
+To solve this problem, we performed the Experimental Design using the D-optimality criterion, relative sensitivities, and the differential evolution optimisation method.
+To ensure the identifiability of the system, the rank of the sensitivity matrix should be equal to the number of parameters [WIE SOLL DER LESER DAS TESTEN?].
+This condition is satisfied if at least two temperatures are measured and two time points for each temperature are measured, e.g., in total four experiments need to be performed 
+[IST DAS WIRKLICH RICHTIG? DAS SCHEINT MIR EINE SEHR GERINGE ANZAHL AN EXPERIMENTEN ZU SEIN. BITTE MAL MIT DEN EXPERIMENTEN IN DER LITERATUR VERGLEICHEN, Z.B. HIER: 1. Gospavic, R., Kreyenschmidt, J., Bruckner, S., Popov, V. + Haque, N. Mathematical modelling for predicting the growth of Pseudomonas spp. in poultry under variable temperature conditions. International Journal of Food Microbiology 127, 290–297 (2008).]
 The resulting \ac{oed} for such a system is presented in Fig. \ref{fig:baranyi_roberts_observable}, \ref{fig:baranyi_roberts_sensitivities}.
 
 \begin{figure}[H]
@@ -725,8 +729,9 @@ The resulting \ac{oed} for such a system is presented in Fig. \ref{fig:baranyi_r
     \label{fig:baranyi_roberts_observable}
 \end{figure}
 
-As can be noticed, the algorithm has chosen two different timepoints for temperature 12.0 and  one time point for temperature value 5.9
-Each of these time points corresponds to an extreme of at least one sensitivity (see Fig. \ref{fig:baranyi_roberts_sensitivities}). [WENN DAS STIMMT DANN SIND DOCH VIEL WENIGER EXPERIMENTE AUSREICHEND UM DIE PARAMETER ZU SCHÄTZEN ALS GEWÖHNLICH DURCHGEFÜHRT WERDEN. BITTE UNBEDINGT MIT DER LITERATUR VERGLEICHEN]
+As can be noticed, the algorithm has chosen two different timepoints for temperature 12.0 and  one time point for temperature value 5.9.
+Each of these time points corresponds to an extreme of at least one sensitivity (see Fig. \ref{fig:baranyi_roberts_sensitivities}).
+[WENN DAS STIMMT DANN SIND DOCH VIEL WENIGER EXPERIMENTE AUSREICHEND UM DIE PARAMETER ZU SCHÄTZEN ALS GEWÖHNLICH DURCHGEFÜHRT WERDEN. BITTE UNBEDINGT MIT DER LITERATUR VERGLEICHEN]
 \begin{figure}[H]
     \begin{subfigure}{.9\textwidth}
       \centering
@@ -760,7 +765,11 @@ Each of these time points corresponds to an extreme of at least one sensitivity 
     \label{fig:baranyi_roberts_sensitivities}
     \end{figure}
 
-Based on the results of the Experimental Design, the optimal number of measurement times is three, which may appear a very low number.ﬂ Indeed, consider how the determinant increases with the number of measurement times in the logarithmic scale (see Fig. \ref{fig:det_vs_ntimes}). It can be noticed that the slope of the curve is largest between point 1 and 2, in fact approximately fourteen orders of magnitude larger than the slope between the other points. For a higher number of times, informational profit stays at the same order of magnitude [WAS BEDEUTET DAS?]. As a result, the researcher can significantly reduce the experimental workload without a noticeable loss of information, which exemplifies the value of \ac{oed}.
+Based on the results of the Experimental Design, the optimal number of measurement times is three, which may appear a very low number.
+Indeed, consider how the determinant increases with the number of measurement times in the logarithmic scale (see Fig. \ref{fig:det_vs_ntimes}).
+It can be noticed that the slope of the curve is largest between point 1 and 2, in fact approximately fourteen orders of magnitude larger than the slope between the other points.
+For a higher number of times, informational profit stays at the same order of magnitude [WAS BEDEUTET DAS?].
+As a result, the researcher can significantly reduce the experimental workload without a noticeable loss of information, which exemplifies the value of \ac{oed}.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.4]{Figures/det_vs_ntimes.pdf}
@@ -770,8 +779,8 @@ Based on the results of the Experimental Design, the optimal number of measureme
 
 \section*{Two-species resource competition}
 As a second example we discuss a slightly more complicated system and extend the previous example of bacteria growth to a system where two species are present.
-The species interact by competitive inhibition because they depend on a common nutrient resource. 
-Analogously to the previous example, we denote the concentration of the two different species as $x_1$ and $y_1$, resp. 
+The species interact by competitive inhibition because they depend on a common nutrient resource.
+Analogously to the previous example, we denote the concentration of the two different species as $x_1$ and $y_1$, respectively.
 The system can be described by the following set of \acp{ode}:
 \begin{equation}
     \begin{cases}
@@ -781,8 +790,8 @@ The system can be described by the following set of \acp{ode}:
     \end{cases}
     \label{eq:Lotka_Volterra_2species_1}
 \end{equation}
-where $\alpha_x, \alpha_y$ are the time and temperature dependent growth rates for population $x_1$, $y_1$, and $R$ represents the nutrient pool concentration, respectively. Using 
-the conservation quantity $x_1 + y_1 + n_\text{max}R = n_\text{max}$ this system can be reduced to:
+where $\alpha_x, \alpha_y$ are the time and temperature dependent growth rates for population $x_1$, $y_1$, and $R$ represents the nutrient pool concentration, respectively.
+Using the conservation quantity $x_1 + y_1 + n_\text{max}R = n_\text{max}$ this system can be reduced to:
 \begin{equation}
     \begin{cases}
         \dot x_1 = \alpha_x x_1\left(1-\frac{x_1+y_1}{n_\text{max}}\right) \\
@@ -805,9 +814,13 @@ Combining equations (\ref{eq:Lotka_Volterra_2species_2}, \ref{eq:growth_rate_2sp
     \end{cases}
     \label{eq:model_2species_resource}
 \end{equation}
-where $x_2, y_2$ are the physiological states [WAS MEINT IHR DAMIT?] of the species $x_1$ and $y_1$, respectively. The parameter vector of this system reads: $\mbp = (n_\text{max}, b_x, T_{\text{min}, x}, b_y, T_{\text{min}, y})$. We use as initial values for two species $(x_{10}, x_{20}, y_{10}, y_{20}) = (10^5, 0.1, 10^3, 0.1)$ and the starting vector $\mbp_0= (10^8, 0.1, 1.0, 0.3, 1.0)$ to calculate the \ac{fim}. [WAS SIND GENAU DIE ZU OPTIMIERENDEN GRÖSSEN? BITTE HIER AUCH BESCHREIBEN.]
+where $x_2, y_2$ are the physiological states [WAS MEINT IHR DAMIT?] of the species $x_1$ and $y_1$, respectively.
+The parameter vector of this system reads: $\mbp = (n_\text{max}, b_x, T_{\text{min}, x}, b_y, T_{\text{min}, y})$.
+We use as initial values for two species $(x_{10}, x_{20}, y_{10}, y_{20}) = (10^5, 0.1, 10^3, 0.1)$ and the starting vector $\mbp_0= (10^8, 0.1, 1.0, 0.3, 1.0)$ to calculate the \ac{fim}.
+[WAS SIND GENAU DIE ZU OPTIMIERENDEN GRÖSSEN? BITTE HIER AUCH BESCHREIBEN.]
 
-Other optimisation arguments were taken the same as in previous example. to get the new Optimal Experimental Design for shown in Fig. \ref{fig:baranyi_roberts_2species_observable}.
+Other optimisation arguments were taken the same as in previous example.
+To get the new Optimal Experimental Design for shown in Fig. \ref{fig:baranyi_roberts_2species_observable}.
 \begin{figure}[H]
     \begin{subfigure}{.9\textwidth}
         \centering
@@ -832,8 +845,8 @@ Other optimisation arguments were taken the same as in previous example. to get 
     \label{fig:baranyi_roberts_2species_observable}
 \end{figure}
 
-The presented Design shows that the least needed number of experiments is two with temperatures of 4.6 and 12.0. 
-Here in each experiment two observables were measured that correspond to the concentrations of two bacteria types. 
+The presented Design shows that the least needed number of experiments is two with temperatures of 4.6 and 12.0.
+Here in each experiment two observables were measured that correspond to the concentrations of two bacteria types.
 For the first temperature one time-point is needed while for the second one at least two measurement times were chosen.
 With these experimental conditions the system is identifiable so the data is sufficient to estimate the parameters.
 
