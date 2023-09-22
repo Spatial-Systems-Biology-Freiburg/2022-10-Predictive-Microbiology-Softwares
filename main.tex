@@ -575,19 +575,19 @@ There are some optional arguments which can be set if desired ...\newline
 [IST MIR NICHT GANZ KLAR. MÜSSEN DARÜBER REDEN].
 % TODO
 % TODO
-For a full list of optional arguments, we refer to the \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{documentation} of the package.
+For a full list of optional arguments, we refer to the \href{https://spatial-systems-biology-freiburg.github.io/Fishi/}{documentation} of the package.
 %
 % ########################################################################
 \subsubsection*{Identifiability}
 Before proceeding with the optimisation, the reader need to check if the parameters of the system are identifiable, i.e, to examine if it is possible to obtain a unique solution for the parameters from the optimisation.
 It can happen that a subset of the parameters are non-identifiable.
-The non-identifiability can be due to the model structure or observables (structural non-identifiability) or insufficient data (practical non-identifiability) \cite{}.
+The non-identifiability can be due to the model structure or observables (structural non-identifiability) or insufficient data (practical non-identifiability)~\cite{guillaume_introductory_2019, wieland_structural_2021, walter_identifiability_1996}.
 Structural non-identifiability should be avoided as it results in at least one parameter which could be freely chosen meaning there is no optimal value for this parameter.
-Fortunately, there is a quick and easy way to check whether the system is structural non-identifiable by calculating the rank of the sensitivity matrix \cite{}.
+Fortunately, there is a quick and easy way to check whether the system is structural non-identifiable by calculating the rank of the sensitivity matrix~\cite{miao_identifiability_2011, stigter_fast_2015}.
 For an identifiable system, the rank should coincide with the number of estimated parameters.
 Only if this condition is satisfied, we can continue with optimisation.
 In case the rank of the sensitivity matrix is less than the number of parameters it is necessary to change the structure of the model or change or increase the number of observables.
-Practical non-identifiability results in large confidence intervals \cite{} \newline
+Practical non-identifiability results in large confidence intervals~\cite{holmberg_practical_1982, miao_identifiability_2011, wieland_structural_2021, kreutzProfileLikelihood2013} \newline
 
 [STELLEN WIR DENN KEINE ROUTINE DAZU BEREIT?]
 %

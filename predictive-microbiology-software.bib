@@ -468,7 +468,7 @@
 	pages = {163--172}
   }
 
-  @article{banks_generalized_2010,
+@article{banks_generalized_2010,
 	title = {Generalized sensitivities and optimal experimental design},
 	volume = {18},
 	copyright = {De Gruyter expressly reserves the right to use all content for commercial text and data mining within the meaning of Section 44b of the German Copyright Act.},
@@ -486,6 +486,116 @@
   Section: Journal of Inverse and Ill-posed Problems},
 	keywords = {design of experiments, Fisher information matrix, Least squares inverse problems, sensitivity and generalized sensitivity functions},
 	pages = {25--83}
+}
+
+@article{guillaume_introductory_2019,
+	title = {Introductory overview of identifiability analysis: {A} guide to evaluating whether you have the right type of data for your modeling purpose},
+	volume = {119},
+	issn = {1364-8152},
+	shorttitle = {Introductory overview of identifiability analysis},
+	url = {http://www.sciencedirect.com/science/article/pii/S1364815218307278},
+	doi = {10.1016/j.envsoft.2019.07.007},
+	abstract = {Identifiability is a fundamental concept in parameter estimation, and therefore key to the large majority of environmental modeling applications. Parameter identifiability analysis assesses whether it is theoretically possible to estimate unique parameter values from data, given the quantities measured, conditions present in the forcing data, model structure (and objective function), and properties of errors in the model and observations. In other words, it tackles the problem of whether the right type of data is available to estimate the desired parameter values. Identifiability analysis is therefore an essential technique that should be adopted more routinely in practice, alongside complementary methods such as uncertainty analysis and evaluation of model performance. This article provides an introductory overview to the topic. We recommend that any modeling study should document whether a model is non-identifiable, the source of potential non-identifiability, and how this affects intended project outcomes.},
+	language = {en},
+	urldate = {2020-03-09},
+	journal = {Environmental Modelling \& Software},
+	author = {Guillaume, Joseph H. A. and Jakeman, John D. and Marsili-Libelli, Stefano and Asher, Michael and Brunner, Philip and Croke, Barry and Hill, Mary C. and Jakeman, Anthony J. and Keesman, Karel J. and Razavi, Saman and Stigter, Johannes D.},
+	month = sep,
+	year = {2019},
+	keywords = {Derivative based methods, Emulation, Hessian, Identifiability, Non-uniqueness, Response surface, Uncertainty},
+	pages = {418--432}
   }
 
+@article{wieland_structural_2021,
+	title = {On structural and practical identifiability},
+	volume = {25},
+	issn = {2452-3100},
+	url = {https://www.sciencedirect.com/science/article/pii/S245231002100007X},
+	doi = {10.1016/j.coisb.2021.03.005},
+	abstract = {We discuss issues of structural and practical identifiability of partially observed differential equations, which are often applied in systems biology. The development of mathematical methods to investigate structural nonidentifiability has a long tradition. Computationally efficient methods to detect and cure it have been developed recently. Practical nonidentifiability, on the other hand, has not been investigated at the same conceptually clear level. We argue that practical identifiability is more challenging than structural identifiability when it comes to modeling experimental data. We discuss that the classical approach based on the Fisher information matrix has severe shortcomings. As an alternative, we propose using the profile likelihood, which is a powerful approach to detect and resolve practical nonidentifiability.},
+	urldate = {2023-09-22},
+	journal = {Current Opinion in Systems Biology},
+	author = {Wieland, Franz-Georg and Hauber, Adrian L. and Rosenblatt, Marcus and Tönsing, Christian and Timmer, Jens},
+	month = mar,
+	year = {2021},
+	keywords = {Experimental design, Fisher information matrix, Identifiability, Model reduction, Nonlinear dynamics, Observability, ODE models, Practical identifiability, Profile likelihood, Structural identifiability},
+	pages = {60--69}
+  }
+
+  @article{stigter_fast_2015,
+	title = {A fast algorithm to assess local structural identifiability},
+	volume = {58},
+	issn = {0005-1098},
+	url = {https://www.sciencedirect.com/science/article/pii/S0005109815001946},
+	doi = {10.1016/j.automatica.2015.05.004},
+	abstract = {The paper presents a novel method for assessing the local structural identifiability question for a general non-linear state-space model. The method is a combination of (i) the application of a singular value decomposition to a parametric output sensitivity matrix that is created by simply integrating the model once and, (ii) a symbolic computation for a reduced model that is guided by the SVD results and allows a confirmation of the conclusions regarding identifiability obtained in the first step. In case there is a lack of identifiability, the symbolic computation quickly results in determination of the exact structure of the nullspace and a suitable re-parametrisation. The method is discussed in detail and applied to three case studies, of which the last two are considerably large, containing 22 and 43 parameters to be identified, respectively.},
+	urldate = {2023-09-22},
+	journal = {Automatica},
+	author = {Stigter, Johannes D. and Molenaar, Jaap},
+	month = aug,
+	year = {2015},
+	keywords = {Identifiability, Parameter identification},
+	pages = {118--124}
+  }
+
+@article{miao_identifiability_2011,
+	title = {On {Identifiability} of {Nonlinear} {ODE} {Models} and {Applications} in {Viral} {Dynamics}},
+	volume = {53},
+	issn = {0036-1445},
+	url = {https://epubs.siam.org/doi/10.1137/090757009},
+	doi = {10.1137/090757009},
+	abstract = {This erratum corrects an error in the coefficients of equation (6.23) in the original paper [H. Miao, X. Xia, A. S. Perelson, and H. Wu, SIAM Rev., 53 (2011), pp. 3--39].},
+	number = {1},
+	urldate = {2023-09-22},
+	journal = {SIAM Rev.},
+	author = {Miao, Hongyu and Xia, Xiaohua and Perelson, Alan S. and Wu, Hulin},
+	month = jan,
+	year = {2011},
+	note = {Publisher: Society for Industrial and Applied Mathematics},
+	pages = {3--39}
+  }
+
+@article{walter_identifiability_1996,
+	series = {Mathematical {Modelling} and {Simulation} in {Agriculture} and {Bio}-{Industries} {Proceedings} of the 1st {IMACS}-{IFAC} {Symposium} {M}\{su2\}{SABI}},
+	title = {On the identifiability and distinguishability of nonlinear parametric models},
+	volume = {42},
+	issn = {0378-4754},
+	url = {https://www.sciencedirect.com/science/article/pii/0378475495001239},
+	doi = {10.1016/0378-4754(95)00123-9},
+	abstract = {Testing parametric models for identifiability and distinguishability is important when the parameters to be estimated have a physical meaning or when the model is to be used to reconstruct physically meaningful state variables that cannot be measured directly. Examples are used to explain why and indicate briefly how, with special emphasis on nonlinear models.},
+	number = {2},
+	urldate = {2023-09-22},
+	journal = {Mathematics and Computers in Simulation},
+	author = {Walter, Eric and Pronzato, Luc},
+	month = oct,
+	year = {1996},
+	pages = {125--134}
+  }
+
+@article{holmberg_practical_1982,
+	title = {On the practical identifiability of microbial growth models incorporating {Michaelis}-{Menten} type nonlinearities},
+	volume = {62},
+	issn = {0025-5564},
+	url = {https://www.sciencedirect.com/science/article/pii/002555648290061X},
+	doi = {10.1016/0025-5564(82)90061-X},
+	abstract = {The reason for difficulties in obtaining unique estimates of the parameters μm and Ks of the Michaelis-Menten equation are analysed for a microbial batch growth process. With the aid of simulation studies in which the influences of different types of noise on the parameter estimates are compared, it is shown that, although theoretically identifiable in the deterministic case with ideal measurements, the parameters cannot in general be correctly determined from noisy measurements. The difficulties are further illuminated by estimation examples using real data. It certain situations, in which the value of the ratio Ks/so is high or in which only few and noisy measurements are available, the linear approximation of the Michaelis-Menten equation gives a better fit. The practical difficulties in obtaining correct values of the model parameters do not limit the applicability of the Michaelis-Menten model, which in most cases explains the bacterial growth behavior excellently. Rather, they underline the fact that care must be taken when utilizing parameter estimates for biological interpretations.},
+	number = {1},
+	urldate = {2023-09-22},
+	journal = {Mathematical Biosciences},
+	author = {Holmberg, Andrea},
+	month = nov,
+	year = {1982},
+	pages = {23--43}
+}
+
+@article{kreutzProfileLikelihood2013,
+	title = {Profile likelihood in systems biology},
+	url = {http://doi.wiley.com/10.1111/febs.12276},
+	doi = {10.1111/febs.12276},
+	language = {English},
+	journal = {The FEBS journal},
+	author = {Kreutz, Clemens and Raue, Andreas and Kaschek, Daniel and Timmer, Jens},
+	month = may,
+	year = {2013}
+  }
 
