@@ -74,10 +74,10 @@ Christian Fleck\textsuperscript{1,2}
 % ########################################################################
 \section*{Abstract}
 \linenumbers
-The aim of predictive microbiology is to provide tools and methods for predicting the growth, survival, and death of microorganisms in different food matrices under a range of environmental conditions. 
-The parametrised mathematical models need to be calibrated using dedicated experimental data. 
-To efficiently plan experiments model-based experimental design is used. 
-In this chapter, we explain model-based experimental and provide step-by-step instructions for finding the optimal design using the well-known Baranyi\&Roberts growth model as an example. 
+The aim of predictive microbiology is to provide tools and methods for predicting the growth, survival, and death of microorganisms in different food matrices under a range of environmental conditions.
+The parametrised mathematical models need to be calibrated using dedicated experimental data.
+To efficiently plan experiments model-based experimental design is used.
+In this chapter, we explain model-based experimental and provide step-by-step instructions for finding the optimal design using the well-known Baranyi\&Roberts growth model as an example.
 To make this chapter self-consistent we provide a Python software {\it eDPM} for \ac{ode} -based models.\\
 \keywords{Optimal experimental design, Parameter estimation, Fisher Information matrix, Identifiability, Uncertainty}
 
@@ -93,28 +93,28 @@ To make this chapter self-consistent we provide a Python software {\it eDPM} for
 % \end{figure}
 %
 Mathematical modelling is a widely used tool to describe, understand and predict further behaviour of living systems.
-In particular, in the field of Predictive Biology, one can find a large variety of works that dwell on building models of different levels of complexity controlled by model parameters, e.g., to describe bacteria growth \cite{bernaertsConceptsToolsPredictive2004}. 
-Predictive microbiology is a subfield of food microbiology that uses mathematical models to predict the behaviour of microorganisms in food.  
-It is based on the premise that the behaviour of microorganisms can be mathematically described by the use of mathematical models, which can take into account the effects of various factors such as temperature, pH, water activity, and the presence of preservatives, on the growth and survival of microorganisms. 
-These models can then be used to predict the behaviour of microorganisms under different conditions, and to evaluate the effectiveness of various control measures, such as refrigeration, heat treatment, or the addition of preservatives. 
-Predictive microbiology has many applications in food safety, as it can be used to assess the risk of foodborne illness, to design safe food processing and storage practices, and to develop new food products with extended shelf-life. 
-For successful predictions it is essential that the model parameters can be estimated from experimental data. 
-Due to measurement noise, the parameters can only be estimated with some uncertainties. 
-That gives rise to a set of important questions: given the model structure can all parameters be estimated? 
-What should be measured and when? What are the confidence intervals for the parameters? How can the experimental effort be minimised? 
-Answering these questions leads to finding the \ac{oed} where optimised experimental conditions and/or measurement times allow for a reduction of the experimental load without loss of information \cite{derlindenImpactExperimentDesign2013, balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}. 
-In general, the Experimental Design procedure can be used not only for the parameter estimation but also for model discrimination \cite{kreutzSystemsBiology2009, stamatiOptimalExperimentalDesign2016}. 
-However, in this chapter, we focus on Experimental Design for parameter estimation. 
-Comprehensive reviews can be found here: \cite{atkinsonDevelopmentsDesignExperiments1982, franceschiniModelbasedDesignExperiments2008,sunParameterEstimation2011,vilasPredictiveFood2016}. 
-Depending on the goal, a researcher faces an important choice, which of the several sometimes contradicting objectives should be chosen for a particular case. 
-For example, is it more desirable to have precise knowledge in a chosen set of parameters and less information about the remaining ones? What is the best balance between experimental effort and precision? 
-Using multi-objective approaches, some attempts were made to answer these questions and to improve the experimental design by combining several objectives \cite{telenOptimalExperimentDesign2012, logistRobustMultiobjectiveOptimal2011}. 
-For models which depend on external cues like temperature, it is {\it a priori} not clear whether constant are variable conditions are more efficient for the parameter estimation \cite{versyckIntroducingOptimal1999,garciaQualityShelflifePrediction2015}. 
-The whole parameter estimation process starts with choosing a model structure. Once this is chosen a first parameter set is selected based on the literature review or prior data from previous experiments. 
-Using this parameter set a first optimal experimental design is determined taking into account specific constraints, such as maximum number of measurements, measurement times, etc. Next, the designed experiments need to be performed and this data result into a new estimation of the parameters. 
-If the confidence intervals of the parameters are sufficiently small, the scheme ends, otherwise one uses the new estimates as the starting point for the next experimental design (see Fig. \ref{fig:expdesign_scheme}). 
-The process can be repeated several times to increase the precision of the parameter estimates until the desired accuracy is achieved. 
-To test the scheme one can also perform numerical experiments and obtain {\it in-silico} data. 
+In particular, in the field of Predictive Biology, one can find a large variety of works that dwell on building models of different levels of complexity controlled by model parameters, e.g., to describe bacteria growth \cite{bernaertsConceptsToolsPredictive2004}.
+Predictive microbiology is a subfield of food microbiology that uses mathematical models to predict the behaviour of microorganisms in food.
+It is based on the premise that the behaviour of microorganisms can be mathematically described by the use of mathematical models, which can take into account the effects of various factors such as temperature, pH, water activity, and the presence of preservatives, on the growth and survival of microorganisms.
+These models can then be used to predict the behaviour of microorganisms under different conditions, and to evaluate the effectiveness of various control measures, such as refrigeration, heat treatment, or the addition of preservatives.
+Predictive microbiology has many applications in food safety, as it can be used to assess the risk of foodborne illness, to design safe food processing and storage practices, and to develop new food products with extended shelf-life.
+For successful predictions it is essential that the model parameters can be estimated from experimental data.
+Due to measurement noise, the parameters can only be estimated with some uncertainties.
+That gives rise to a set of important questions: given the model structure can all parameters be estimated?
+What should be measured and when? What are the confidence intervals for the parameters? How can the experimental effort be minimised?
+Answering these questions leads to finding the \ac{oed} where optimised experimental conditions and/or measurement times allow for a reduction of the experimental load without loss of information \cite{derlindenImpactExperimentDesign2013, balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}.
+In general, the Experimental Design procedure can be used not only for the parameter estimation but also for model discrimination \cite{kreutzSystemsBiology2009, stamatiOptimalExperimentalDesign2016}.
+However, in this chapter, we focus on Experimental Design for parameter estimation.
+Comprehensive reviews can be found here: \cite{atkinsonDevelopmentsDesignExperiments1982, franceschiniModelbasedDesignExperiments2008,sunParameterEstimation2011,vilasPredictiveFood2016}.
+Depending on the goal, a researcher faces an important choice, which of the several sometimes contradicting objectives should be chosen for a particular case.
+For example, is it more desirable to have precise knowledge in a chosen set of parameters and less information about the remaining ones? What is the best balance between experimental effort and precision?
+Using multi-objective approaches, some attempts were made to answer these questions and to improve the experimental design by combining several objectives \cite{telenOptimalExperimentDesign2012, logistRobustMultiobjectiveOptimal2011}.
+For models which depend on external cues like temperature, it is {\it a priori} not clear whether constant are variable conditions are more efficient for the parameter estimation \cite{versyckIntroducingOptimal1999,garciaQualityShelflifePrediction2015}.
+The whole parameter estimation process starts with choosing a model structure. Once this is chosen a first parameter set is selected based on the literature review or prior data from previous experiments.
+Using this parameter set a first optimal experimental design is determined taking into account specific constraints, such as maximum number of measurements, measurement times, etc. Next, the designed experiments need to be performed and this data result into a new estimation of the parameters.
+If the confidence intervals of the parameters are sufficiently small, the scheme ends, otherwise one uses the new estimates as the starting point for the next experimental design (see Fig. \ref{fig:expdesign_scheme}).
+The process can be repeated several times to increase the precision of the parameter estimates until the desired accuracy is achieved.
+To test the scheme one can also perform numerical experiments and obtain {\it in-silico} data.
 
 \begin{figure}[H]
     \centering
@@ -129,11 +129,11 @@ To test the scheme one can also perform numerical experiments and obtain {\it in
 % ########################################################################
 % ########################################################################
 \section*{Materials and Methods}
-There are several software packages available for model-based experimental design~\cite{balsa-canto_amigo2_2016, zhang_optimal_2018, busetto_near-optimal_2013}. 
-These packages comprise a large number of tools and due to this require some time to understand how to use them. to make this tutorial self-contained, we developed \mintinline[bgcolor=white,style=emacs]{bash}{eDPM} (Experimental Design for Predictive Microbiology), which is a set of tools to calculate the Sensitivity and Fischer Information Matrix and do parameter space exploration in order to find optimal results. 
+There are several software packages available for model-based experimental design~\cite{balsa-canto_amigo2_2016, zhang_optimal_2018, busetto_near-optimal_2013}.
+These packages comprise a large number of tools and due to this require some time to understand how to use them. to make this tutorial self-contained, we developed \mintinline[bgcolor=white,style=emacs]{bash}{eDPM} (Experimental Design for Predictive Microbiology), which is a set of tools to calculate the Sensitivity and Fischer Information Matrix and do parameter space exploration in order to find optimal results.
 We expect a working installation of the popular scripting language Python $\geq3.7$~\cite{rossumPythonLanguageReference2010}.
-For installation instructions, please refer to the website \href{https://www.python.org/downloads/}{python.org}. 
-We also expect users, to be able to write, execute and display output of scripts. 
+For installation instructions, please refer to the website \href{https://www.python.org/downloads/}{python.org}.
+We also expect users, to be able to write, execute and display output of scripts.
 This tutorial can also be followed using jupyter notebooks \cite{jupyterteamJupyterNotebook}.
 Users can obtain it by installing \mintinline[bgcolor=white,style=emacs]{bash}{eDPM} from \href{https://pypi.org/project/FisInMa/0.0.1/}{pypi.org}.
 The python website has guides for installing packages \href{https://packaging.python.org/en/latest/tutorials/installing-packages/}{packaging.python.org/}.
@@ -160,7 +160,7 @@ Afterwards, we import the needed packages.
     \label{code:import_statements}
     % TODO make this FisInMa into a link
 \end{code}
-This will serve as the starting point for our script. 
+This will serve as the starting point for our script.
 In the following, we will append more code to it and utilise the methods developed in eDPM~\cite{edpm2023}.
 % TODO add citation which points to github repository
 If line numbers are missing, these should be filled by blank lines for better readability.
@@ -169,7 +169,7 @@ If line numbers are missing, these should be filled by blank lines for better re
 % ########################################################################
 \subsection*{Model Formulation}
 \subsubsection*{Theory}
-As a starting point it is necessary to define the mathematical model. 
+As a starting point it is necessary to define the mathematical model.
 We restrict our discussion to biological system which can be described by a system of \aclp{ode}:
 \begin{equation}
     \begin{cases}
@@ -179,16 +179,16 @@ We restrict our discussion to biological system which can be described by a syst
     \end{cases}.
 \end{equation}
 Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is the time, $\mbu$ is a vector of a externally controlled inputs into the system (e.g., supply of glucose or the external temperature) and $\mbp$ are the parameters of the system.
-We assume that a subset of the parameters $\mbp$ is unknown and should be estimated from data. 
+We assume that a subset of the parameters $\mbp$ is unknown and should be estimated from data.
 Predominantly, the state variables cannot be directly observed, but rather the observables are functions of the state variables:
 \begin{equation}
     \mby (t) = g(t, \mbx (t), \mbu, \mbp) + \epsilon (t),
     \label{eq:observ_general}
 \end{equation}
-where the function $g$ is the observation or output function, and $\epsilon$ is the measurement noise. 
+where the function $g$ is the observation or output function, and $\epsilon$ is the measurement noise.
 The observational noise is often assumed to be an independently distributed Gaussian noise with zero mean and variance $\sigma^2$: $\epsilon (t) \sim N(0, \sigma^2)$, $\forall t$.\\
 
-To demonstrate how Experimental Design works, we use in this tutorial the widely employed mathematical model by Baranyi and Roberts model \cite{baranyiDynamicApproach1994}, which was devised to describe bacteria growth. 
+To demonstrate how Experimental Design works, we use in this tutorial the widely employed mathematical model by Baranyi and Roberts model \cite{baranyiDynamicApproach1994}, which was devised to describe bacteria growth.
 The model introduces two state variables $\mbx = (x_1, x_2)$, where $x_1(t)$ denotes the cell concentration of a bacterial population at the time $t$ and $x_2(t)$ defines a physiological state of the cells, the process of adjustment (lag-phase):
 \begin{equation}
     \begin{cases}
@@ -197,29 +197,29 @@ The model introduces two state variables $\mbx = (x_1, x_2)$, where $x_1(t)$ den
     \end{cases}.
     \label{eq:ode_BaranyiRoberts}
 \end{equation}
-Here $\mu^\text{max}$ determines the maximum growth rate, and $x_1^\text{max}$ is the maximal bacteria concentration due to environmental constraints. 
-To account for the influence of the temperature on the activity of the model, we will use the 'square root' or Ratkowsky-type model for the maximum growth rate \cite{}
+Here $\mu^\text{max}$ determines the maximum growth rate, and $x_1^\text{max}$ is the maximal bacteria concentration due to environmental constraints.
+To account for the influence of the temperature on the activity of the model, we will use the 'square root' or Ratkowsky-type model for the maximum growth rate~\cite{ratkowsky_relationship_1982}
 \begin{equation}
     \sqrt{\mu^\text{max}} = b (T - T_\text{min}),
     \label{eq:RatkowskyModel}
 \end{equation} 
-where $b$ is the regression coefficient, and $T_\text{min}$ is the minimum temperature at which the growth can occur. 
+where $b$ is the regression coefficient, and $T_\text{min}$ is the minimum temperature at which the growth can occur.
 As the observable we choose the bacteria count, i.e:
 \begin{equation}
     y(t) = x_1(t)+\epsilon(t),
  \end{equation} 
-a common choice in predictive microbiology. 
-By this and the equations (\ref{eq:ode_BaranyiRoberts}), (\ref{eq:RatkowskyModel}) the system is fully defined. 
-Here $x_1^\text{max}, b, T_\text{min}$ are the parameters that we estimate using observational data $y$ at measurement times $t_i$, and temperature $T$ is an input of the system. 
+a common choice in predictive microbiology.
+By this and the equations (\ref{eq:ode_BaranyiRoberts}), (\ref{eq:RatkowskyModel}) the system is fully defined.
+Here $x_1^\text{max}, b, T_\text{min}$ are the parameters that we estimate using observational data $y$ at measurement times $t_i$, and temperature $T$ is an input of the system.
 Based on this model, we would like to optimize the choice of measurement times as well as temperatures (inputs) of the system to find the \acl{oed}.
 %
 % ########################################################################
 \subsubsection*{Code}
-In order to be able to solve the equations numerically, we first need first to define the \ac{ode} system in python. 
-As was explained in the previous sections, this system consists of the equation (\ref{eq:ode_general}) with initial values $t_0,x_0$. 
-Next, we need to define all numerical values present in the system. 
-We distinguish between time points $t_i$ at which the result of the \ac{ode} is evaluated, inputs $u$, which alter the behaviour of our system (for example temperature, humidity, etc.), parameters $p$, which are the quantities that we want to estimate and other arguments which might be needed to solve the \ac{ode}. 
-Table \ref{tab:fsm-variables} provides an overview of these quantities and gives corresponding names in the code. 
+In order to be able to solve the equations numerically, we first need first to define the \ac{ode} system in python.
+As was explained in the previous sections, this system consists of the equation (\ref{eq:ode_general}) with initial values $t_0,x_0$.
+Next, we need to define all numerical values present in the system.
+We distinguish between time points $t_i$ at which the result of the \ac{ode} is evaluated, inputs $u$, which alter the behaviour of our system (for example temperature, humidity, etc.), parameters $p$, which are the quantities that we want to estimate and other arguments which might be needed to solve the \ac{ode}.
+Table \ref{tab:fsm-variables} provides an overview of these quantities and gives corresponding names in the code.
 In the following, we will step-by-step explain how to specify all variables needed by using the example of the Baranyi-Roberts Model (Eq. \ref{eq:ode_BaranyiRoberts}).
 \begin{table}[H]
     \centering
@@ -246,9 +246,11 @@ In the following, we will step-by-step explain how to specify all variables need
     \caption{Summary of user-defined functions and variables.}
 \label{tab:fsm-variables}
 \end{table}
-\paragraph{Defining the \acs{ode}} 
-We must define a few functions in python. The first function will be the right-hand side of equation (\ref{eq:ode_general}), i.e., we need to implement the Baranyi-Roberts model (\ref{eq:ode_BaranyiRoberts}) into a function. 
-The implementation can be seen in Figure \ref{code:code_baranyi_roberts_ode_fun}. We explain the individual steps to create this function:
+\paragraph{Defining the \acs{ode}}
+We must define a few functions in python.
+The first function will be the right-hand side of equation (\ref{eq:ode_general}), i.e., we need to implement the Baranyi-Roberts model (\ref{eq:ode_BaranyiRoberts}) into a function. 
+The implementation can be seen in Figure \ref{code:code_baranyi_roberts_ode_fun}.
+We explain the individual steps to create this function:
 \begin{itemize}
 \item  \mintinline[bgcolor=white,style=emacs]{python}{def ode_fun(t, x, u, P, ode_args)}\\
 The function name can be chosen freely, but the order of required function arguments is fixed by the definition.  
