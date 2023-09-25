@@ -594,15 +594,19 @@ Practical non-identifiability results in large confidence intervals~\cite{holmbe
 % ########################################################################
 \subsubsection*{Optimality Criteria}
 The Fisher Information matrix needs to be mapped on an objective function. There are several ways to do this resulting in different objectives also called criteria.
-Optimisation of the different objectives result in different experimental design, some of the most popular criteria are \cite{}:
+Optimisation of the different objectives result in different experimental design, some of the most popular criteria are~\cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008, dette_designing_1997, walter_qualitative_1990}:
 \begin{itemize}
- \item \textbf{D-optimality criterion} maximises the determinant $\det (F)$ of the \ac{fim}. 
- Translated to the parameter space it means that the volume of the confidence region (see Fig. \ref{fig:opt_criteria}) (or the geometric mean of all errors) is minimised.
- The confidence region at a confidence level of $\alpha$ [WHAT IS $\alpha$?] can be interpreted as there is a $\alpha \cdot 100 \%$ chance that the best parameter fit will belong to this area in case of repeating the experiment and estimations multiple times.
- It is usually presented as a confidence ellipsoid. D-optimality is the most widely used criterion and is suitable even if the parameters have different dimensionalities [WHAT DOES THIS MEAN EXACTLY? THE OTHER CRITERIA ARE NOT SUITED IN THIS CASE? AND WHAT DOES DIMENSIONALITY MEAN?].
+\item \textbf{D-optimality criterion} maximises the determinant $\det (F)$ of the \ac{fim}. 
+ Translated to the parameter space, it means that the volume of the confidence region (see Fig. \ref{fig:opt_criteria}) (or the geometric mean of all errors) is minimised.
+ The size of the confidence region is determined by a confidence level, which is typically chosen $90 \%$ or $95 \%$.
+ The confidence level can be interpretated as a probability value that the best 
+ parameter fit will belong to this area in case of repeating the experiment and estimations multiple times.
+ The confidence region is usually presented as a confidence ellipsoid. 
+ D-optimality is the most widely used criterion and is suitable even in case of such parameter transformations as rescaling.
 \item \textbf{E-optimality criterion} maximises the smallest eigenvalue $\lambda_{\min}$ of the \ac{fim}, which is the same as reducing only the largest estimation error.
 \item \textbf{A-optimality criterion} maximises the sum of all eigenvalues $\sum_i \lambda_i$, which can be interpreted as minimising the algebraic mean of all errors.
- \item \textbf{Modified E-optimality criterion} maximises the ratio between the minimal and maximal eigenvalue $\lambda_{\min} / \lambda_{\max}$ [INTERPRETATION?].
+\item \textbf{Modified E-optimality criterion} maximises the ratio between the minimal and maximal eigenvalue $\lambda_{\min} / \lambda_{\max}$ and reduces correlation between two parameters correspnding to these eigenvalues.
+ 
 \end{itemize}
 Each of the criteria has its pros and cons so the reader should have a closer look at the various properties of these criteria, for instance, in Franceschini's and Macchietto's paper \cite{franceschiniModelbasedDesignExperiments2008}.
 For the geometrical interpretation of the criteria using the confidence region shown in Fig. \ref{fig:opt_criteria}.
@@ -614,7 +618,7 @@ For the geometrical interpretation of the criteria using the confidence region s
     The ellipsoid shows the geometrical meaning of the optimality criteria. 
     The center of the ellipsoid represents the estimated parameter values.
     The radii are the uncertainties of the estimates associated with different eigenvalues of the \ac{fim} $\lambda_1$, $\lambda_2$ ($\lambda_1 < \lambda_2$).
-    The D-optimality aims to minimize the volume of the ellipsoid, the E-optimality minimizes the largest radius, A-optimality minimizes the perimeter of the rectangle that encloses the ellipse (dashed gray line), and, finally,  Modified E-optimality tends to make the ellipse as spherical as possible.}}
+    The D-optimality aims to minimize the volume of the ellipsoid, the E-optimality minimizes the largest radius, A-optimality minimizes the perimeter of the rectangle that encloses the ellipse (dashed gray line), and, finally,  modified E-optimality tends to make the ellipse as spherical as possible.}}
     \label{fig:opt_criteria}
 \end{figure}
 %
