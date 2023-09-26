@@ -627,40 +627,43 @@ For the geometrical interpretation of the criteria using the confidence region s
 After defining the objective function based on the Fisher Information matrix the next step is to optimise the chosen optimality criteria.
 Finding the Experimental Design corresponds to finding the global maximum of the objective, which can be formulated as an optimal control problem~\cite{espie_optimal_1989}.
 This problem has been widely studied, and multiple numerical solution algorithms for both local and global optimisation were introduced~\cite{esposito_global_2000, bangaImprovingFoodProcessing2003, ali_numerical_1997, runarsson_stochastic_2000}.
-In the supplied toolbox {\it eDPM}, three methods were implemented: differential evolution, basin-hopping, and so-called “brute force” method that checks each point of a multidimensional grid.
-These algorithms have mild computational load but one cannot be sure that the absolute optimum is reached~\cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}.
+In the supplied toolbox {\it eDPM}, three methods were implemented: differential evolution, basin-hopping, and so-called “brute force” method.
 We give in the following a brief summary of the implemented methods.
-For more information the reader should turn to the available literature, e.g.,~\cite{banga_global_1996, banga_dynamic_2005}.
+For more information the reader should turn to the available literature, e.g.,~\cite{stornDifferentialEvolutionSimple1997, walesGlobalOptimizationBasinHopping1997}.
 \newline
 
 The \ac{de} algorithm developed by Storn and Price (1996)~\cite{stornDifferentialEvolutionSimple1997} is one of the stochastic global optimisation methods appropriate for nonlinear dynamic problems.
+Such types of algorithms have mild computational load but one cannot be sure that the absolute optimum is reached~\cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}.
 For differential evolution an initial population of candidate vectors for the Experimental Design (sampling times and inputs) is randomly chosen from the region of available values.
 Then each vector mutates by mixing with other candidate vector.
 To a chosen vector from the initial population $D_0$, we add a weighted difference between two other randomly chosen vectors from the same set $(D_\text{rand1} - D_\text{rand2})$.
-This process is called mutation and a new vector $D_m$ is obtained. The next step is to construct a new trial solution.
+This process is called mutation and a new vector $D_m$ is obtained.
+The next step is to construct a new trial solution.
 This is done by choosing the elements of the trial vector either from the initial $D_0$ or the mutated $D_m$ vectors. 
 For each new element of trial vector, a random number drawn uniformly from the interval [0, 1) and compared to the so-called recombination constant.
 If this random number is less than the recombination constant, then the trial vector element is chosen from the vector $D_m$, otherwise from $D_0$.
 The degree of mutation can be controlled by changing the recombination constant; the larger this constant is, the more often vector elements are chosen from $D_m$.
 Subsequently, the objective function is calculated using the trial vector and the result is compared to result obtained using the initial solution $D_0$; and the best of them is chosen for the next generation.
-This procedure is repeated for every solution candidate of the initial population, by means of which the new generation is build.
+This procedure is repeated for every solution candidate of the initial population, by means of which the new generation is build~\cite{scipydiffev}.
 The process of population mutation is repeated till a stoping criterion is reached, e.g., the maximum number of generations (steps) is reached or the standard deviation of the candidate vectors is below a certain threshold~\cite{Zielinski_DE}.
 This method is rather simple and straightforward, and does not require any gradient calculation and is easy to parallelise.
 Another advantages include its fast convergence and robustness at numerical optimization~\cite{babu_differential_2007}.
 \newline
 
-The second implemented method is basin-hopping developed by David Wales and Jonathan Doye \cite{walesGlobalOptimizationBasinHopping1997}.
-It combines the Monte-Carlo and local optimisation and works as follows. [DIE FOLGENDEN SÄTZE SIND LEIDER VÖLLIG UNVERSTÄNDLICH; BITTE NEU FORMULIEREN]
-The classic Monte-Carlo algorithm implies that the values of the optimised vector are perturbed and are either accepted or rejected.
-However, in this modified strategy, after perturbation, the vector is additionally subjected to local minimisation. And only after this procedure the move is accepted according to the Metropolis criterion.
+The second implemented method is basin-hopping developed by David Wales and Jonathan Doye~\cite{walesGlobalOptimizationBasinHopping1997}.
+This iteratite algorithm combines the Monte-Carlo and local optimisation and works as follows.
+During the iteration step the design vector, i.e., vector of measurement times and inputs, is subjected to a random preturbation and then to local minimization.
+After this the step is either accepted or rejected.
+As in a standard Monte-Carlo method, the decision is made using the Metropolis criterion for the objective function~\cite{scipybashop}.
+For deeper understanding Monte-Carlo minimization the reader can refer to the papers~\cite{li_monte_1987, beichl_metropolis_2000}.
 \newline
 
 And lastly, a simple brute force method was implemented as well.
 It is a grid search algorithm calculating the objective function value at each point of a multidimensional grid in a chosen region.
-The advantage of this algorithm is that we can be sure that the global minimum is achieved [DAS STIMMT NICHT; DAS GITTER-OPTIMUM WIRD GEFUNDEN] because all possibilities are checked.
-However, the downside of this technique is that rather slow and inefficient.
-Even though discretisation and reduction of the whole number of possible values [GRID SEARCH ALREADY IMPLIES DISCRETISATION; WAS IHR MEINT IST WOHL EIN GRÖBERES GITTER?] can improve the performance, the computational time of this method allows optimisation only for a small number of optimisation times or inputs.
-Some other methods for the optimal control problem the reader can find, for example, in the papers of Banga \etal \cite{BANGA2005407, bangaImprovingFoodProcessing2003}.
+This method is suitable for discrete optimization with a limited number of grid values.
+However, the downside of this technique is its slowness, inefficiency and long computational times that can be noticed by increasing the possible discrete solutions~\cite{scipybrute}.
+\newline
+Some other methods for the optimal control problem the reader can find, for example, in the papers of Banga \etal \cite{banga_global_1996, banga_dynamic_2005, BANGA2005407, bangaImprovingFoodProcessing2003}.
 %
 % ########################################################################
 \subsubsection*{Optimisation Code}
