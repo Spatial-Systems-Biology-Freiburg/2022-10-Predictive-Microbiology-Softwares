@@ -712,7 +712,7 @@ To this end we study the growth of a bacterial colony consisting of a single spe
 We would like to estimate the parameters of the model with as few experiments as possible to minimise the experimental effort.
 The observable is the bacterial count, i.e., the first component of the state variable vector $y = x_1$.
 As an additional constraint we need to consider that the available climate chambers can only operate the temperature in the range from 3 to 12 degrees.
-For the starting values of the parameters we take from literature $x_1^\text{max}=10^8$, $b=0.2$, $T_\text{min}=1.0$, and the initial conditions of the \acp{ode} are chosen to be $x_1(0) = 10^3$, $x_2(0)=0.01$.
+For the starting values of the parameters we take from literature $x_1^\text{max}=10^8$, $b=0.2$, $T_\text{min}=1.0$, and the initial conditions of the \acp{ode} are chosen to be $x_1(0) = 10^3$, $x_2(0)=0.01$ \cite{}(?).
 Moreover, we choose for all the measurements points the error model given by Eq. (\ref{eq:error_model}) with $\gamma_\text{abs}=0.3$ and $\gamma_\text{rel}=0.1$.
 The task is to propose at which temperatures to perform the experiments and which sampling times to choose.
 The number of different temperatures of the experiments is not specified yet, but we aim to chose the lowest possible number.
@@ -723,14 +723,16 @@ This condition is satisfied if at least two temperatures are measured and two ti
 The resulting \ac{oed} for such a system is presented in Fig. \ref{fig:baranyi_roberts_observable}, \ref{fig:baranyi_roberts_sensitivities}.
 
 \begin{figure}[H]
-    \begin{subfigure}{.9\textwidth}
+    \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.35]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00.pdf}
-      \end{subfigure}    
-      \begin{subfigure}{.9\textwidth}
+        \includegraphics[scale=0.27]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00.pdf}
+        \subcaption{}
+    \end{subfigure}    
+    \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.35]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00.pdf}
-      \end{subfigure}
+        \includegraphics[scale=0.27]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00.pdf}
+        \subcaption{}
+    \end{subfigure}
     \caption{{\footnotesize The example of the output of the Experimental Design optimisation procedure for the Baranyi and Roberts model. 
     The line plot presents the model solution for the observable, and the scatter plot determines the time points chosen by Experimental Design. [DIE BILDER BITTE BESCHRIFTEN MIT A UND B, UND MEHR TEXT ALS ERKLÄRUNG. AUCH GIBT ES HIER KEINEN SCATTER PLOT, SONDERN FILLED CIRCLES ODER ÄHNLICH]}}
     \label{fig:baranyi_roberts_observable}
@@ -740,33 +742,38 @@ As can be noticed, the algorithm has chosen two different timepoints for tempera
 Each of these time points corresponds to an extreme of at least one sensitivity (see Fig. \ref{fig:baranyi_roberts_sensitivities}).
 [WENN DAS STIMMT DANN SIND DOCH VIEL WENIGER EXPERIMENTE AUSREICHEND UM DIE PARAMETER ZU SCHÄTZEN ALS GEWÖHNLICH DURCHGEFÜHRT WERDEN. BITTE UNBEDINGT MIT DER LITERATUR VERGLEICHEN]
 \begin{figure}[H]
-    \begin{subfigure}{.9\textwidth}
+    \begin{subfigure}{.5\textwidth}
       \centering
-      \includegraphics[scale=0.35]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_00.pdf}
+      \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_00.pdf}
+      \subcaption{}
     \end{subfigure}
-    \begin{subfigure}{.9\textwidth}
+    \begin{subfigure}{.5\textwidth}
       \centering
-      \includegraphics[scale=0.35]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_01.pdf}
+      \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_01.pdf}
+      \subcaption{}
     \end{subfigure}
-    \begin{subfigure}{.9\textwidth}
+    \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.35]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_02.pdf}
+        \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_02.pdf}
+        \subcaption{}
     \end{subfigure}
-\end{figure}%
-\begin{figure}[H]\ContinuedFloat
-    \begin{subfigure}{.9\textwidth}
+%\end{figure}%
+%\begin{figure}[H]\ContinuedFloat
+    \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.35]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_00.pdf}
-      \end{subfigure}
-      \begin{subfigure}{.9\textwidth}
+        \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_00.pdf}
+        \subcaption{}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.35]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_01.pdf}
-      \end{subfigure}
-  
-      \begin{subfigure}{.9\textwidth}
+        \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_01.pdf}
+        \subcaption{}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
           \centering
-          \includegraphics[scale=0.35]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_02.pdf}
-      \end{subfigure}
+          \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_02.pdf}
+          \subcaption{}
+        \end{subfigure}
     \caption{{\footnotesize The example of the sensitivities calculated for the Experimental Design optimisation procedure for the Baranyi and Roberts model.
     The line plots present the model solution for the sensitivities, and the scatter plots determine the time points chosen by Experimental Design. [DIE BILDER IN PANELS ZUSAMMENFASSEN UND BESCHRIFTEN]}} 
     \label{fig:baranyi_roberts_sensitivities}
@@ -829,24 +836,28 @@ We use as initial values for two species $(x_{10}, x_{20}, y_{10}, y_{20}) = (10
 Other optimisation arguments were taken the same as in previous example.
 To get the new Optimal Experimental Design for shown in Fig. \ref{fig:baranyi_roberts_2species_observable}.
 \begin{figure}[H]
-    \begin{subfigure}{.9\textwidth}
+    \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.35]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_00.pdf}
+        \includegraphics[scale=0.27]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_00.pdf}
+        \subcaption{}
       \end{subfigure}    
-      \begin{subfigure}{.9\textwidth}
+      \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.35]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_01.pdf}
-      \end{subfigure}
-    \end{figure}%
-    \begin{figure}[H]\ContinuedFloat      
-      \begin{subfigure}{.9\textwidth}
+        \includegraphics[scale=0.27]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_01.pdf}
+    \subcaption{}  
+    \end{subfigure}
+    %\end{figure}%
+    %\begin{figure}[H]\ContinuedFloat      
+      \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.35]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_00.pdf}
-      \end{subfigure}      
-      \begin{subfigure}{.9\textwidth}
+        \includegraphics[scale=0.27]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_00.pdf}
+    \subcaption{}
+    \end{subfigure}      
+      \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.35]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_01.pdf}
-      \end{subfigure}   
+        \includegraphics[scale=0.27]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_01.pdf}
+        \subcaption{}  
+    \end{subfigure}   
     \caption{{\footnotesize The Optimal Experimental Design for the Baranyi and Roberts model with two different species. 
     The line plot presents the model solution for the observable, and the scatter plot determines the time points chosen by Experimental Design. [SEHT MEINE KOMMENTARE BEI DEN ANDEREN BILDERN.]}}
     \label{fig:baranyi_roberts_2species_observable}
