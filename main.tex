@@ -627,7 +627,7 @@ For the geometrical interpretation of the criteria using the confidence region s
 After defining the objective function based on the Fisher Information matrix the next step is to optimise the chosen optimality criteria.
 Finding the Experimental Design corresponds to finding the global maximum of the objective, which can be formulated as an optimal control problem~\cite{espie_optimal_1989}.
 This problem has been widely studied, and multiple numerical solution algorithms for both local and global optimisation were introduced~\cite{esposito_global_2000, bangaImprovingFoodProcessing2003, ali_numerical_1997, runarsson_stochastic_2000}.
-In the supplied toolbox {\it eDPM}, three methods were implemented: differential evolution, basin-hopping, and so-called “brute force” method.
+In the supplied toolbox {\it eDPM}, three methods were implemented: differential evolution, basin-hopping, and the so-called “brute force” method.
 We give in the following a brief summary of the implemented methods.
 For more information the reader should turn to the available literature, e.g.,~\cite{stornDifferentialEvolutionSimple1997, walesGlobalOptimizationBasinHopping1997}.
 \newline
@@ -651,17 +651,17 @@ Another advantages include its fast convergence and robustness at numerical opti
 \newline
 
 The second implemented method is basin-hopping developed by David Wales and Jonathan Doye~\cite{walesGlobalOptimizationBasinHopping1997}.
-This iteratite algorithm combines the Monte-Carlo and local optimisation and works as follows.
-During the iteration step the design vector, i.e., vector of measurement times and inputs, is subjected to a random preturbation and then to local minimization.
-After this the step is either accepted or rejected.
+This iterative algorithm combines the Monte-Carlo and local optimisation and works as follows.
+During the iteration step the design vector, i.e., vector of measurement times and inputs, is subjected to a random perturbation and then to local minimisation.
+After this, the step is either accepted or rejected.
 As in a standard Monte-Carlo method, the decision is made using the Metropolis criterion for the objective function~\cite{scipybashop}.
-For deeper understanding Monte-Carlo minimization the reader can refer to the papers~\cite{li_monte_1987, beichl_metropolis_2000}.
+For a deeper understanding of the Monte-Carlo minimisation, the reader can refer to the papers~\cite{li_monte_1987, beichl_metropolis_2000}.
 \newline
 
 And lastly, a simple brute force method was implemented as well.
 It is a grid search algorithm calculating the objective function value at each point of a multidimensional grid in a chosen region.
-This method is suitable for discrete optimization with a limited number of grid values.
-However, the downside of this technique is its slowness, inefficiency and long computational times that can be noticed by increasing the possible discrete solutions~\cite{scipybrute}.
+This method is suitable for discrete optimization with limited number of grid values.
+However, the downside of this technique is its slowness, inefficiency and long computational times, noticeable for higher number of the possible discrete solutions~\cite{scipybrute}.
 \newline
 Some other methods for the optimal control problem the reader can find, for example, in the papers of Banga \etal \cite{banga_global_1996, banga_dynamic_2005, BANGA2005407, bangaImprovingFoodProcessing2003}.
 %
