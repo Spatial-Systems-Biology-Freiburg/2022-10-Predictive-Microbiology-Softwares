@@ -36,6 +36,7 @@
 \newcommand{\mbp}{\mathbf{p}}
 \newcommand{\mby}{\mathbf{y}}
 \newcommand{\mbd}{\mathbf{d}}
+\newcommand{\cmt}[1]{\textcolor{red} {[#1]}}
 \providecommand{\keywords}[1]{\textbf{Keywords } #1}
 
 % Create a new environment for code samples.
@@ -189,7 +190,8 @@ where the function $g$ is the observation or output function, and $\epsilon$ is 
 The observational noise is often assumed to be an independently distributed Gaussian noise with zero mean and variance $\sigma^2$: $\epsilon (t) \sim N(0, \sigma^2)$, $\forall t$.\\
 
 To demonstrate how Experimental Design works, we use in this tutorial the widely employed mathematical model by Baranyi and Roberts model \cite{baranyiDynamicApproach1994}, which was devised to describe bacteria growth.
-The model introduces two state variables $\mbx = (x_1, x_2)$, where $x_1(t)$ denotes the cell concentration of a bacterial population at the time $t$ and $x_2(t)$ defines a physiological state of the cells, the process of adjustment (lag-phase):
+The model introduces two state variables $\mbx = (x_1, x_2)$, where $x_1(t)$ denotes the cell concentration of a bacterial population at the time $t$ 
+and $x_2(t)$ is the quantity defining the proportion of the growth rate specified by the environment, e.g., a limiting nutrient critical for bacteria growth. 
 \begin{equation}
     \begin{cases}
         \dot x_1(t) = \frac{x_2(t)}{x_2(t) + 1} \mu^\text{max} \big(1 - \frac{x_1(t)}{x_1^\text{max}}\big) x(t)  = f_1 \\
@@ -198,6 +200,7 @@ The model introduces two state variables $\mbx = (x_1, x_2)$, where $x_1(t)$ den
     \label{eq:ode_BaranyiRoberts}
 \end{equation}
 Here $\mu^\text{max}$ determines the maximum growth rate, and $x_1^\text{max}$ is the maximal bacteria concentration due to environmental constraints.
+The condition $x_2(0)$ allows to quantify the initial physiological state of the cells and, hence, the process of adjustment (lag-phase)~\cite{grijspeerdt_estimating_1999}.
 To account for the influence of the temperature on the activity of the model, we will use the 'square root' or Ratkowsky-type model for the maximum growth rate~\cite{ratkowsky_relationship_1982}
 \begin{equation}
     \sqrt{\mu^\text{max}} = b (T - T_\text{min}),
@@ -712,7 +715,26 @@ To this end we study the growth of a bacterial colony consisting of a single spe
 We would like to estimate the parameters of the model with as few experiments as possible to minimise the experimental effort.
 The observable is the bacterial count, i.e., the first component of the state variable vector $y = x_1$.
 As an additional constraint we need to consider that the available climate chambers can only operate the temperature in the range from 3 to 12 degrees.
-For the starting values of the parameters we take from literature $x_1^\text{max}=10^8$, $b=0.2$, $T_\text{min}=1.0$, and the initial conditions of the \acp{ode} are chosen to be $x_1(0) = 10^3$, $x_2(0)=0.01$ \cite{}(?).
+The parameter values and initial values of the system, taken from literature~\cite{}, are presented in Table~\ref{tab:1species_vals}.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccc}
+    \specialrule{.1em}{.01em}{.05em} 
+    \textbf{Variable} \hspace{3mm} & \textbf{Value} \hspace{3mm} & \textbf{Units}\\
+    \toprule
+    $n_\text{max}$      & $10^8$ & cfu/g                                     \\
+    $b$               & 0.2    & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
+    $T_{\text{min}}$ & 1.0    & ${^\circ \text{C}}$                       \\
+    \midrule
+    $x_{10}$            & $10^3$ & cfu/g                                     \\
+    $x_{20}$            & 0.01    &                                           \\
+    \bottomrule
+    \end{tabular}
+    \caption{{\footnotesize The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}).}}
+    \label{tab:1species_vals}
+\end{table}
+\cmt{Look for parameters/initial values for Baranyi model: \cite{gospavic_mathematical_2008, grijspeerdt_estimating_1999}}.
+
 Moreover, we choose for all the measurements points the error model given by Eq. (\ref{eq:error_model}) with $\gamma_\text{abs}=0.3$ and $\gamma_\text{rel}=0.1$.
 The task is to propose at which temperatures to perform the experiments and which sampling times to choose.
 The number of different temperatures of the experiments is not specified yet, but we aim to chose the lowest possible number.
@@ -828,9 +850,31 @@ Combining equations (\ref{eq:Lotka_Volterra_2species_2}, \ref{eq:growth_rate_2sp
     \end{cases}
     \label{eq:model_2species_resource}
 \end{equation}
-where $x_2, y_2$ are the physiological states [WAS MEINT IHR DAMIT?] of the species $x_1$ and $y_1$, respectively.
-The parameter vector of this system reads: $\mbp = (n_\text{max}, b_x, T_{\text{min}, x}, b_y, T_{\text{min}, y})$.
-We use as initial values for two species $(x_{10}, x_{20}, y_{10}, y_{20}) = (10^5, 0.1, 10^3, 0.1)$ and the starting vector $\mbp_0= (10^8, 0.1, 1.0, 0.3, 1.0)$ to calculate the \ac{fim}.
+where $x_2, y_2$ are the concentration of the quantities determining the critical substance (nutritient) needed for growth of the species $x_1$ and $y_1$, respectively.
+The parameter vector of this system $\mbp = (n_\text{max}, b_x, T_{\text{min}, x}, b_y, T_{\text{min}, y})$ 
+and the vector of the initial values $\mbx=(x_{10}, x_{20}, y_{10}, y_{20})$ are presented in Table~\ref{tab:2species_vals}.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccc}
+    \specialrule{.1em}{.01em}{.05em} 
+    \textbf{Variable} \hspace{3mm} & \textbf{Value} \hspace{3mm} & \textbf{Units}\\
+    \toprule
+    $n_\text{max}$      & $10^8$ & cfu/g                                     \\
+    $b_x$               & 0.1    & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
+    $T_{\text{min}, x}$ & 1.0    & ${^\circ \text{C}}$                       \\
+    $b_y$               & 0.3    & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
+    $T_{\text{min}, y}$ & 1.0    & ${^\circ \text{C}}$                       \\
+    \midrule
+    $x_{10}$            & $10^5$ & cfu/g                                     \\
+    $x_{20}$            & 0.1    &                                           \\
+    $y_{10}$            & $10^3$ & cfu/g                                     \\
+    $y_{20}$            & 0.1    &                                           \\
+    \bottomrule
+    \end{tabular}
+    \caption{{\footnotesize The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:model_2species_resource}).}}
+    \label{tab:2species_vals}
+\end{table}
+
 [WAS SIND GENAU DIE ZU OPTIMIERENDEN GRÖSSEN? BITTE HIER AUCH BESCHREIBEN.]
 
 Other optimisation arguments were taken the same as in previous example.
