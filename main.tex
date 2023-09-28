@@ -714,27 +714,26 @@ As a summary of this tutorial, we would like to present the resulting output of 
 To this end we study the growth of a bacterial colony consisting of a single specie and describe it mathematically using the Baranyi and Roberts model given by Eqs. (\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}).
 We would like to estimate the parameters of the model with as few experiments as possible to minimise the experimental effort.
 The observable is the bacterial count, i.e., the first component of the state variable vector $y = x_1$.
-As an additional constraint we need to consider that the available climate chambers can only operate the temperature in the range from 3 to 12 degrees.
-The parameter values and initial values of the system, taken from literature~\cite{}, are presented in Table~\ref{tab:1species_vals}.
+As an additional constraint we need to consider that the available climate chambers can only operate the temperature in the range from 2 to 12 degrees, and the experiment should not take longer than 100 hours.
+The parameter values and initial values of the system are taken in accordance with the literature~\cite{gospavic_mathematical_2008} and presented in Table~\ref{tab:1species_vals}.
 \begin{table}[H]
     \centering
     \begin{tabular}{ccc}
     \specialrule{.1em}{.01em}{.05em} 
-    \textbf{Variable} \hspace{3mm} & \textbf{Value} \hspace{3mm} & \textbf{Units}\\
+    \textbf{Variable} \hspace{3mm} & \textbf{Value} \hspace{3mm} & \textbf{Units}                            \\
     \toprule
-    $n_\text{max}$      & $10^8$ & cfu/g                                     \\
-    $b$               & 0.2    & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
-    $T_{\text{min}}$ & 1.0    & ${^\circ \text{C}}$                       \\
+    $n_\text{max}$                 & $2 \cdot 10^4$              & cfu/g                                     \\
+    $b$                            & 0.2                         & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
+    $T_{\text{min}}$               & -5.5                        & ${^\circ \text{C}}$                       \\
     \midrule
-    $x_{10}$            & $10^3$ & cfu/g                                     \\
-    $x_{20}$            & 0.01    &                                           \\
+    $x_{10}$                       & 50.0                        & cfu/g                                     \\
+    $x_{20}$                       & 1.0                         &                                           \\
     \bottomrule
     \end{tabular}
-    \caption{{\footnotesize The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}).}}
+    \caption{{\footnotesize The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}).
+    The values correspond to estimated parameters for Pseudomonas spp. in poultry under aerobic conditions~\cite{gospavic_mathematical_2008}.}}
     \label{tab:1species_vals}
 \end{table}
-\cmt{Look for parameters/initial values for Baranyi model: \cite{gospavic_mathematical_2008, grijspeerdt_estimating_1999}}.
-
 Moreover, we choose for all the measurements points the error model given by Eq. (\ref{eq:error_model}) with $\gamma_\text{abs}=0.3$ and $\gamma_\text{rel}=0.1$.
 The task is to propose at which temperatures to perform the experiments and which sampling times to choose.
 The number of different temperatures of the experiments is not specified yet, but we aim to chose the lowest possible number.
@@ -747,57 +746,61 @@ The resulting \ac{oed} for such a system is presented in Fig. \ref{fig:baranyi_r
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.27]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00.pdf}
+        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00.pdf}
         \subcaption{}
     \end{subfigure}    
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.27]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00.pdf}
+        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00.pdf}
         \subcaption{}
     \end{subfigure}
     \caption{{\footnotesize The example of the output of the Experimental Design optimisation procedure for the Baranyi and Roberts model. 
-    The line plot presents the model solution for the observable, and the scatter plot determines the time points chosen by Experimental Design. [DIE BILDER BITTE BESCHRIFTEN MIT A UND B, UND MEHR TEXT ALS ERKLÄRUNG. AUCH GIBT ES HIER KEINEN SCATTER PLOT, SONDERN FILLED CIRCLES ODER ÄHNLICH]}}
+    The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
+    The Optimal Design is proposed for one observable which is the total bacterial count of the specie $x_1$ and consists of two time series where samples are stored at temperatures (a) $T_1 = 3.5^\circ$C and (b) $T_2 = 12^\circ$C.
+    The corresponding measurement times are (a)~$t_{11}=100$h and (b)~$t_{21}=43$h, $t_{22}=100$h.
+    [DIE BILDER BITTE BESCHRIFTEN MIT A UND B, UND MEHR TEXT ALS ERKLÄRUNG. AUCH GIBT ES HIER KEINEN SCATTER PLOT, SONDERN FILLED CIRCLES ODER ÄHNLICH]}}
     \label{fig:baranyi_roberts_observable}
 \end{figure}
 
-As can be noticed, the algorithm has chosen two different timepoints for temperature 12.0 and  one time point for temperature value 5.9.
+As can be noticed, the algorithm has chosen two different timepoints for temperature 12.0 and  one time point for temperature value 3.5.
 Each of these time points corresponds to an extreme of at least one sensitivity (see Fig. \ref{fig:baranyi_roberts_sensitivities}).
 [WENN DAS STIMMT DANN SIND DOCH VIEL WENIGER EXPERIMENTE AUSREICHEND UM DIE PARAMETER ZU SCHÄTZEN ALS GEWÖHNLICH DURCHGEFÜHRT WERDEN. BITTE UNBEDINGT MIT DER LITERATUR VERGLEICHEN]
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
       \centering
-      \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_00.pdf}
+      \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_00.pdf}
       \subcaption{}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_00.pdf}
+        \subcaption{}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
       \centering
-      \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_01.pdf}
+      \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_01.pdf}
       \subcaption{}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_02.pdf}
-        \subcaption{}
-    \end{subfigure}
-%\end{figure}%
-%\begin{figure}[H]\ContinuedFloat
-    \begin{subfigure}{.5\textwidth}
-        \centering
-        \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_00.pdf}
+        \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_01.pdf}
         \subcaption{}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_01.pdf}
+        \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_02.pdf}
         \subcaption{}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
           \centering
-          \includegraphics[scale=0.27]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_02.pdf}
+          \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_02.pdf}
           \subcaption{}
         \end{subfigure}
-    \caption{{\footnotesize The example of the sensitivities calculated for the Experimental Design optimisation procedure for the Baranyi and Roberts model.
-    The line plots present the model solution for the sensitivities, and the scatter plots determine the time points chosen by Experimental Design. [DIE BILDER IN PANELS ZUSAMMENFASSEN UND BESCHRIFTEN]}} 
+    \caption{{\footnotesize The example of the sensitivities of the total bacterial count calculated for the Experimental Design optimisation procedure for the Baranyi and Roberts model.
+    The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
+    In (a), (c), (e) the sensitivity curves for the experimental series at storage temperature $T_1=3.5^\circ$C are shown for parameters $x_\text{max}$, $b$, $T_\text{min}$, respectively.
+    As well as, (b), (d), (f) subfigures present the sensitivities for the $T_2=12^\circ$C experiment for parameters $x_\text{max}$, $b$, $T_\text{min}$, respectively.
+    [DIE BILDER IN PANELS ZUSAMMENFASSEN UND BESCHRIFTEN]}} 
     \label{fig:baranyi_roberts_sensitivities}
     \end{figure}
 
@@ -856,19 +859,19 @@ and the vector of the initial values $\mbx=(x_{10}, x_{20}, y_{10}, y_{20})$ are
 \begin{table}[H]
     \centering
     \begin{tabular}{ccc}
-    \specialrule{.1em}{.01em}{.05em} 
-    \textbf{Variable} \hspace{3mm} & \textbf{Value} \hspace{3mm} & \textbf{Units}\\
+    \specialrule{.1em}{.01em}{.05em}
+    \textbf{Variable}\hspace{3mm} & \textbf{Value}\hspace{3mm} & \textbf{Units}\\
     \toprule
-    $n_\text{max}$      & $10^8$ & cfu/g                                     \\
-    $b_x$               & 0.1    & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
-    $T_{\text{min}, x}$ & 1.0    & ${^\circ \text{C}}$                       \\
-    $b_y$               & 0.3    & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
-    $T_{\text{min}, y}$ & 1.0    & ${^\circ \text{C}}$                       \\
+    $n_\text{max}$                & $2 \cdot 10^4$             & cfu/g                                     \\
+    $b_x$                         & 0.02                       & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
+    $T_{\text{min}, x}$           & -5.5                       & ${^\circ \text{C}}$                       \\
+    $b_y$                         & 0.04                       & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
+    $T_{\text{min}, y}$           & -5.5                       & ${^\circ \text{C}}$                       \\
     \midrule
-    $x_{10}$            & $10^5$ & cfu/g                                     \\
-    $x_{20}$            & 0.1    &                                           \\
-    $y_{10}$            & $10^3$ & cfu/g                                     \\
-    $y_{20}$            & 0.1    &                                           \\
+    $x_{10}$                      & 50.0                       & cfu/g                                     \\
+    $x_{20}$                      & 1.0                        &                                           \\
+    $y_{10}$                      & 20.0                       & cfu/g                                     \\
+    $y_{20}$                      & 1.0                        &                                           \\
     \bottomrule
     \end{tabular}
     \caption{{\footnotesize The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:model_2species_resource}).}}
@@ -882,28 +885,32 @@ To get the new Optimal Experimental Design for shown in Fig. \ref{fig:baranyi_ro
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.27]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_00.pdf}
+        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_00.pdf}
         \subcaption{}
-      \end{subfigure}    
+      \end{subfigure}   
+    \begin{subfigure}{.5\textwidth}
+        \centering
+        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_00.pdf}
+    \subcaption{}
+    \end{subfigure}
       \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.27]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_01.pdf}
+        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_01.pdf}
     \subcaption{}  
     \end{subfigure}
     %\end{figure}%
-    %\begin{figure}[H]\ContinuedFloat      
-      \begin{subfigure}{.5\textwidth}
+    %\begin{figure}[H]\ContinuedFloat        
+    \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.27]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_00.pdf}
-    \subcaption{}
-    \end{subfigure}      
-      \begin{subfigure}{.5\textwidth}
-        \centering
-        \includegraphics[scale=0.27]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_01.pdf}
+        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_01.pdf}
         \subcaption{}  
     \end{subfigure}   
-    \caption{{\footnotesize The Optimal Experimental Design for the Baranyi and Roberts model with two different species. 
-    The line plot presents the model solution for the observable, and the scatter plot determines the time points chosen by Experimental Design. [SEHT MEINE KOMMENTARE BEI DEN ANDEREN BILDERN.]}}
+    \caption{{\footnotesize 
+    The Optimal Experimental Design for the Baranyi and Roberts model with two different species~(\ref{eq:model_2species_resource}) is proposed for two observables: the bacterial count of the first specie $x_1$ and of the second specie $x_2$. 
+    (a), (c) show the first experimental series held at the temperature $T_1=2^\circ$C and with measurement times $t_{11}=70$h, $t_{12}=100$h for observables $x_1$ and $x_2$, respectively.
+    (b), (d) show the second experimental series held at the temperature $T_2=12^\circ$Cand with measurement times $t_{21}=13$h, $t_{22}=78$h for observables $x_1$ and $x_2$, respectively.
+    The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
+    [SEHT MEINE KOMMENTARE BEI DEN ANDEREN BILDERN.]}}
     \label{fig:baranyi_roberts_2species_observable}
 \end{figure}
 
