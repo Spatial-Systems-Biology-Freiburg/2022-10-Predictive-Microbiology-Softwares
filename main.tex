@@ -14,6 +14,7 @@
 \usepackage{ctable} % for \specialrule command
 \usepackage{graphicx}
 \usepackage{subcaption}
+\captionsetup[subfigure]{justification=centering}
 
 \usepackage[outputdir=out]{minted}
 \setminted{autogobble=true,linenos=true}
@@ -46,7 +47,7 @@
 % Create acronyms to use in text
 \newacro{ode}[ODE]{Ordinary Differential Equation}
 \newacro{oed}[OED]{optimal experimental design}
-\newacro{fim}[FIM]{Fisher information matrix}
+\newacro{fim}[FIM]{\ac{fim}}
 \newacro{de}[DE]{Differential evolution}
 
 \begin{document}
@@ -80,7 +81,7 @@ The parametrised mathematical models need to be calibrated using dedicated exper
 To efficiently plan experiments model-based experimental design is used.
 In this chapter, we explain model-based experimental and provide step-by-step instructions for finding the optimal design using the well-known Baranyi\&Roberts growth model as an example.
 To make this chapter self-consistent we provide a Python software {\it eDPM} for \ac{ode} -based models.\\
-\keywords{Optimal experimental design, Parameter estimation, Fisher Information matrix, Identifiability, Uncertainty}
+\keywords{Optimal experimental design, Parameter estimation, \ac{fim}, Identifiability, Uncertainty}
 
 %
 %
@@ -110,10 +111,10 @@ Comprehensive reviews can be found here: \cite{atkinsonDevelopmentsDesignExperim
 Depending on the goal, a researcher faces an important choice, which of the several sometimes contradicting objectives should be chosen for a particular case.
 For example, is it more desirable to have precise knowledge in a chosen set of parameters and less information about the remaining ones? What is the best balance between experimental effort and precision?
 Using multi-objective approaches, some attempts were made to answer these questions and to improve the experimental design by combining several objectives \cite{telenOptimalExperimentDesign2012, logistRobustMultiobjectiveOptimal2011}.
-For models which depend on external cues like temperature, it is {\it a priori} not clear whether constant are variable conditions are more efficient for the parameter estimation \cite{versyckIntroducingOptimal1999,garciaQualityShelflifePrediction2015}.
+For models which depend on external cues like temperature, it is {\it a priori} not clear whether constant variable conditions are more efficient for the parameter estimation \cite{versyckIntroducingOptimal1999,garciaQualityShelflifePrediction2015}.
 The whole parameter estimation process starts with choosing a model structure. Once this is chosen a first parameter set is selected based on the literature review or prior data from previous experiments.
-Using this parameter set a first optimal experimental design is determined taking into account specific constraints, such as maximum number of measurements, measurement times, etc. Next, the designed experiments need to be performed and this data result into a new estimation of the parameters.
-If the confidence intervals of the parameters are sufficiently small, the scheme ends, otherwise one uses the new estimates as the starting point for the next experimental design (see Fig. \ref{fig:expdesign_scheme}).
+Using this parameter set a first optimal experimental design is determined taking into account specific constraints, such as maximum number of measurements, measurement times, etc. Next, the designed experiments need to be performed and this data results into a new estimation of the parameters.
+If the confidence intervals of the parameters are sufficiently small, the scheme ends, otherwise one uses the new estimates as the starting point for the next experimental design (see Figure~\ref{fig:expdesign_scheme}).
 The process can be repeated several times to increase the precision of the parameter estimates until the desired accuracy is achieved.
 To test the scheme one can also perform numerical experiments and obtain {\it in-silico} data.
 
@@ -133,9 +134,9 @@ To test the scheme one can also perform numerical experiments and obtain {\it in
 There are several software packages available for model-based experimental design~\cite{balsa-canto_amigo2_2016, zhang_optimal_2018, busetto_near-optimal_2013}.
 These packages comprise a large number of tools and due to this require some time to understand how to use them.
 To make this tutorial self-contained, we developed \mintinline[bgcolor=white,style=emacs]{bash}{eDPM} (Experimental Design for Predictive Microbiology), which is a set of tools to calculate the Sensitivity and Fischer Information Matrix and do parameter space exploration in order to find optimal results.
-We expect a working installation of the popular scripting language Python $\geq3.7$~\cite{rossumPythonLanguageReference2010}.
+We require a working installation of the popular scripting language Python $\geq3.7$~\cite{rossumPythonLanguageReference2010}.
 For installation instructions, please refer to the website \href{https://www.python.org/downloads/}{python.org}.
-We also expect users, to be able to write, execute and display output of scripts.
+In addition, we expect users, to be able to write, execute and display output of scripts.
 This tutorial can also be followed using jupyter notebooks \cite{jupyterteamJupyterNotebook}.
 Users can obtain it by installing \mintinline[bgcolor=white,style=emacs]{bash}{eDPM} from \href{https://pypi.org/project/FisInMa/0.0.1/}{pypi.org}.
 The python website has guides for installing packages \href{https://packaging.python.org/en/latest/tutorials/installing-packages/}{packaging.python.org/}.
@@ -190,9 +191,9 @@ Predominantly, the state variables cannot be directly observed, but rather the o
 where the function $g$ is the observation or output function, and $\epsilon$ is the measurement noise.
 The observational noise is often assumed to be an independently distributed Gaussian noise with zero mean and variance $\sigma^2$: $\epsilon (t) \sim N(0, \sigma^2)$, $\forall t$.\\
 
-To demonstrate how Experimental Design works, we use in this tutorial the widely employed mathematical model by Baranyi and Roberts model \cite{baranyiDynamicApproach1994}, which was devised to describe bacteria growth.
-The model introduces two state variables $\mbx = (x_1, x_2)$, where $x_1(t)$ denotes the cell concentration of a bacterial population at the time $t$ 
-and $x_2(t)$ is the quantity defining the proportion of the growth rate specified by the environment, e.g., a limiting nutrient critical for bacteria growth. 
+To demonstrate how Experimental Design works, we use in this tutorial the widely employed mathematical model developed by Baranyi and Roberts \cite{baranyiDynamicApproach1994}, which was devised to describe bacteria growth.
+The model introduces two state variables $\mbx = (x_1, x_2)$, where $x_1(t)$ denotes the cell concentration of a bacterial population at the time $t$
+and $x_2(t)$ is the quantity defining the proportion of the growth rate specified by the environment, e.g., a limiting nutrient critical for bacteria growth.
 \begin{equation}
     \begin{cases}
         \dot x_1(t) = \frac{x_2(t)}{x_2(t) + 1} \mu^\text{max} \big(1 - \frac{x_1(t)}{x_1^\text{max}}\big) x(t)  = f_1 \\
@@ -206,16 +207,16 @@ To account for the influence of the temperature on the activity of the model, we
 \begin{equation}
     \sqrt{\mu^\text{max}} = b (T - T_\text{min}),
     \label{eq:RatkowskyModel}
-\end{equation} 
+\end{equation}
 where $b$ is the regression coefficient, and $T_\text{min}$ is the minimum temperature at which the growth can occur.
 As the observable we choose the bacteria count, i.e:
 \begin{equation}
     y(t) = x_1(t)+\epsilon(t),
- \end{equation} 
+ \end{equation}
 a common choice in predictive microbiology.
 By this and the equations (\ref{eq:ode_BaranyiRoberts}), (\ref{eq:RatkowskyModel}) the system is fully defined.
 Here $x_1^\text{max}, b, T_\text{min}$ are the parameters that we estimate using observational data $y$ at measurement times $t_i$, and temperature $T$ is an input of the system.
-Based on this model, we would like to optimize the choice of measurement times as well as temperatures (inputs) of the system to find the \acl{oed}.
+Based on this model, we would like to optimise the choice of measurement times as well as temperatures (inputs) of the system to find the \acl{oed}.
 %
 % ########################################################################
 \subsubsection*{Code}
@@ -230,7 +231,7 @@ In the following, we will step-by-step explain how to specify all variables need
     \begin{tabular}{ccccc}
         \specialrule{.1em}{.01em}{.05em}
         Description & Formula & Code \\[1ex]
-        \toprule \vspace{1mm} 
+        \toprule \vspace{1mm}
         ODE & $f$                       & \mintinline[bgcolor=white,style=emacs]{python}{def ode_fun(t, x, u, p, ode_args):} \\
             & $\partial f / \partial x$ & \mintinline[bgcolor=white,style=emacs]{python}{def ode_dfdx(t, x, u, p, ode_args):} \\[0.5ex]
             & $\partial f / \partial p$ & \mintinline[bgcolor=white,style=emacs]{python}{def ode_dfdp(t, x, u, p, ode_args):} \\[0.5ex]
@@ -250,73 +251,68 @@ In the following, we will step-by-step explain how to specify all variables need
     \caption{Summary of user-defined functions and variables.}
 \label{tab:fsm-variables}
 \end{table}
-\paragraph{Defining the \acs{ode}} 
+\paragraph{Defining the \acs{ode}}
 We must define a few functions in python.
-The first function will be the right-hand side of equation (\ref{eq:ode_general}), i.e., we need to implement the Baranyi-Roberts model (\ref{eq:ode_BaranyiRoberts}) into a function. 
+The first function will be the right-hand side of equation (\ref{eq:ode_general}), i.e., we need to implement the Baranyi-Roberts model (\ref{eq:ode_BaranyiRoberts}) into a function.
 The implementation can be seen in Figure \ref{code:code_baranyi_roberts_ode_fun}.
 We explain the individual steps to create this function:
-\begin{itemize}
-\item  \mintinline[bgcolor=white,style=emacs]{python}{def ode_fun(t, x, u, P, ode_args)}\\
-The function name can be chosen freely, but the order of required function arguments is fixed by the definition.  
-\item \mintinline[bgcolor=white,style=emacs]{python}{(x1, x2) = x}\\
-\mintinline[bgcolor=white,style=emacs]{python}{(Temp,...) = u}\\
-\mintinline[bgcolor=white,style=emacs]{python}{(x_max, b, Temp_min) = p}\\
-Unpack the input vectors \mintinline[bgcolor=white,style=emacs]{python}{x,u,p} for easy access of their components
-\item \mintinline[bgcolor=white,style=emacs]{python}{mu_max = b**2 * (Temp - Temp_min)**2}\\
-Calculate the maximum growth rate.
-\item \mintinline[bgcolor=white,style=emacs]{python}{return [}\\
-    \mintinline[bgcolor=white,style=emacs]{python}{mu_max * (x2/(x2 + 1)) * (1 - x1/x_max) * x1}\\
-    \mintinline[bgcolor=white,style=emacs]{python}{mu_max * x2}\\
-    \mintinline[bgcolor=white,style=emacs]{python}{]}\\
-Calculate the right hand side of the \acs{ode}, store it in a list (\mintinline[bgcolor=white,style=emacs]{python}{[ ... ]}) and return it.
-\end{itemize}
-
 \begin{code}[h]
     \begin{minted}[firstnumber=6]{python}
+    # The function name can be chosen freely, but the order
+    # of required function arguments is fixed by the definition.
     def baranyi_roberts_ode(t, x, u, p, ode_args):
+        # Unpack the input vectors x,u,p for easy access
+        # of their components
         (x1, x2) = x
         (Temp, ) = u
         (x_max, b, Temp_min) = p
-        # Define the maximum growth rate
+
+        # Calculate the maximum growth rate
         mu_max = b**2 * (Temp - Temp_min)**2
+
+        # Calculate the right hand side of the \ac{ode}, store
+        # it in a list [ ... ] and return it.
         return [
             mu_max * (x2/(x2 + 1)) * (1 - x1/x_max) * x1,
             mu_max * x2
         ]
     \end{minted}
-    \caption{Definition of the Baranyi-Roberts \ac{ode} model.}
+    \caption{
+        Definition of the Baranyi-Roberts \ac{ode} model.
+        We explain the individual steps needed to fully describe the model.
+    }
     \label{code:code_baranyi_roberts_ode_fun}
 \end{code}
 %
 % ########################################################################
 \subsection*{Parameter Estimation}
-After defining the model, the user need to provide an initial parameter set.  
-This could be chosen from the literature or estimated from previously gathered experimental data. 
-It is common to assume that the observational or measurement noise is Gaussian white noise (e.g., no temporal correlations) with zero mean and variance $\sigma(t)^2$: $\epsilon(t) \sim N(0, \sigma(t)^2)$, $\forall t$. 
+After defining the model, the user need to provide an initial parameter set.
+This could be chosen from the literature or estimated from previously gathered experimental data.
+It is common to assume that the observational or measurement noise is Gaussian white noise (e.g., no temporal correlations) with zero mean and variance $\sigma(t)^2$: $\epsilon(t) \sim N(0, \sigma(t)^2)$, $\forall t$.
 In this case the logarithm of the likelihood function (log-likelihood) is given by:
 \begin{equation}
     \ln L(\mbp) \propto - \sum_{i}\frac{ \big(\mathbf{g}^{i}(\mbp) - \mbd^{i}\big)^2}{2 \sigma_{i}^2}.
     \label{eq:likelihood_Gaussian}
 \end{equation}
-We introduced the following short hand notations: 
+We introduced the following short hand notations:
 \begin{itemize}
 \item $\mbd^{i}$: data measured at time $t=t_i$
 \item $\mathbf{g}^{i}(\mbp)$: the observation function depending on the parameter vector $\mbp$ evaluated at time $t=t_i$
 \item $\sigma_{i}^2$: variance of the observational noise at time $t=t_i$.
 \end{itemize}
-The method of maximum likelihood consist in searching for the parameter vector $\mbp$ which maximizes the likelihood or equivalently minimizes the log-likelihood \cite{gaborRobustEfficient2015}. 
-
+The method of maximum likelihood consist in searching for the parameter vector $\mbp$ which maximizes the likelihood or equivalently minimises the log-likelihood \cite{gaborRobustEfficient2015}.
+%
 %
 % ########################################################################
 \subsection*{Experimental Design}
-After defining the model and setting the initial parameter vector $\mbp_0$ we can proceed to the Experimental Design. 
-In essence, Experimental Design comprises maximizing an objective function depending on the model, the initial parameter vector $\mbp_0$, external input $\mbu$ into the system, and a set of discrete observation times $t_i$ at which the potential measurements should be performed. 
-The objective function needs to quantify the information the observation $\mby$ has about the parameter vector $\mbp$. 
-A common choice here is constructing objective functions based on the \ac{fim} \cite{lyTutorialFisher2017}. 
-According to the so-called 'Cramer-Rao inequality', the Fisher information is inversely proportional to the minimal squared estimation error \cite{friedenExploratoryData2010}. 
-Due to this relationship maximization of the information leads to a minimization of the variance or uncertainty in the parameters. 
+Following our definition of the model and setting the initial parameter vector $\mbp_0$ we can proceed to the Experimental Design.
+In essence, Experimental Design comprises maximizing an objective function depending on the model, the initial parameter vector $\mbp_0$, external input $\mbu$ into the system, and a set of discrete observation times $t_i$ at which the potential measurements should be performed.
+The objective function needs to quantify the information the observation $\mby$ has about the parameter vector $\mbp$.
+A common choice here is constructing objective functions based on the \ac{fim} \cite{lyTutorialFisher2017}.
+According to the so-called 'Cramer-Rao inequality', the Fisher information is inversely proportional to the minimal squared estimation error \cite{friedenExploratoryData2010}.
+Due to this relationship maximization of the information leads to a minimisation of the variance or uncertainty in the parameters.
 In the following we explain one of the ways to calculate the \acl{fim} for an \acp{ode} system (\ref{eq:ode_general}) and the observable function (\ref{eq:observ_general}) \cite{lyTutorialFisher2017}.
-
+%
 %
 % ########################################################################
 \subsubsection*{Sensitivity Calculation}
@@ -330,7 +326,7 @@ These can be calculated using an enhanced system of the \acp{ode}:
     \dot s^x_{ij} = \sum_k \frac{\partial f_i}{\partial x_k} s^x_{kj} + \frac{\partial f_i}{\partial p_j}
     \end{cases}.
 \label{eq:ode_and_sensitiv}
-\end{equation} 
+\end{equation}
 For the \ac{fim} we need the sensitivities of observables functions $(\mathrm{d} y_i / \mathrm{d} p_j) = s_{ij}$.
 We determine these at a certain times $t_m$ and input $u_n$ using the solutions of $s^x_{ij}$:
 \begin{equation}
@@ -347,7 +343,7 @@ These sensitivities are the elements of the sensitivity matrix \cite{stigterObse
 For example, in case of two observables $\mby = (y_1, y_2)$, two different inputs $\mbu = (u_1, u_2)$, $N$ different measurement times and $N_p$ parameters, sensitivity matrix reads:
 
 \begin{equation}
-    S = 
+    S =
 \begin{pmatrix}
 s_{11} (t_1, u_1) & ... & s_{1 N_p}(t_1, u_1) \\
 \vdots  &   & \vdots  \\
@@ -372,7 +368,7 @@ This matrix we will use to directly calculate the \ac{fim} via equation:
 where $Q$ is the covariance matrix of measurement error~\cite{cintron-arias_sensitivity_2009, balsa-cantoComputationalProcedures2008}.
 If the measurements are independent, then only the diagonal elements of the matrix are non-zero:
 \begin{equation}
-    Q = 
+    Q =
 \begin{pmatrix}
     \sigma_{1}^2(t_1, u_1) & 0                      & 0                      & \dots  & 0                     \\
     0                      & \sigma_{1}^2(t_2, u_1) & 0                      & \dots  & 0                     \\
@@ -394,8 +390,8 @@ where $\gamma_\text{abs}$ and $\gamma_\text{rel}$ are the coefficients determini
 In case one uses relative sensitivities $\tilde{s}_{ij} (t_m, u_n)$, one needs to use relative measurements errors for the matrix $Q$:
 \begin{equation}
     \tilde{\sigma}_{i}^2 (t_m, u_n) = \frac{\sigma_{i}^2 (t_m, u_n)}{y^2_i(t_m, u_n)}.
-\end{equation} 
-Note that this approach is heuristic and the matrix $F$ is not the Fisher information matri~\cite{versyckIntroducingOptimal1999, banks_generalized_2010}.
+\end{equation}
+Note that this approach is heuristic and the matrix $F$ is not the \ac{fim}~\cite{versyckIntroducingOptimal1999, banks_generalized_2010}.
 %
 % ########################################################################
 \subsection*{Numerical Sensitivity Calculation}
@@ -447,7 +443,7 @@ The resulting implemented functions in python can be seen in Code Sample~\ref{co
                 0,
                 2 * b * (Temp - Temp_min)**2 * x2,
                 -2 * b**2 * (Temp - Temp_min) * x2
-            ]  
+            ]
         ]
 
     def ode_dfdx(t, x, u, p, ode_args):
@@ -459,7 +455,7 @@ The resulting implemented functions in python can be seen in Code Sample~\ref{co
             [
                 mu_max * (x2/(x2 + 1)) * (1 - 2*x1/x_max),
                 mu_max * 1/(x2 + 1)**2 * (1 - x1/x_max)*x1
-            ], 
+            ],
             [
                 0,
                 mu_max
@@ -502,16 +498,23 @@ Here, we supply a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} wit
             np.linspace(Temp_low, Temp_high, n_Temp)
         ]
     \end{minted}
-    \caption{The main function contains the actual values for our model definition.}
+    \caption{
+        The main function will encompass every step in our experimental design approach.
+        In the beginning, we insert the actual values for our model definition.
+    }
     \label{code:code_write_main_function_start}
 \end{code}
 \subsubsection*{Defining Explicit Values and Sampling}
+There are two distinct ways to define inputs of the model.
+First, one can fix (multiple) explicit values for an input variable.
+The experiment will then be solved for for only these values without optimising them.
+Secondly, one can also optimise inputs of the system.
 The difference between choosing explicit values and specifying a sampling range may be subtle at first glance, but in turn allows to very easily switch between fixed values and optimised sampling points.
 For example, suppose we want to optimise the temperature at which the experiments are performed, which means we let the optimisation algorithm pick the optimal temperature points such that the information gathered from the system is maximised.
 Then the difference between defining explicit values for the temperatures and defining an interval for optimisation can be understood in code sample~\ref{code:difference_explicit_sampling}.\newline
 \begin{code}[h]
     \begin{minted}[linenos=false]{python}
-    # This will choose values explicitly
+    # This will fix values explicitly
     inputs = [
         np.linspace(Temp_low, Temp_high, n_Temp)
     ]
@@ -519,7 +522,8 @@ Then the difference between defining explicit values for the temperatures and de
     # [array([4., 6., 8.])]
 
 
-    # This will sample in the interval
+    # This will sample in the interval (Temp_low, Temp_high)
+    # with n_Temp points.
     inputs = [
         {"lb":Temp_low, "ub":Temp_high, "n":n_Temp}
     ]
@@ -535,7 +539,6 @@ The different variables can be treated individually as needed.
 Suppose, we have a system with temperatures and humidity as input variables.
 We could decide to have the temperature optimised, but fix the humidity explicitly, because experimentally one can change the temperature continuously (or in discrete steps) but is restricted regarding the humidity.
 In our code, we simply would mix explicit and sampled definitions for individual inputs (see code sample~\ref{code:mix_sampling_explicit}).
-[MIR IST DIES NICHT GANZ KLAR, WIR MÜSSEN DARÜBER REDEN].
 \begin{code}[h]
     \begin{minted}[linenos=false]{python}
         inputs = [
@@ -559,7 +562,7 @@ However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherMo
 \begin{code}[H]
     \begin{minted}[autogobble=false,firstnumber=77]{python}
     # Create the FisherModel which serves as the entry point
-    #  for the solving and optimization algorithms
+    #  for the solving and optimisation algorithms
     fsm = FisherModel(
         ode_x0=x0,
         ode_t0=0.0,
@@ -575,10 +578,6 @@ However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherMo
     \caption{Define the full model.}
     \label{code:model_definition}
 \end{code}
-There are some optional arguments which can be set if desired ...\newline
-[IST MIR NICHT GANZ KLAR. MÜSSEN DARÜBER REDEN].
-% TODO
-% TODO
 For a full list of optional arguments, we refer to the \href{https://spatial-systems-biology-freiburg.github.io/Fishi/}{documentation} of the package.
 %
 % ########################################################################
@@ -597,43 +596,43 @@ Practical non-identifiability results in large confidence intervals~\cite{holmbe
 %
 % ########################################################################
 \subsubsection*{Optimality Criteria}
-The Fisher Information matrix needs to be mapped on an objective function. There are several ways to do this resulting in different objectives also called criteria.
+The \ac{fim} needs to be mapped on an objective function. There are several ways to do this resulting in different objectives also called criteria.
 Optimisation of the different objectives result in different experimental design, some of the most popular criteria are~\cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008, dette_designing_1997, walter_qualitative_1990}:
 \begin{itemize}
-\item \textbf{D-optimality criterion} maximises the determinant $\det (F)$ of the \ac{fim}. 
- Translated to the parameter space, it means that the volume of the confidence region (see Fig. \ref{fig:opt_criteria}) (or the geometric mean of all errors) is minimised.
+\item \textbf{D-optimality criterion} maximises the determinant $\det (F)$ of the \ac{fim}.
+ Translated to the parameter space, it means that the volume of the confidence region (see Figure~\ref{fig:opt_criteria}) (or the geometric mean of all errors) is minimised.
  The size of the confidence region is determined by a confidence level, which is typically chosen $90 \%$ or $95 \%$.
- The confidence level can be interpretated as a probability value that the best 
+ The confidence level can be interpretated as a probability value that the best
  parameter fit will belong to this area in case of repeating the experiment and estimations multiple times.
- The confidence region is usually presented as a confidence ellipsoid. 
+ The confidence region is usually presented as a confidence ellipsoid.
  D-optimality is the most widely used criterion and is suitable even in case of such parameter transformations as rescaling.
 \item \textbf{E-optimality criterion} maximises the smallest eigenvalue $\lambda_{\min}$ of the \ac{fim}, which is the same as reducing only the largest estimation error.
 \item \textbf{A-optimality criterion} maximises the sum of all eigenvalues $\sum_i \lambda_i$, which can be interpreted as minimising the algebraic mean of all errors.
 \item \textbf{Modified E-optimality criterion} maximises the ratio between the minimal and maximal eigenvalue $\lambda_{\min} / \lambda_{\max}$ and reduces correlation between two parameters correspnding to these eigenvalues.
- 
+
 \end{itemize}
 Each of the criteria has its pros and cons so the reader should have a closer look at the various properties of these criteria, for instance, in Franceschini's and Macchietto's paper \cite{franceschiniModelbasedDesignExperiments2008}.
-For the geometrical interpretation of the criteria using the confidence region shown in Fig. \ref{fig:opt_criteria}.
+For the geometrical interpretation of the criteria using the confidence region shown in Figure~\ref{fig:opt_criteria}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.6]{Figures/optimality_criteria.pdf}
-    \caption{{\footnotesize The confidence ellipsoid projection to the ($p_1$, $p_2$) parameter space. 
-    The ellipsoid shows the geometrical meaning of the optimality criteria. 
+    \caption{{\footnotesize The confidence ellipsoid projection to the ($p_1$, $p_2$) parameter space.
+    The ellipsoid shows the geometrical meaning of the optimality criteria.
     The center of the ellipsoid represents the estimated parameter values.
     The radii are the uncertainties of the estimates associated with different eigenvalues of the \ac{fim} $\lambda_1$, $\lambda_2$ ($\lambda_1 < \lambda_2$).
-    The D-optimality aims to minimize the volume of the ellipsoid, the E-optimality minimizes the largest radius, A-optimality minimizes the perimeter of the rectangle that encloses the ellipse (dashed gray line), and, finally,  modified E-optimality tends to make the ellipse as spherical as possible.}}
+    The D-optimality aims to minimise the volume of the ellipsoid, the E-optimality minimises the largest radius, A-optimality minimises the perimeter of the rectangle that encloses the ellipse (dashed gray line), and, finally,  modified E-optimality tends to make the ellipse as spherical as possible.}}
     \label{fig:opt_criteria}
 \end{figure}
 %
 % ########################################################################
-\subsubsection*{Optimization}
-After defining the objective function based on the Fisher Information matrix the next step is to optimise the chosen optimality criteria.
+\subsubsection*{Optimisation}
+After defining the objective function based on the \ac{fim} the next step is to optimise the chosen optimality criteria.
 Finding the Experimental Design corresponds to finding the global maximum of the objective, which can be formulated as an optimal control problem~\cite{espie_optimal_1989}.
 This problem has been widely studied, and multiple numerical solution algorithms for both local and global optimisation were introduced~\cite{esposito_global_2000, bangaImprovingFoodProcessing2003, ali_numerical_1997, runarsson_stochastic_2000}.
 In the supplied toolbox {\it eDPM}, three methods were implemented: differential evolution, basin-hopping, and the so-called “brute force” method.
 We give in the following a brief summary of the implemented methods.
-For more information the reader should turn to the available literature, e.g.,~\cite{stornDifferentialEvolutionSimple1997, walesGlobalOptimizationBasinHopping1997}.
+For more information the reader should turn to the available literature, e.g.,~\cite{stornDifferentialEvolutionSimple1997, walesGlobalOptimisationBasinHopping1997}.
 \newline
 
 The \ac{de} algorithm developed by Storn and Price (1996)~\cite{stornDifferentialEvolutionSimple1997} is one of the stochastic global optimisation methods appropriate for nonlinear dynamic problems.
@@ -643,7 +642,7 @@ Then each vector mutates by mixing with other candidate vector.
 To a chosen vector from the initial population $D_0$, we add a weighted difference between two other randomly chosen vectors from the same set $(D_\text{rand1} - D_\text{rand2})$.
 This process is called mutation and a new vector $D_m$ is obtained.
 The next step is to construct a new trial solution.
-This is done by choosing the elements of the trial vector either from the initial $D_0$ or the mutated $D_m$ vectors. 
+This is done by choosing the elements of the trial vector either from the initial $D_0$ or the mutated $D_m$ vectors.
 For each new element of trial vector, a random number drawn uniformly from the interval [0, 1) and compared to the so-called recombination constant.
 If this random number is less than the recombination constant, then the trial vector element is chosen from the vector $D_m$, otherwise from $D_0$.
 The degree of mutation can be controlled by changing the recombination constant; the larger this constant is, the more often vector elements are chosen from $D_m$.
@@ -651,10 +650,10 @@ Subsequently, the objective function is calculated using the trial vector and th
 This procedure is repeated for every solution candidate of the initial population, by means of which the new generation is build~\cite{scipydiffev}.
 The process of population mutation is repeated till a stoping criterion is reached, e.g., the maximum number of generations (steps) is reached or the standard deviation of the candidate vectors is below a certain threshold~\cite{Zielinski_DE}.
 This method is rather simple and straightforward, and does not require any gradient calculation and is easy to parallelise.
-Another advantages include its fast convergence and robustness at numerical optimization~\cite{babu_differential_2007}.
+Another advantages include its fast convergence and robustness at numerical optimisation~\cite{babu_differential_2007}.
 \newline
 
-The second implemented method is basin-hopping developed by David Wales and Jonathan Doye~\cite{walesGlobalOptimizationBasinHopping1997}.
+The second implemented method is basin-hopping developed by David Wales and Jonathan Doye~\cite{walesGlobalOptimisationBasinHopping1997}.
 This iterative algorithm combines the Monte-Carlo and local optimisation and works as follows.
 During the iteration step the design vector, i.e., vector of measurement times and inputs, is subjected to a random perturbation and then to local minimisation.
 After this, the step is either accepted or rejected.
@@ -664,23 +663,27 @@ For a deeper understanding of the Monte-Carlo minimisation, the reader can refer
 
 And lastly, a simple brute force method was implemented as well.
 It is a grid search algorithm calculating the objective function value at each point of a multidimensional grid in a chosen region.
-This method is suitable for discrete optimization with limited number of grid values.
+This method is suitable for discrete optimisation with limited number of grid values.
 However, the downside of this technique is its slowness, inefficiency and long computational times, noticeable for higher number of the possible discrete solutions~\cite{scipybrute}.
 \newline
 Some other methods for the optimal control problem the reader can find, for example, in the papers of Banga \etal \cite{banga_global_1996, banga_dynamic_2005, BANGA2005407, bangaImprovingFoodProcessing2003}.
 %
 % ########################################################################
 \subsubsection*{Optimisation Code}
-The usage of three implemented optimisation methods is greatly simplified in our approach: 
+The usage of three implemented optimisation methods is greatly simplified in our approach:
 \begin{minted}[linenos=false]{python}
 fsr = find_optimal(fsm).
 \end{minted}
-[OHNE ARGUMENTE, WIE WERDEN DENN DIE OPTIMIERUNGSROUTINEN AUFGERUFEN? ICH NEHME AN MIT DEFAULT EINSTELLUNGEN?]
-However, we retain their full functionality. Any optimisation argument of the aforementioned routines, can be specified: 
+However, we retain their full functionality.
+Any optimisation argument of the aforementioned routines, can be specified.
+The deafault arguments of the \mintinline[bgcolor=white,style=emacs]{python}["scipy_differential_evolution"] optimisation method are given by the scipy default arguments~\cite{scipydiffev}.
+For our specific usecase, we advise to experiment with the following options:
 \begin{minted}[autogobble=false,firstnumber=98]{python}
     fsr = find_optimal(
         # Required argument: The model to optimise
         fsm,
+        # The optimisation method
+        optimization_strategy="scipy_differential_evolution",
         # Our custom options
         criterion=fisher_determinant,
         relative_sensitivities=True,
@@ -692,7 +695,7 @@ However, we retain their full functionality. Any optimisation argument of the af
         polish=False,
     )
 \end{minted}
-A full list of optional arguments can be seen in the \href{https://docs.scipy.org/doc/scipy/reference/optimize.html#global-optimization}{scipy documentation}~\cite{virtanenSciPyFundamentalAlgorithms2020}.
+A full list of optional arguments can be seen in the \href{https://docs.scipy.org/doc/scipy/reference/optimise.html#global-optimisation}{scipy documentation}~\cite{virtanenSciPyFundamentalAlgorithms2020}.
 In addition, there are some interesting optimisation options such as the optional arguments \mintinline[bgcolor=white,style=emacs]{python}{relative_sensitivities,criterion}, which are responsible for using relative sensitivities $\tfrac{dy}{dp}\tfrac{p}{y}$ and specifying the optimality criterion as explained in the previous section [WAS SIND DIE DEFAULT PARAMETER?.
 Please view the \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{full documentation} for explanation.
 The resulting class \mintinline[bgcolor=white,style=emacs]{python}{fsr} contains all definitions, current values and information on the optimisation process.
@@ -711,6 +714,7 @@ Our package also provides the option to save results into Json file and automati
 % ########################################################################
 % ########################################################################
 \section*{Results}
+\subsection*{Baranyi-Roberts Model - Single Species}
 As a summary of this tutorial, we would like to present the resulting output of our package.
 To this end we study the growth of a bacterial colony consisting of a single specie and describe it mathematically using the Baranyi and Roberts model given by Eqs. (\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}).
 We would like to estimate the parameters of the model with as few experiments as possible to minimise the experimental effort.
@@ -720,7 +724,7 @@ The parameter values and initial values of the system are taken in accordance wi
 \begin{table}[H]
     \centering
     \begin{tabular}{ccc}
-    \specialrule{.1em}{.01em}{.05em} 
+    \specialrule{.1em}{.01em}{.05em}
     \textbf{Variable} \hspace{3mm} & \textbf{Value} \hspace{3mm} & \textbf{Units}                            \\
     \toprule
     $n_\text{max}$                 & $2 \cdot 10^4$              & cfu/g                                     \\
@@ -749,19 +753,18 @@ The resulting \ac{oed} for the described system is presented in Figure \ref{fig:
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00.pdf}
         \subcaption{{\footnotesize Experiment 1: $T = 3.5^\circ$C, $t=100$h}}
-    \end{subfigure}    
+        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00.pdf}
+    \end{subfigure}  
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00.pdf}
         \subcaption{{\footnotesize Experiment 2: $T = 12^\circ$C, $t=43\text{h}, 100$h}}
+        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00.pdf}
     \end{subfigure}
-    \caption{{\footnotesize The example of the output of the Experimental Design optimisation procedure for the Baranyi and Roberts model. 
+    \caption{{\footnotesize The example of the output of the Experimental Design optimisation procedure for the Baranyi and Roberts model.
     The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
     The Optimal Design is proposed for one observable which is the total bacterial count of the specie $x_1$ and consists of two time series where samples are stored at temperatures (a) $T_1 = 3.5^\circ$C and (b) $T_2 = 12^\circ$C.
-    The corresponding measurement times are (a)~$t_{11}=100$h and (b)~$t_{21}=43$h, $t_{22}=100$h.
-    [DIE BILDER BITTE BESCHRIFTEN MIT A UND B, UND MEHR TEXT ALS ERKLÄRUNG. AUCH GIBT ES HIER KEINEN SCATTER PLOT, SONDERN FILLED CIRCLES ODER ÄHNLICH]}}
+    The corresponding measurement times are (a)~$t_{11}=100$h and (b)~$t_{21}=43$h, $t_{22}=100$h.}}
     \label{fig:baranyi_roberts_observable}
 \end{figure}
 
@@ -769,60 +772,61 @@ The resulting \ac{oed} for the described system is presented in Figure \ref{fig:
 [IST DAS WIRKLICH RICHTIG? DAS SCHEINT MIR EINE SEHR GERINGE ANZAHL AN EXPERIMENTEN ZU SEIN. BITTE MAL MIT DEN EXPERIMENTEN IN DER LITERATUR VERGLEICHEN, Z.B. HIER: 1. Gospavic, R., Kreyenschmidt, J., Bruckner, S., Popov, V. + Haque, N. Mathematical modelling for predicting the growth of Pseudomonas spp. in poultry under variable temperature conditions. International Journal of Food Microbiology 127, 290–297 (2008).]
 The algorithm has shown that at least two different temperarures are required, optimal values for which are $3.5^\circ$C and $12^\circ$C.
 Two different timepoints were chosen for temperature $12^\circ$C and  one time point for temperature value $3.5^\circ$C.
-There results can be explained with local sensitivity curves where each of the chosen time points correspond to an extreme of at least one sensitivity (see Fig. \ref{fig:baranyi_roberts_sensitivities}).
+There results can be explained with local sensitivity curves where each of the chosen time points correspond to an extreme of at least one sensitivity (see Figure~\ref{fig:baranyi_roberts_sensitivities}).
 [WENN DAS STIMMT DANN SIND DOCH VIEL WENIGER EXPERIMENTE AUSREICHEND UM DIE PARAMETER ZU SCHÄTZEN ALS GEWÖHNLICH DURCHGEFÜHRT WERDEN. BITTE UNBEDINGT MIT DER LITERATUR VERGLEICHEN]
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
       \centering
-      \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_00.pdf}
       \subcaption{{\footnotesize $T_1=3.5^\circ$C, parameter $x_\text{max}$}}
+      \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_00.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_00.pdf}
         \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $x_\text{max}$}}
+        \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_00.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
       \centering
-      \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_01.pdf}
       \subcaption{{\footnotesize $T_1=3.5^\circ$C, parameter $b$}}
+      \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_01.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_01.pdf}
         \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $b$}}
+        \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_01.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_02.pdf}
         \subcaption{{\footnotesize $T_1=3.5^\circ$C, parameter $T_\text{min}$}}
+        \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_02.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
           \centering
-          \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_02.pdf}
           \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $T_\text{min}$}}
+          \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_02.pdf}
         \end{subfigure}
     \caption{{\footnotesize The example of the sensitivities of the total bacterial count calculated for the Experimental Design optimisation procedure for the Baranyi and Roberts model.
     The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
     In (a), (c), (e) the sensitivity curves for the experimental series at storage temperature $T_1=3.5^\circ$C are shown for parameters $x_\text{max}$, $b$, $T_\text{min}$, respectively.
-    As well as, (b), (d), (f) subfigures present the sensitivities for the $T_2=12^\circ$C experiment for parameters $x_\text{max}$, $b$, $T_\text{min}$, respectively.
-    [DIE BILDER IN PANELS ZUSAMMENFASSEN UND BESCHRIFTEN]}} 
+    As well as, (b), (d), (f) subfigures present the sensitivities for the $T_2=12^\circ$C experiment for parameters $x_\text{max}$, $b$, $T_\text{min}$, respectively.}}
     \label{fig:baranyi_roberts_sensitivities}
-    \end{figure}
-
-Based on the results of the Experimental Design, the optimal number of measurement times is three, which may appear a very low number.
-Indeed, consider how the determinant increases with the number of measurement times in the logarithmic scale (see Fig. \ref{fig:det_vs_ntimes}).
-It can be noticed that the slope of the curve is largest between point 1 and 2, in fact approximately fourteen orders of magnitude larger than the slope between the other points.
-For a higher number of times, informational profit stays at the same order of magnitude [WAS BEDEUTET DAS?].
-As a result, the researcher can significantly reduce the experimental workload without a noticeable loss of information, which exemplifies the value of \ac{oed}.
+\end{figure}
+%
+For the system described above the minimal requirements for passing the identifiability test is using a setup with at least two temperatures and two measurement times per temperature.
+The choice of minimal number of measurement times can also be justified when looking at Figure~\ref{fig:det_vs_ntimes}.
+Here we see that one measurement time is not enough as the determinant is numerically very close to $0$ indicating a non-identifieability of this systems configuration.
+%
+%
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.4]{Figures/det_vs_ntimes.pdf}
-    \caption{{\footnotesize The determinant of the Fisher information matrix as a function of the number of measurement times for the Experimental Design consisted of two measured temperatures.}}
+    \caption{{\footnotesize The determinant of the \ac{fim} as a function of the number of measurement times for the Experimental Design consisted of two measured temperatures.}}
     \label{fig:det_vs_ntimes}
 \end{figure}
-
-\section*{Two-species resource competition}
+%
+%
+%
+\subsection*{Two-Species Resource Competition}
 As a second example we discuss a slightly more complicated system and extend the previous example of bacteria growth to a system where two species are present.
 The species interact by competitive inhibition because they depend on a common nutrient resource.
 Analogously to the previous example, we denote the concentration of the two different species as $x_1$ and $y_1$, respectively.
@@ -875,7 +879,7 @@ The values of the parameter vector $\mbp = (n_\text{max}, b_x, T_{\text{min}, x}
     $T_{\text{min}, y}$           & -5.5                       & ${^\circ \text{C}}$                       \\
     \midrule
     $x_{10}$                      & 50.0                       & cfu/g                                     \\
-    $x_{20}$                      & 1.0                        & \cmt{??}                                  \\
+    $x_{20}$                      & 1.0                        &                                           \\
     $y_{10}$                      & 20.0                       & cfu/g                                     \\
     $y_{20}$                      & 1.0                        &                                           \\
     \bottomrule
@@ -883,49 +887,53 @@ The values of the parameter vector $\mbp = (n_\text{max}, b_x, T_{\text{min}, x}
     \caption{{\footnotesize The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:model_2species_resource}).}}
     \label{tab:2species_vals}
 \end{table}
-
-[WAS SIND GENAU DIE ZU OPTIMIERENDEN GRÖSSEN? BITTE HIER AUCH BESCHREIBEN.]
-
-Other optimisation arguments were taken the same as in previous example.
-To get the new Optimal Experimental Design for shown in Fig. \ref{fig:baranyi_roberts_2species_observable}.
+In comparison to the previous example, we now choose the count of the two bacteria species $x_1,y_1$ as observables.
+Meanwhile other optimisation arguments were taken the same as in the previous example ie. we optimise measurement times and temperatures.
+The new \ac{oed} is shown in Figure \ref{fig:baranyi_roberts_2species_observable}.
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
-        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_00.pdf}
         \subcaption{{\footnotesize Specie 1, $T = 12^\circ$C, $t=12 \text{h}, 38$h}}
-      \end{subfigure}   
+        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_00.pdf}
+      \end{subfigure} 
     \begin{subfigure}{.5\textwidth}
         \centering
+        \subcaption{{\footnotesize Specie 1, $T = 2^\circ$C, $t=58 \text{h}, 90$h}}
         \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_00.pdf}
-    \subcaption{{\footnotesize Specie 1, $T = 2^\circ$C, $t=58 \text{h}, 90$h}}
     \end{subfigure}
       \begin{subfigure}{.5\textwidth}
         \centering
+        \subcaption{{\footnotesize Specie 2, $T = 12^\circ$C, $t=12 \text{h}, 38$h}}
         \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_01.pdf}
-    \subcaption{{\footnotesize Specie 2, $T = 12^\circ$C, $t=12 \text{h}, 38$h}}  
     \end{subfigure}
     %\end{figure}%
-    %\begin{figure}[H]\ContinuedFloat        
+    %\begin{figure}[H]\ContinuedFloat      
     \begin{subfigure}{.5\textwidth}
         \centering
+        \subcaption{{\footnotesize Specie 2, $T = 2^\circ$C, $t=58 \text{h}, 90$h}}
         \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_01.pdf}
-        \subcaption{{\footnotesize Specie 2, $T = 2^\circ$C, $t=58 \text{h}, 90$h}}  
-    \end{subfigure}   
-    \caption{{\footnotesize 
-    The Optimal Experimental Design for the Baranyi and Roberts model with two different species~(\ref{eq:model_2species_resource}) is proposed for two observables: the bacterial count of the first specie $x_1$ and of the second specie $x_2$. 
+    \end{subfigure} 
+    \caption{{\footnotesize
+    The Optimal Experimental Design for the Baranyi and Roberts model with two different species~(\ref{eq:model_2species_resource}) is proposed for two observables: the bacterial count of the first specie $x_1$ and of the second specie $x_2$.
     (a), (c) show the first experimental series held at the temperature $T_1=12^\circ$C and with measurement times $t_{11}=12$h, $t_{12}=38$h for observables $x_1$ and $x_2$, respectively.
     (b), (d) show the second experimental series held at the temperature $T_2=2^\circ$Cand with measurement times $t_{21}=58$h, $t_{22}=90$h for observables $x_1$ and $x_2$, respectively.
-    The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
-    [SEHT MEINE KOMMENTARE BEI DEN ANDEREN BILDERN.]}}
+    The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.}}
     \label{fig:baranyi_roberts_2species_observable}
 \end{figure}
-
-\cmt{??} The presented Design shows that the least needed number of experiments is two with temperatures of $2^\circ$C and $12^\circ$C.
+%
+The presented Design shows that the least needed number of experiments is two with temperatures of $2^\circ$C and $12^\circ$C.
 Here in each experiment two observables that correspond to the concentrations of two bacteria types and two time points were measured.
 For the first temperature one time-point is needed while for the second one at least two measurement times were chosen.
 With these experimental conditions the system is identifiable so the data is sufficient to estimate the parameters.
-
-[WAS FEHLT IST DEN EFFEKT DES EXPERIMENTELLEN DESIGNS ZU ZEIGEN. DAZU MÜSST IHR FOLGENDES MACHEN: NEHMT EINEN PARAMETERVEKTOR ALS WAHR AN. STARTET MIT EINEM VEKTOR NICHT ZU WEIT WEG VON DIESEM. PRODUZIERT NUN IN SILICO DATEN UND SCHÄTZT DIE PARAMETER. ZEIGT DIE UNSICHERHEITEN AUF DEN PARAMETERN, AM BESTEN BENUTZT IHR DAZU DIE PROFIL-LIKELIHOOD.]
+%
+%
+%
+\section*{Conclusion}
+We showed how to programmatically write simple python code and obtain optimal measurement points for systems described by \acp{ode}.
+Furthermore, it was explained how to check if the system can be fully identified by the chosen combinations of measurement points.
+The main result of our approach however, are the calculated measurement points (such as times and temperatures in our previous examples) itself.
+The newly calculated measurement points can now be used to more efficiently collect data about our system when performing new experiments.
+This newly gathered data can in turn be used to obtain better parameter estimates with smaller confidence intervals when fitting a model to them.
 %
 %
 %
