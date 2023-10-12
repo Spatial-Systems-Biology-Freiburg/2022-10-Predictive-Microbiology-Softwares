@@ -676,7 +676,7 @@ fsr = find_optimal(fsm).
 \end{minted}
 However, we retain their full functionality.
 Any optimisation argument of the aforementioned routines, can be specified.
-The deafault arguments of the \mintinline[bgcolor=white,style=emacs]{python}["scipy_differential_evolution"] optimisation method are given by the scipy default arguments~\cite{scipydiffev}.
+The default arguments of the \mintinline[bgcolor=white,style=emacs]{python}{"scipy_differential_evolution"} optimisation method are given by the scipy default arguments~\cite{scipydiffev}.
 For our specific usecase, we advise to experiment with the following options:
 \begin{minted}[autogobble=false,firstnumber=98]{python}
     fsr = find_optimal(
@@ -767,13 +767,6 @@ The resulting \ac{oed} for the described system is presented in Figure \ref{fig:
     The corresponding measurement times are (a)~$t_{11}=100$h and (b)~$t_{21}=43$h, $t_{22}=100$h.}}
     \label{fig:baranyi_roberts_observable}
 \end{figure}
-
-\cmt{?? For the studied model the mentioned above identifiability condition is satisfied if at least two temperatures and in total three timepoints are measured.}
-[IST DAS WIRKLICH RICHTIG? DAS SCHEINT MIR EINE SEHR GERINGE ANZAHL AN EXPERIMENTEN ZU SEIN. BITTE MAL MIT DEN EXPERIMENTEN IN DER LITERATUR VERGLEICHEN, Z.B. HIER: 1. Gospavic, R., Kreyenschmidt, J., Bruckner, S., Popov, V. + Haque, N. Mathematical modelling for predicting the growth of Pseudomonas spp. in poultry under variable temperature conditions. International Journal of Food Microbiology 127, 290–297 (2008).]
-The algorithm has shown that at least two different temperarures are required, optimal values for which are $3.5^\circ$C and $12^\circ$C.
-Two different timepoints were chosen for temperature $12^\circ$C and  one time point for temperature value $3.5^\circ$C.
-There results can be explained with local sensitivity curves where each of the chosen time points correspond to an extreme of at least one sensitivity (see Figure~\ref{fig:baranyi_roberts_sensitivities}).
-[WENN DAS STIMMT DANN SIND DOCH VIEL WENIGER EXPERIMENTE AUSREICHEND UM DIE PARAMETER ZU SCHÄTZEN ALS GEWÖHNLICH DURCHGEFÜHRT WERDEN. BITTE UNBEDINGT MIT DER LITERATUR VERGLEICHEN]
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
       \centering
