@@ -141,11 +141,11 @@ This tutorial can also be followed using jupyter notebooks \cite{jupyterteamJupy
 Users can obtain it by installing \mintinline[bgcolor=white,style=emacs]{bash}{eDPM} from \href{https://pypi.org/project/FisInMa/0.0.1/}{pypi.org}.
 The python website has guides for installing packages \href{https://packaging.python.org/en/latest/tutorials/installing-packages/}{packaging.python.org/}.
 Most Unix-Based systems (e.g. GNU/Linux) and Mac-OS can use \mintinline[bgcolor=white,style=emacs]{bash}{pip}
-\begin{minted}[bgcolor=white]{bash}
+\begin{minted}[bgcolor=white, linenos=false]{bash}
 pip install eDPM
 \end{minted}
 or \mintinline[bgcolor=white,style=emacs]{bash}{conda} to install the desired package.
-\begin{minted}[bgcolor=white]{bash}
+\begin{minted}[bgcolor=white, linenos=false]{bash}
 conda install eDPM
 \end{minted}
 The \href{https://spatial-systems-biology-freiburg.github.io/Fishi/}{Documentation} of the package is continuously updated.
@@ -394,7 +394,7 @@ In case one uses relative sensitivities $\tilde{s}_{ij} (t_m, u_n)$, one needs t
 Note that this approach is heuristic and the matrix $F$ is not the \ac{fim}~\cite{versyckIntroducingOptimal1999, banks_generalized_2010}.
 %
 % ########################################################################
-\subsection*{Numerical Sensitivity Calculation}
+\subsubsection*{Numerical Sensitivity Calculation}
 For the calculation of the sensitivities (Eq. \ref{eq:ode_and_sensitiv}) we need to supply the derivatives of $f$ with respect to the parameters and state variables.
 We define $\mbx=(x_1,x_2,x_3)$ and $\mbp=(p_1,p_2,p_3)$ with $p_1=x_{max}$, $p_2=b$ and $p_3=T_\text{min}$.
 Firstly, we calculate the mathematical derivatives $\partial f_i/\partial p_j$ and $\partial f_i/\partial x_j$ and then implement the corresponding functions.
@@ -425,7 +425,7 @@ Similarly, the derivatives $\partial f/\partial x_i$ are given by:
 The readers are encouraged to calculate the components $\partial f_2/\partial p_i$ and $\partial f_2/\partial x_i$ as an exercise.
 The resulting implemented functions in python can be seen in Code Sample~\ref{code:code_baranyi_roberts_ode_fun_derivatives}.
 \begin{code}[H]
-    \begin{minted}[firstnumber=20]{python}
+    \begin{minted}[firstnumber=25]{python}
     def ode_dfdp(t, x, u, p, ode_args):
         (x1, x2) = x
         (Temp, ) = u
@@ -467,7 +467,7 @@ The resulting implemented functions in python can be seen in Code Sample~\ref{co
 \end{code}
 %
 % ########################################################################
-\subsection*{Define numerical values}
+\subsubsection*{Define numerical values}
 After the definition of the structure of the \ac{ode}, we need to specify numerical values.
 It is good practice, to gather such definitions in the \mintinline[bgcolor=white,style=emacs]{python}{__main__} method of the python program as it was done in Figure~\ref{code:code_write_main_function_start}.
 We start by defining the parameters of the \ac{ode} (line 59) and afterwards the initial values (line 62).
@@ -477,10 +477,10 @@ In contrast, if we wanted to specify explicit values for the sampling points, we
 One can see this approach  in line 70 of the code example.
 Here, we supply a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} with explicit values, thus fixing the sampling points them for the optimisation routine.
 \begin{code}[h]
-    \begin{minted}[firstnumber=57]{python}
+    \begin{minted}[firstnumber=62]{python}
     if __name__ == "__main__":
         # Define parameters
-        p = (np.exp(21.1), 0.038, 2)
+        p = (2e4, 0.02, -5.5)
 
         # Define initial conditions
         x0 = np.array([np.exp(2.36), 1 / (np.exp(2.66)-1)])
@@ -553,14 +553,14 @@ In our code, we simply would mix explicit and sampled definitions for individual
 \end{code}
 %
 % ########################################################################
-\subsection*{Define Model}
+\subsubsection*{Define Model}
 After we have decided on the numerical values for our model, we need to put everything together.
 The \mintinline[bgcolor=white,style=emacs]{python}{FisherModel} class serves as the entry point.
 Here, we simply supply every previously made definition of variables and methods.
 When using the syntax as shown in code sample~\ref{code:model_definition}, the order of arguments does not matter.
 However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherModel(x0, 0.0, ...)}, please pay attention to the order of arguments.
 \begin{code}[H]
-    \begin{minted}[autogobble=false,firstnumber=77]{python}
+    \begin{minted}[autogobble=false,firstnumber=82]{python}
     # Create the FisherModel which serves as the entry point
     #  for the solving and optimisation algorithms
     fsm = FisherModel(
@@ -581,18 +581,6 @@ However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherMo
 For a full list of optional arguments, we refer to the \href{https://spatial-systems-biology-freiburg.github.io/Fishi/}{documentation} of the package.
 %
 % ########################################################################
-\subsubsection*{Identifiability}
-Before proceeding with the optimisation, the reader need to check if the parameters of the system are identifiable, i.e, to examine if it is possible to obtain a unique solution for the parameters from the optimisation.
-It can happen that a subset of the parameters are non-identifiable.
-The non-identifiability can be due to the model structure or observables (structural non-identifiability) or insufficient data (practical non-identifiability)~\cite{guillaume_introductory_2019, wieland_structural_2021, walter_identifiability_1996}.
-Structural non-identifiability should be avoided as it results in at least one parameter which could be freely chosen meaning there is no optimal value for this parameter.
-Fortunately, there is a quick and easy way to check whether the system is structural non-identifiable by calculating the rank of the sensitivity matrix~\cite{miao_identifiability_2011, stigter_fast_2015}.
-For an identifiable system, the rank should coincide with the number of estimated parameters.
-Only if this condition is satisfied, we can continue with optimisation.
-In case the rank of the sensitivity matrix is less than the number of parameters it is necessary to change the structure of the model or change or increase the number of observables.
-Practical non-identifiability results in large confidence intervals~\cite{holmberg_practical_1982, miao_identifiability_2011, wieland_structural_2021, kreutzProfileLikelihood2013} \newline
-
-[STELLEN WIR DENN KEINE ROUTINE DAZU BEREIT?]
 %
 % ########################################################################
 \subsubsection*{Optimality Criteria}
@@ -678,7 +666,7 @@ However, we retain their full functionality.
 Any optimisation argument of the aforementioned routines, can be specified.
 The default arguments of the \mintinline[bgcolor=white,style=emacs]{python}{"scipy_differential_evolution"} optimisation method are given by the scipy default arguments~\cite{scipydiffev}.
 For our specific usecase, we advise to experiment with the following options:
-\begin{minted}[autogobble=false,firstnumber=98]{python}
+\begin{minted}[autogobble=false,firstnumber=96]{python}
     fsr = find_optimal(
         # Required argument: The model to optimise
         fsm,
@@ -701,9 +689,31 @@ Please view the \href{https://spatial-systems-biology-freiburg.github.io/FisInMa
 The resulting class \mintinline[bgcolor=white,style=emacs]{python}{fsr} contains all definitions, current values and information on the optimisation process.
 %
 % ########################################################################
+\subsubsection*{Identifiability}
+Before using the \acl{oed}, the reader need to check if the parameters of the system are identifiable, i.e, to examine if it is possible to obtain a unique solution for the parameters from the optimisation.
+It can happen that a subset of the parameters are non-identifiable.
+The non-identifiability can be due to the model structure or observables (structural non-identifiability) or insufficient data (practical non-identifiability)~\cite{guillaume_introductory_2019, wieland_structural_2021, walter_identifiability_1996}.
+Structural non-identifiability should be avoided as it results in at least one parameter which could be freely chosen meaning there is no optimal value for this parameter.
+Fortunately, there is a quick and easy way to check whether the system is structural non-identifiable by calculating the rank of the sensitivity matrix~\cite{miao_identifiability_2011, stigter_fast_2015}.
+For an identifiable system, the rank should coincide with the number of estimated parameters.
+Only if this condition is satisfied, we can continue with optimisation.
+In case the rank of the sensitivity matrix is less than the number of parameters it is necessary to change the structure of the model or change or increase the number of observables.
+Practical non-identifiability results in large confidence intervals~\cite{holmberg_practical_1982, miao_identifiability_2011, wieland_structural_2021, kreutzProfileLikelihood2013} \newline
+%
+% ########################################################################
+\subsubsection*{Identifiability Code}
+Using the eDPM package, the reader can quite easily check if the resulting Experimental Design is structurally identifiable.
+For this, one can call the function that compares the rank of the sensitivity matrix with the number of parameters using the following code:
+\begin{minted}[autogobble=false,firstnumber=112]{python}
+    # Check the structural identifiability
+    check_if_identifiable(fsr)
+\end{minted}
+The function returns \mintinline[bgcolor=white,style=emacs]{python}{True}, if the identifiability condition is reached, and \mintinline[bgcolor=white,style=emacs]{python}{False} otherwise.
+%
+% ########################################################################
 \subsubsection*{Plotting, Json, etc.}
 Our package also provides the option to save results into Json file and automatically plot results for the ode solutions, observables and sensitivities:
-\begin{minted}[autogobble=false,firstnumber=92]{python}
+\begin{minted}[autogobble=false,firstnumber=115]{python}
     plot_all_observables(fsr)
     plot_all_sensitivities(fsr)
     json_dump(fsr, "baranyi.json").
@@ -768,6 +778,17 @@ The resulting \ac{oed} for the described system is presented in Figure \ref{fig:
     \label{fig:baranyi_roberts_observable}
 \end{figure}
 \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{Figures/ident_check_output.pdf}
+    \caption{{\footnotesize The result of the identifiability check for the Experimental Design provided in Figure~\ref{fig:baranyi_roberts_observable}.
+    The output shows that the Experimental Design gives structurally identifiable result and allows to estimate parameters of the system.}}
+    \label{fig:identif_check}
+\end{figure}
+For the system described above the minimal requirements for passing the identifiability test (see Figure~\ref{fig:identif_check}) is using a setup with at least two temperatures and two measurement times per temperature.
+The choice of minimal number of measurement times can also be justified when looking at Figure~\ref{fig:det_vs_ntimes}.
+Here we see that one measurement time is not enough as the determinant is numerically very close to zero indicating a non-identifiability of this systems configuration.
+%
+\begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
       \centering
       \subcaption{{\footnotesize $T_1=3.5^\circ$C, parameter $x_\text{max}$}}
@@ -805,9 +826,6 @@ The resulting \ac{oed} for the described system is presented in Figure \ref{fig:
     \label{fig:baranyi_roberts_sensitivities}
 \end{figure}
 %
-For the system described above the minimal requirements for passing the identifiability test is using a setup with at least two temperatures and two measurement times per temperature.
-The choice of minimal number of measurement times can also be justified when looking at Figure~\ref{fig:det_vs_ntimes}.
-Here we see that one measurement time is not enough as the determinant is numerically very close to $0$ indicating a non-identifieability of this systems configuration.
 %
 %
 \begin{figure}[H]
