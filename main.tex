@@ -164,7 +164,7 @@ Afterwards, we import the needed packages.
     % TODO make this FisInMa into a link
 \end{code}
 This will serve as the starting point for our script.
-In the following, we will append more code to it and utilise the methods developed in eDPM~\cite{edpm2023}.
+In the following, we will append more code to it and utilise the methods developed in {\it eDPM}M~\cite{edpm2023}.
 % TODO add citation which points to github repository
 If line numbers are missing, these should be filled by blank lines for better readability.
 %
@@ -620,7 +620,7 @@ Finding the Experimental Design corresponds to finding the global maximum of the
 This problem has been widely studied, and multiple numerical solution algorithms for both local and global optimisation were introduced~\cite{esposito_global_2000, bangaImprovingFoodProcessing2003, ali_numerical_1997, runarsson_stochastic_2000}.
 In the supplied toolbox {\it eDPM}, three methods were implemented: differential evolution, basin-hopping, and the so-called “brute force” method.
 We give in the following a brief summary of the implemented methods.
-For more information the reader should turn to the available literature, e.g.,~\cite{stornDifferentialEvolutionSimple1997, walesGlobalOptimisationBasinHopping1997}.
+For more information the reader should turn to the available literature, e.g.,~\cite{stornDifferentialEvolutionSimple1997, wales_global_1997}.
 \newline
 
 The \ac{de} algorithm developed by Storn and Price (1996)~\cite{stornDifferentialEvolutionSimple1997} is one of the stochastic global optimisation methods appropriate for nonlinear dynamic problems.
@@ -641,7 +641,7 @@ This method is rather simple and straightforward, and does not require any gradi
 Another advantages include its fast convergence and robustness at numerical optimisation~\cite{babu_differential_2007}.
 \newline
 
-The second implemented method is basin-hopping developed by David Wales and Jonathan Doye~\cite{walesGlobalOptimisationBasinHopping1997}.
+The second implemented method is basin-hopping developed by David Wales and Jonathan Doye~\cite{wales_global_1997}.
 This iterative algorithm combines the Monte-Carlo and local optimisation and works as follows.
 During the iteration step the design vector, i.e., vector of measurement times and inputs, is subjected to a random perturbation and then to local minimisation.
 After this, the step is either accepted or rejected.
@@ -696,28 +696,24 @@ The non-identifiability can be due to the model structure or observables (struct
 Structural non-identifiability should be avoided as it results in at least one parameter which can not be determined.
 Fortunately, there is a quick and easy way to check whether the system is structural non-identifiable by calculating the rank of the sensitivity matrix~\cite{miao_identifiability_2011, stigter_fast_2015}.
 For an identifiable system, the rank should coincide with the number of estimated parameters.
-\\
-(PLEASE CHECK THESE STATEMENTS)
-\\
-While this condition should in theory be verified before the optimisation procedure, it is numerically not possible to do so.
-However, we can check if the result of the optimisation routine was able to identify every parameter by this method.
-This does not allow to systematically inspect the model but at least can validate our results.
-If a non-identifieablity is detected, it is highly likely that the structure of the model does not allow to determine the involved parameters.
-This means, we need to adjust our description and check all supplied parameters for their validity.
-\\
-(END OF NEW CONTENT)
+This method allows the analysis of the local structural identifiability for already chosen inputs and times.
+Hence, we can check if the final result of the optimisation routine is able to identify every parameter by this method.
+This does not allow us to systematically inspect the model but at least can validate our results.
+If a non-identifiability is detected, the structure of the model or number of measurements does not allow determination of the involved parameters.
+This means we need to adjust our description and check all supplied parameters for their validity.
 % SOME COMMENTS:
 % 1. The reader cannot check non-identifieability with our tool
 % 2. We can only check if the results of the optimisation have zero-rank (thus not identifiying one parameter). This is different to a principled identifieability check (which should hold for all values of the parameters)
 % 3. We need to think how this functionality should be used. The reader should simply do this check and afterwards see if the model which was put in was fine or not. Thus we should aim to describe it as a very simple "check if you fucked up" method.
-\\
 % Only if this condition is satisfied, we can continue with optimisation.
 % In case the rank of the sensitivity matrix is less than the number of parameters it is necessary to change the structure of the model or change or increase the number of observables.
-Practical non-identifiability results in large confidence intervals~\cite{holmberg_practical_1982, miao_identifiability_2011, wieland_structural_2021, kreutzProfileLikelihood2013} \newline
+On the other hand, there are also {\it a priori} methods, e.g., using Lie group theory, that only require the model definition~\cite{wieland_structural_2021}.
+However, due to extensiveness of the topic so we constrain ourselves with the discussed above method.
+Practical non-identifiability results in large confidence intervals~\cite{holmberg_practical_1982, miao_identifiability_2011, kreutzProfileLikelihood2013} \newline
 %
 % ########################################################################
 \subsubsection*{Identifiability Code}
-Using the eDPM package, the reader can quite easily check if the resulting Experimental Design is structurally identifiable.
+Using the {\it eDPM} package, the reader can quite easily check if the resulting Experimental Design is structurally identifiable.
 For this, one can call the function that compares the rank of the sensitivity matrix with the number of parameters using the following code:
 \begin{minted}[autogobble=false,firstnumber=112]{python}
     # Check the structural identifiability
