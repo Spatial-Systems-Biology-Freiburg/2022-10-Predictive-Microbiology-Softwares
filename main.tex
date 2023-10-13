@@ -690,14 +690,29 @@ The resulting class \mintinline[bgcolor=white,style=emacs]{python}{fsr} contains
 %
 % ########################################################################
 \subsubsection*{Identifiability}
-Before using the \acl{oed}, the reader need to check if the parameters of the system are identifiable, i.e, to examine if it is possible to obtain a unique solution for the parameters from the optimisation.
+Before using the \acl{oed} generated in the preceding section, the reader needs to check if the parameters of the system are identifiable, i.e, to examine if it is possible to obtain a unique solution for the parameters from the optimisation.
 It can happen that a subset of the parameters are non-identifiable.
 The non-identifiability can be due to the model structure or observables (structural non-identifiability) or insufficient data (practical non-identifiability)~\cite{guillaume_introductory_2019, wieland_structural_2021, walter_identifiability_1996}.
-Structural non-identifiability should be avoided as it results in at least one parameter which could be freely chosen meaning there is no optimal value for this parameter.
+Structural non-identifiability should be avoided as it results in at least one parameter which can not be determined.
 Fortunately, there is a quick and easy way to check whether the system is structural non-identifiable by calculating the rank of the sensitivity matrix~\cite{miao_identifiability_2011, stigter_fast_2015}.
 For an identifiable system, the rank should coincide with the number of estimated parameters.
-Only if this condition is satisfied, we can continue with optimisation.
-In case the rank of the sensitivity matrix is less than the number of parameters it is necessary to change the structure of the model or change or increase the number of observables.
+\\
+(PLEASE CHECK THESE STATEMENTS)
+\\
+While this condition should in theory be verified before the optimisation procedure, it is numerically not possible to do so.
+However, we can check if the result of the optimisation routine was able to identify every parameter by this method.
+This does not allow to systematically inspect the model but at least can validate our results.
+If a non-identifieablity is detected, it is highly likely that the structure of the model does not allow to determine the involved parameters.
+This means, we need to adjust our description and check all supplied parameters for their validity.
+\\
+(END OF NEW CONTENT)
+% SOME COMMENTS:
+% 1. The reader cannot check non-identifieability with our tool
+% 2. We can only check if the results of the optimisation have zero-rank (thus not identifiying one parameter). This is different to a principled identifieability check (which should hold for all values of the parameters)
+% 3. We need to think how this functionality should be used. The reader should simply do this check and afterwards see if the model which was put in was fine or not. Thus we should aim to describe it as a very simple "check if you fucked up" method.
+\\
+% Only if this condition is satisfied, we can continue with optimisation.
+% In case the rank of the sensitivity matrix is less than the number of parameters it is necessary to change the structure of the model or change or increase the number of observables.
 Practical non-identifiability results in large confidence intervals~\cite{holmberg_practical_1982, miao_identifiability_2011, wieland_structural_2021, kreutzProfileLikelihood2013} \newline
 %
 % ########################################################################
