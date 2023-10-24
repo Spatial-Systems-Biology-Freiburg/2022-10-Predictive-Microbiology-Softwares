@@ -489,7 +489,7 @@ Here, we supply a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} wit
         p = (2e4, 0.02, -5.5)
 
         # Define initial conditions
-        x0 = np.array([50, 1])
+        x0 = np.array([50.0, 1.0])
 
         # Define interval and number of sampling points for times
         times = {"lb":0.0, "ub":100.0, "n":4}
@@ -497,7 +497,7 @@ Here, we supply a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} wit
         # Define explicit temperature points
         Temp_low = 2.0
         Temp_high = 12.0
-        n_Temp = 1
+        n_Temp = 3
 
         # Summarize all input definitions in list (only temperatures)
         inputs = [
@@ -525,7 +525,7 @@ Then the difference between defining explicit values for the temperatures and de
         np.linspace(Temp_low, Temp_high, n_Temp)
     ]
     # >>> inputs
-    # [array([4., 6., 8.])]
+    # [array([2., 7., 12.])]
 
 
     # This will sample in the interval (Temp_low, Temp_high)
@@ -534,7 +534,7 @@ Then the difference between defining explicit values for the temperatures and de
         {"lb":Temp_low, "ub":Temp_high, "n":n_Temp}
     ]
     # >>> inputs
-    # [{'lb': 4.0, 'ub': 8.0, 'n': 3}]
+    # [{'lb': 2.0, 'ub': 12.0, 'n': 3}]
 
 
     \end{minted}
