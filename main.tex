@@ -37,6 +37,8 @@
 \newcommand{\mbp}{\mathbf{p}}
 \newcommand{\mby}{\mathbf{y}}
 \newcommand{\mbd}{\mathbf{d}}
+\newcommand{\mbf}{\mathbf{f}}
+\newcommand{\mbg}{\mathbf{g}}
 \newcommand{\cmt}[1]{\textcolor{red} {[#1]}}
 \providecommand{\keywords}[1]{\textbf{Keywords } #1}
 
@@ -167,7 +169,7 @@ Afterwards, we import the needed packages.
     % TODO make this FisInMa into a link
 \end{code}
 This will serve as the starting point for our script.
-In the following, we will append more code to it and utilise the methods developed in {\it eDPM}M~\cite{edpm2023}.
+In the following, we will append more code to it and utilise the methods developed in {\it eDPM}~\cite{edpm2023}.
 % TODO add citation which points to github repository
 If line numbers are missing, these should be filled by blank lines for better readability.
 %
@@ -179,7 +181,7 @@ As a starting point it is necessary to define the mathematical model.
 We restrict our discussion to biological system which can be described by a system of \aclp{ode}:
 \begin{equation}
     \begin{cases}
-    \dot \mbx (t) = f(t, \mbx, \mbu, \mbp) \\
+    \dot \mbx (t) = \mbf (t, \mbx, \mbu, \mbp) \\
     \mbx (t_0) = \mbx_0
     \label{eq:ode_general}
     \end{cases}.
@@ -188,10 +190,10 @@ Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system 
 We assume that a subset of the parameters $\mbp$ is unknown and should be estimated from data.
 Predominantly, the state variables cannot be directly observed, but rather the observables are functions of the state variables:
 \begin{equation}
-    \mby (t) = g(t, \mbx (t), \mbu, \mbp) + \epsilon (t),
+    \mby (t) = \mbg (t, \mbx (t), \mbu, \mbp) + \epsilon (t),
     \label{eq:observ_general}
 \end{equation}
-where the function $g$ is the observation or output function, and $\epsilon$ is the measurement noise.
+where the function $\mbg$ is the observation or output function, and $\epsilon$ is the measurement noise.
 The observational noise is often assumed to be an independently distributed Gaussian noise with zero mean and variance $\sigma^2$: $\epsilon (t) \sim N(0, \sigma^2)$, $\forall t$.\\
 
 In this tutorial, we demonstrate the usage of Experimental Design on the widely employed mathematical model developed by Baranyi and Roberts \cite{baranyiDynamicApproach1994}, which was devised to describe bacteria growth.
@@ -225,9 +227,9 @@ Based on this model, we would like to optimise the choice of measurement times a
 % ########################################################################
 \subsubsection*{Code}
 In order to be able to solve the equations numerically, we first need first to define the \ac{ode} system in python.
-As was explained in the previous sections, this system consists of the equation (\ref{eq:ode_general}) with initial values $t_0,x_0$.
+As was explained in the previous sections, this system consists of the equation (\ref{eq:ode_general}) with initial values $t_0, \mbx_0$.
 Next, we need to define all numerical values present in the system.
-We distinguish between time points $t_i$ at which the result of the \ac{ode} is evaluated, inputs $u$, which alter the behaviour of our system (for example temperature, humidity, etc.), parameters $p$, which are the quantities that we want to estimate and other arguments which might be needed to solve the \ac{ode}.
+We distinguish between time points $t_i$ at which the result of the \ac{ode} is evaluated, inputs $\mbu$, which alter the behaviour of our system (for example temperature, humidity, etc.), parameters $\mbp$, which are the quantities that we want to estimate and other arguments which might be needed to solve the \ac{ode}.
 Table \ref{tab:fsm-variables} provides an overview of these quantities and gives corresponding names in the code.
 In the following, we will step-by-step explain how to specify all variables needed by using the example of the Baranyi-Roberts Model (Eq. \ref{eq:ode_BaranyiRoberts}).
 \begin{table}[H]
@@ -236,19 +238,19 @@ In the following, we will step-by-step explain how to specify all variables need
         \specialrule{.1em}{.01em}{.05em}
         Description & Formula & Code \\[1ex]
         \toprule \vspace{1mm}
-        ODE & $f$                       & \mintinline[bgcolor=white,style=emacs]{python}{def ode_fun(t, x, u, p, ode_args)} \\
-            & $\partial f / \partial x$ & \mintinline[bgcolor=white,style=emacs]{python}{def ode_dfdx(t, x, u, p, ode_args)} \\[0.5ex]
-            & $\partial f / \partial p$ & \mintinline[bgcolor=white,style=emacs]{python}{def ode_dfdp(t, x, u, p, ode_args)} \\[0.5ex]
+        ODE & $\mbf$                       & \mintinline[bgcolor=white,style=emacs]{python}{def ode_fun(t, x, u, p, ode_args)} \\
+            & $\partial \mbf / \partial \mbx$ & \mintinline[bgcolor=white,style=emacs]{python}{def ode_dfdx(t, x, u, p, ode_args)} \\[0.5ex]
+            & $\partial \mbf / \partial \mbp$ & \mintinline[bgcolor=white,style=emacs]{python}{def ode_dfdp(t, x, u, p, ode_args)} \\[0.5ex]
         \midrule
-        Observable  & $g$                       &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_fun(t, x, u, p, ode_args)}\\[0.5ex]
-        (optional)  & $\partial g / \partial x$ &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_dgdx(t, x, u, p, ode_args)}\\[0.5ex]
-                    & $\partial g / \partial p$ &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_dgdp(t, x, u, p, ode_args)}\\[0.5ex]
+        Observable  & $\mbg$                       &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_fun(t, x, u, p, ode_args)}\\[0.5ex]
+        (optional)  & $\partial \mbg / \partial \mbx$ &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_dgdx(t, x, u, p, ode_args)}\\[0.5ex]
+                    & $\partial \mbg / \partial \mbp$ &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_dgdp(t, x, u, p, ode_args)}\\[0.5ex]
         \midrule
-        Initial value   & $x_0$ & \mintinline[bgcolor=white,style=emacs]{python}{x0}\\[0.5ex]
+        Initial value   & $\mbx_0$ & \mintinline[bgcolor=white,style=emacs]{python}{x0}\\[0.5ex]
         Initial time    & $t_0$ & \mintinline[bgcolor=white,style=emacs]{python}{t0}\\[0.5ex]
         Time points     & $t_i$ & \mintinline[bgcolor=white,style=emacs]{python}{t}\\[0.5ex]
-        Inputs          & $u$   & \mintinline[bgcolor=white,style=emacs]{python}{u}\\[0.5ex]
-        Parameters      & $p$   & \mintinline[bgcolor=white,style=emacs]{python}{p}\\[0.5ex]
+        Inputs          & $\mbu$   & \mintinline[bgcolor=white,style=emacs]{python}{u}\\[0.5ex]
+        Parameters      & $\mbp$   & \mintinline[bgcolor=white,style=emacs]{python}{p}\\[0.5ex]
         Other arguments &       & \mintinline[bgcolor=white,style=emacs]{python}{ode_args}\\[0.5ex]
         \bottomrule
     \end{tabular}
@@ -323,9 +325,9 @@ In the following we explain one of the ways to calculate the \ac{fim} for an \ac
 %
 % ########################################################################
 \subsubsection*{Sensitivity Calculation}
-An easy way to calculate the \ac{fim} uses local sensitivities of the observables $y$, that are in turn calculated from local sensitivities of the internal variables $x$~\cite{versyckIntroducingOptimal1999, banks_generalized_2010}.
-Assume that functions $f$ and $g$ are differentiable functions with respect to the state variables $\mbx$ and parameters $\mbp$.
-The local sensitivities of $x$ are defined by $s^x_{ij} = (\mathrm{d} x_i / \mathrm{d} p_j )$.
+An easy way to calculate the \ac{fim} uses local sensitivities of the observables $\mby$, that are in turn calculated from local sensitivities of the internal variables $\mbx$~\cite{versyckIntroducingOptimal1999, banks_generalized_2010}.
+Assume that functions $\mbf$ and $\mbg$ are differentiable functions with respect to the state variables $\mbx$ and parameters $\mbp$.
+The local sensitivities of $x_i$ are defined by $s^x_{ij} = (\mathrm{d} x_i / \mathrm{d} p_j )$.
 These can be calculated using an enhanced system of the \acp{ode}:
 \begin{equation}
     \begin{cases}
@@ -468,7 +470,7 @@ The resulting implemented functions in python can be seen in Code Sample~\ref{co
             ]
         ]
     \end{minted}
-    \caption{Derivatives of the function $f$ of the Baranyi-Roberts model \ac{ode}.}
+    \caption{Derivatives of the function $\mbf$ of the Baranyi-Roberts model \ac{ode}.}
     \label{code:code_baranyi_roberts_ode_fun_derivatives}
 \end{code}
 %
@@ -690,7 +692,7 @@ For our specific use-case, we advise to experiment with the following options:
     )
 \end{minted}
 A full list of optional arguments can be seen in the \href{https://docs.scipy.org/doc/scipy/reference/optimise.html#global-optimisation}{scipy documentation}~\cite{virtanenSciPyFundamentalAlgorithms2020}.
-In addition, there are some interesting optimisation options such as the optional arguments \mintinline[bgcolor=white,style=emacs]{python}{relative_sensitivities,criterion}, which are responsible for using relative sensitivities $\tfrac{dy}{dp}\tfrac{p}{y}$ and specifying the optimality criterion as explained in the previous section.
+In addition, there are some interesting optimisation options such as the optional arguments \mintinline[bgcolor=white,style=emacs]{python}{relative_sensitivities,criterion}, which are responsible for using relative sensitivities $\tfrac{d\mby}{d\mbp}\tfrac{\mbp}{\mb y}$ and specifying the optimality criterion as explained in the previous section.
 Please view the \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{full documentation} for explanation.
 The resulting class \mintinline[bgcolor=white,style=emacs]{python}{fsr} contains all definitions, current values and information on the optimisation process.
 %
