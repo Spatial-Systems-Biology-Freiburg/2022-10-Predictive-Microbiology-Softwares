@@ -38,7 +38,14 @@
 \captionsetup[subfigure]{justification=centering}
 
 \usepackage[outputdir=.]{minted}
-\setminted{autogobble=true,linenos=true,frame=single,framerule=1pt,numbersep=-1.5em}
+\setminted{
+    linenos=true,
+    frame=single,
+    framerule=1pt,
+    obeytabs=true,
+    tabsize=4,
+    numbersep=-10pt
+}
 
 \bibliographystyle{abbrv}
 
@@ -165,11 +172,11 @@ Users can obtain it by installing {\it eDPM} from \href{https://pypi.org/project
 The python website has guides for installing packages \href{https://packaging.python.org/en/latest/tutorials/installing-packages/}{packaging.python.org/}.
 Most Unix-Based systems (e.g. GNU/Linux) and Mac-OS can use \mintinline[bgcolor=white,style=emacs]{bash}{pip}
 \begin{minted}[bgcolor=white, linenos=false]{bash}
-pip install eDPM
+    pip install eDPM
 \end{minted}
 or \mintinline[bgcolor=white,style=emacs]{bash}{conda} to install the desired package.
 \begin{minted}[bgcolor=white, linenos=false]{bash}
-conda install eDPM
+    conda install eDPM
 \end{minted}
 The \href{https://spatial-systems-biology-freiburg.github.io/eDPM/}{documentation} of the package is continuously updated.
 After the installation of the package is complete, we open a file with a text editor of choice and simply start writing code.
@@ -568,12 +575,12 @@ We could decide to have the temperature optimized, but fix the humidity explicit
 In our code, we simply would mix explicit and sampled definitions for individual inputs (see code sample~\ref{code:mix_sampling_explicit}).
 \begin{code}[h]
     \begin{minted}[linenos=false]{python}
-        inputs = [
-            # These values will be sampled
-            {"lb":Temp_low, "ub":Temp_high, "n":n_Temp},
-            # These are fixed
-            np.array([0.4, 0.45, 0.5, 0.55])
-        ]
+    inputs = [
+        # These values will be sampled
+        {"lb":Temp_low, "ub":Temp_high, "n":n_Temp},
+        # These are fixed
+        np.array([0.4, 0.45, 0.5, 0.55])
+    ]
     \end{minted}
     \caption{Mixing of explicit and sampling for inputs.}
     \label{code:mix_sampling_explicit}
@@ -587,7 +594,7 @@ Here, we simply supply every previously made definition of variables and methods
 When using the syntax as shown in code sample~\ref{code:model_definition}, the order of arguments does not matter.
 However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherModel(x0, 0.0, ...)}, please pay attention to the order of arguments.
 \begin{code}[H]
-    \begin{minted}[autogobble=false,firstnumber=82]{python}
+    \begin{minted}[firstnumber=82]{python}
     # Create the FisherModel which serves as the entry point
     #  for the solving and optimization algorithms
     fsm = FisherModel(
@@ -687,13 +694,13 @@ The papers of Banga \etal \cite{banga_global_1996, banga_dynamic_2005, bangaImpr
 % The usage of the three implemented optimization methods is greatly simplified in our approach:
 To run the optimization procedure the following function can be used:
 \begin{minted}[linenos=false]{python}
-fsr = find_optimal(fsm).
+    fsr = find_optimal(fsm).
 \end{minted}
 The user can choose between any of the three previously explained optimization procedures.
 Any optimization argument of the aforementioned routines, can be specified.
 The default arguments of the \mintinline[bgcolor=white,style=emacs]{python}{"scipy_differential_evolution"} optimization method are given by the scipy default arguments~\cite{scipydiffev}.
 For our specific use-case, we advise to experiment with the following options:
-\begin{minted}[autogobble=false,firstnumber=96]{python}
+\begin{minted}[firstnumber=96]{python}
     fsr = find_optimal(
         # Required argument: The model to optimize
         fsm,
@@ -743,7 +750,7 @@ Methods such as profile-likelihood~\cite{wieland_structural_2021} are able to te
 \subsubsection*{Identifiability Code}
 Using the {\it eDPM} package, the reader can quite easily check if the resulting Experimental Design is structurally identifiable.
 For this, one can call the function that compares the rank of the sensitivity matrix with the number of parameters using the following code:
-\begin{minted}[autogobble=false,firstnumber=112]{python}
+\begin{minted}[firstnumber=112]{python}
     # Check the structural identifiability
     check_if_identifiable(fsr)
 \end{minted}
@@ -757,7 +764,7 @@ Thus we suggest that the reader considers the optimization result not as a finis
 % ########################################################################
 \subsubsection*{Plotting, Json, etc.}
 Our package also provides the option to save results into Json file and automatically plot results for the ode solutions, observables and sensitivities:
-\begin{minted}[autogobble=false,firstnumber=115]{python}
+\begin{minted}[firstnumber=115]{python}
     plot_all_observables(fsr)
     plot_all_sensitivities(fsr)
     json_dump(fsr, "baranyi.json").
