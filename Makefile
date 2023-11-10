@@ -9,7 +9,7 @@ TEX_FILES:=$(wildcard $(SRCDIR)/*.tex)
 COMPILATION_FILES:=$(filter-out src/$(TARGET)_expanded.tex, $(TEX_FILES))
 
 
-ZIP_TARGETS:= README.md $(BIBDIR)/cited.bib $(SRCDIR)/$(TARGET)_expanded.tex $(ODIR)/$(TARGET).pdf
+ZIP_TARGETS:= README.md $(BIBDIR)/cited.bib $(SRCDIR)/$(TARGET)_expanded.tex $(ODIR)/$(TARGET).pdf Figures/*
 
 all:
 	$(CC) $(OPTIONS) --output-directory=$(CURDIR)/$(ODIR) -cd $(CURDIR)/$(SRCDIR)/$(TARGET).tex
@@ -38,3 +38,6 @@ wordcount:
 
 citecount: clean_cite bibexport
 	cat $(BIBDIR)/cited.bib | grep -o ^@ | wc -l
+
+zip: all bibexport latexpand
+	zip $(TARGET) $(ZIP_TARGETS)
