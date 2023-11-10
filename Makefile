@@ -1,52 +1,55 @@
 CC:=latexmk
-SRCDIR:=.
-BIBDIR:=.
 MEDIADIR:=./media
-ODIR:=.
 TARGET:=main
+BIBFILE:=predictive-microbiology-software
 OPTIONS:=-pdf -shell-escape
-TEX_FILES:=$(wildcard $(SRCDIR)/*.tex)
+TEX_FILES:=$(wildcard *.tex)
 COMPILATION_FILES:=$(filter-out src/$(TARGET)_expanded.tex, $(TEX_FILES))
 
-
-ZIP_TARGETS:= Makefile README.md $(BIBDIR)/cited.bib $(SRCDIR)/$(TARGET)_expanded.tex $(ODIR)/$(TARGET).pdf Figures/* svmult.cls
+ZIP_TARGETS:= Makefile README.md $(BIBFILE)_cited.bib $(TARGET)_expanded.tex $(TARGET).pdf Figures/* svmult.cls
 
 all:
-	$(CC) $(OPTIONS) --output-directory=$(CURDIR)/$(ODIR) -cd $(CURDIR)/$(SRCDIR)/$(TARGET).tex
+	$(CC) $(OPTIONS) $(CURDIR)/$(TARGET).tex
 
-clean: clean_cite
-	-rm -r $(ODIR)/*.aux
-	-rm -r $(ODIR)/*.bbl
-	-rm -r $(ODIR)/*.blg
-	-rm -r $(ODIR)/*.fdb_latexmk
-	-rm -r $(ODIR)/*.fls
-	-rm -r $(ODIR)/*.log
-	-rm -r $(ODIR)/*.out
-	-rm -r $(ODIR)/*.pdf
-	-rm -r $(ODIR)/*.pyg
-	-rm -r $(ODIR)/_minted-main
-	-rm $(SRCDIR)/$(TARGET)_expanded.tex
-	-rm $(CURDIR)/release.zip
+clean: clean_cite clean_zip
+	-rm -r *.aux
+	-rm -r *.bbl
+	-rm -r *.blg
+	-rm -r *.fdb_latexmk
+	-rm -r *.fls
+	-rm -r *.log
+	-rm -r *.out
+	-rm -r *.pdf
+	-rm -r *.pyg
+	-rm -r _minted-main
+	-rm -r $(TARGET)_expanded.tex
 
 clean_cite:
-	-rm -r $(BIBDIR)/cited.bib*
+	-rm -r $(BIBFILE)_cited.bib*
 
 bibexport: all
-	bibexport -r $(BIBDIR)/Paper-ode-integrate.bib -o $(BIBDIR)/cited.bib $(ODIR)/$(TARGET).aux
+	bibexport -r $(BIBFILE).bib -o $(BIBFILE)_cited.bib $(TARGET).aux
 
 latexpand:
-	cd $(SRCDIR); latexpand $(TARGET).tex > $(TARGET)_expanded.tex
+	latexpand $(TARGET).tex > $(TARGET)_expanded.tex
 
 fresh: clean clean_cite all
 
 examine:
-	pplatex -i $(ODIR)/$(TARGET).log
+	pplatex -i $(TARGET).log
 
 wordcount:
 	texcount $(COMPILATION_FILES)
 
 citecount: clean_cite bibexport
-	cat $(BIBDIR)/cited.bib | grep -o ^@ | wc -l
+	cat $(BIBFILE)_cited.bib | grep -o ^@ | wc -l
 
 zip: all bibexport latexpand
 	zip $(TARGET) $(ZIP_TARGETS)
+	printf "@ $(TARGET)_expanded.tex\n@=$(TARGET).tex" | zipnote -w $(TARGET).zip
+	
+	printf "@ $(BIBFILE)_cited.bib\n@=$(BIBFILE).bib\n" | zipnote -w $(TARGET).zip
+	printf "@ $(TARGET)_expanded.tex\n@=$(TARGET).tex\n" | zipnote -w $(TARGET).zip
+
+clean_zip:
+	-rm -r $(TARGET).zip

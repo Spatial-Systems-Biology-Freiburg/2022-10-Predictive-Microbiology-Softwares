@@ -11,4 +11,7 @@ release.zip
 *.log
 *.out
 *.pdf
+*.zip
+*_expanded.tex
+*cited.bib
 _minted-main
