@@ -15,7 +15,16 @@ all:
 	$(CC) $(OPTIONS) --output-directory=$(CURDIR)/$(ODIR) -cd $(CURDIR)/$(SRCDIR)/$(TARGET).tex
 
 clean: clean_cite
-	-rm -r $(ODIR)/*
+	-rm -r $(ODIR)/*.aux
+	-rm -r $(ODIR)/*.bbl
+	-rm -r $(ODIR)/*.blg
+	-rm -r $(ODIR)/*.fdb_latexmk
+	-rm -r $(ODIR)/*.fls
+	-rm -r $(ODIR)/*.log
+	-rm -r $(ODIR)/*.out
+	-rm -r $(ODIR)/*.pdf
+	-rm -r $(ODIR)/*.pyg
+	-rm -r $(ODIR)/_minted-main
 	-rm $(SRCDIR)/$(TARGET)_expanded.tex
 	-rm $(CURDIR)/release.zip
 
