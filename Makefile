@@ -2,14 +2,14 @@ CC:=latexmk
 SRCDIR:=.
 BIBDIR:=.
 MEDIADIR:=./media
-ODIR:=out
+ODIR:=.
 TARGET:=main
 OPTIONS:=-pdf -shell-escape
 TEX_FILES:=$(wildcard $(SRCDIR)/*.tex)
 COMPILATION_FILES:=$(filter-out src/$(TARGET)_expanded.tex, $(TEX_FILES))
 
 
-ZIP_TARGETS:= README.md $(BIBDIR)/cited.bib $(SRCDIR)/$(TARGET)_expanded.tex $(ODIR)/$(TARGET).pdf Figures/* svmult.cls
+ZIP_TARGETS:= Makefile README.md $(BIBDIR)/cited.bib $(SRCDIR)/$(TARGET)_expanded.tex $(ODIR)/$(TARGET).pdf Figures/* svmult.cls
 
 all:
 	$(CC) $(OPTIONS) --output-directory=$(CURDIR)/$(ODIR) -cd $(CURDIR)/$(SRCDIR)/$(TARGET).tex

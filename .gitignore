@@ -3,3 +3,12 @@ out
 src/main_expanded.tex
 src/bibliography/cited.bib*
 release.zip
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.pdf
+_minted-main
