@@ -948,10 +948,18 @@ In summary, model-based experimental design can accelerate and simplify the plan
     The corresponding measurement times are (a)~$t_{11}=100$h and (b)~$t_{21}=43$h, $t_{22}=100$h.}}
     \label{fig:baranyi_roberts_observable}
 \end{figure}
+%
+%
+% ###### CHANGE THE MINTED ENVIRONMENT ######
+%
+%
+\definecolor{MintedFgColor}{HTML}{fcfcfc}
+\definecolor{MintedBgColor}{HTML}{2c2e30}
+\AtBeginEnvironment{minted}{\color{MintedFgColor}}
 \begin{figure}[H]
     \centering
     %\includegraphics[scale=0.5]{Figures/ident_check_output.pdf}
-    \begin{minted}[linenos=false,fontsize=\scriptsize]{text}
+    \begin{minted}[bgcolor=MintedBgColor,linenos=false,fontsize=\scriptsize]{text}
 =========================== SUMMARY OF FISHER MODEL ============================
 ================================ ODE FUNCTIONS =================================
 ├─ode_fun   baranyi_roberts_ode
@@ -996,7 +1004,7 @@ In summary, model-based experimental design can accelerate and simplify the plan
     \label{fig:summary_configuration_edpm_command_line}
 \end{figure}
 \begin{figure}
-    \begin{minted}[linenos=false,fontsize=\scriptsize]{text}
+    \begin{minted}[bgcolor=MintedBgColor,linenos=false,fontsize=\scriptsize]{text}
 ========================== STARTING OPTIMIZATION RUN ===========================
 differential_evolution step 1: f(x)= -72.0062
 differential_evolution step 2: f(x)= -152.503
@@ -1061,7 +1069,7 @@ Result_1
     \label{fig:summary_optimization_routine_command_line}
 \end{figure}
 \begin{figure}
-    \begin{minted}[linenos=false,fontsize=\scriptsize]{text}
+    \begin{minted}[bgcolor=MintedBgColor,linenos=false,fontsize=\scriptsize]{text}
 =============================== ANALYSIS RESULTS ===============================
 └─structural identifiability  True
     \end{minted}
