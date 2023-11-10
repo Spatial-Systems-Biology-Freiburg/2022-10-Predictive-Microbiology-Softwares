@@ -1,4 +1,4 @@
-\documentclass[10pt,A4paper]{article}
+\documentclass[graybox]{svmult}
 %\documentclass{Springer_template_contributed_works/svmult}
 %\usepackage{newtxmat}
 
@@ -14,12 +14,31 @@
 \usepackage{xcolor}
 \usepackage{multirow}
 \usepackage{ctable} % for \specialrule command
+\usepackage{multirow} % to combine cells vertically in a table
 \usepackage{graphicx}
 \usepackage{subcaption}
+
+
+% ############ From Springer Template ###############
+\usepackage{type1cm}        % activate if the above 3 fonts are
+                            % not available on your system
+%
+\usepackage{makeidx}         % allows index generation
+\usepackage{graphicx}        % standard LaTeX graphics tool
+                             % when including figure files
+\usepackage{multicol}        % used for the two-column index
+\usepackage[bottom]{footmisc}% places footnotes at page bottom
+
+
+\usepackage{newtxtext}
+\usepackage[varvw]{newtxmath}       % selects Times Roman as basic font
+% ###################################################
+
+
 \captionsetup[subfigure]{justification=centering}
 
 \usepackage[outputdir=out]{minted}
-\setminted{autogobble=true,linenos=true,frame=single,framerule=1pt}
+\setminted{autogobble=true,linenos=true,frame=single,framerule=1pt,numbersep=-1.5em}
 
 \bibliographystyle{abbrv}
 
@@ -56,30 +75,31 @@
 \begin{document}
 % ########################################################################
 % ########################################################################
-\vspace*{0.2in}
-% Title must be 250 characters or less.
-\begin{flushleft}
-{\Large
-\textbf\newline{Experimental design for predictive models in microbiology depending on environmental variables}}
-\newline
-\\
-Polina Gaindrik\textsuperscript{1},
-Jonas Pleyer\textsuperscript{1},
-Daniel Heger\textsuperscript{2},
-Christian Fleck\textsuperscript{1}
-\\
-\bigskip
-\textbf{1} \href{https://www.fdm.uni-freiburg.de/spatsysbio}{University of Freiburg, Freiburg Center for Data Analysis and Modeling, Ernst-Zermelo-Str. 1, 79104 Freiburg, Germany}\\
-\textbf{2} \href{https://tsenso.com/en/}{tsenso GmbH, Johannesstr. 19, 70176 Stuttgart, Germany}\\
-\bigskip
 
-\end{flushleft}
+\title*{Experimental design for predictive models in microbiology depending on environmental variables}
+
+\author{
+    Polina Gaindrik, Jonas Pleyer, Daniel Heger and Christian Fleck
+}
+\institute{
+    Polina Gaindrik, Jonas Pleyer, Christian Fleck \at
+    \href{https://www.fdm.uni-freiburg.de/spatsysbio}{University of Freiburg, Freiburg Center for Data Analysis and Modeling},
+    Ernst-Zermelo-Str. 1, 79104 Freiburg, Germany
+    \and
+    Daniel Heger \at
+    \href{https://tsenso.com/en/}{tsenso GmbH, Johannesstr. 19, 70176 Stuttgart, Germany}
+}
+
+
+\maketitle
+
 % ########################################################################
 % ########################################################################
-\section*{Abstract}
-\linenumbers
+\abstract{
+%
 The aim of predictive microbiology is the provision of tools and methods for predicting the growth, survival, and death of microorganisms in different food matrices under a range of environmental conditions. The parametrized mathematical models need to be calibrated using dedicated experimental data.
-In order to efficiently plan experiments model-based experimental design is used. In this chapter, we explain model-based experimental design and provide step-by-step instructions for finding the optimal design using the well-known Baranyi\&Roberts growth model as an example. We provide the Python software {\it eDPM} for \ac{ode} -based models, such that the reader can apply model-based experimental design in his/her research context.\\
+In order to efficiently plan experiments model-based experimental design is used. In this chapter, we explain model-based experimental design and provide step-by-step instructions for finding the optimal design using the well-known Baranyi\&Roberts growth model as an example. We provide the Python software {\it eDPM} for \ac{ode} -based models, such that the reader can apply model-based experimental design in his/her research context.
+}
 \keywords{Optimal experimental design, Parameter estimation, \ac{fim}, Identifiability, Uncertainty}
 %
 %
@@ -193,7 +213,7 @@ Predominantly, the state variables cannot be directly observed, but rather the o
 \end{equation}
 where the function $g$ is the observation or output function, and $\epsilon$ is the measurement noise.
 The observational noise is often assumed to be an independently distributed Gaussian noise with zero mean and variance $\sigma^2$: $\epsilon (t) \sim N(0, \sigma^2)$, $\forall t$.\\
-
+%
 In this tutorial, we demonstrate the usage of Experimental Design on the widely employed mathematical model developed by Baranyi and Roberts \cite{baranyiDynamicApproach1994}, which was devised to describe bacterial growth.
 The model introduces two state variables $\mbx = (x_1, x_2)$, where $x_1(t)$ denotes the cell concentration of a bacterial population at the time $t$
 and $x_2(t)$ is the quantity defining the proportion of the growth rate specified by the environment, e.g., a limiting nutrient critical for bacterial growth.
@@ -236,13 +256,13 @@ In the following, we will step-by-step explain how to specify all variables need
         \specialrule{.1em}{.01em}{.05em}
         Description & Formula & Code \\[1ex]
         \toprule \vspace{1mm}
-        ODE & $\mbf$                       & \mintinline[bgcolor=white,style=emacs]{python}{def ode_fun(t, x, u, p, ode_args)} \\
+        \multirow{3}{*}{ODE} & $\mbf$                       & \mintinline[bgcolor=white,style=emacs]{python}{def ode_fun(t, x, u, p, ode_args)} \\
             & $\partial \mbf / \partial \mbx$ & \mintinline[bgcolor=white,style=emacs]{python}{def ode_dfdx(t, x, u, p, ode_args)} \\[0.5ex]
             & $\partial \mbf / \partial \mbp$ & \mintinline[bgcolor=white,style=emacs]{python}{def ode_dfdp(t, x, u, p, ode_args)} \\[0.5ex]
         \midrule
-        Observable  & $\mbg$                       &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_fun(t, x, u, p, ode_args)}\\[0.5ex]
-        (optional)  & $\partial \mbg / \partial x$ &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_dgdx(t, x, u, p, ode_args)}\\[0.5ex]
-                    & $\partial \mbg / \partial p$ &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_dgdp(t, x, u, p, ode_args)}\\[0.5ex]
+        \multirow{3}{*}{\shortstack{Observable\\(optional)}} & $\mbg$                       &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_fun(t, x, u, p, ode_args)}\\[0.5ex]
+         & $\partial \mbg / \partial x$ &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_dgdx(t, x, u, p, ode_args)}\\[0.5ex]
+                        & $\partial \mbg / \partial p$ &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_dgdp(t, x, u, p, ode_args)}\\[0.5ex]
         \midrule
         Initial value   & $\mbx_0$ & \mintinline[bgcolor=white,style=emacs]{python}{x0}\\[0.5ex]
         Initial time    & $t_0$ & \mintinline[bgcolor=white,style=emacs]{python}{t0}\\[0.5ex]
@@ -409,7 +429,8 @@ The first component of the Baranyi-Roberts model reads:
 \label{eq:rob_bar_model}
     \dot x_1(t) = f_1(t, \mbx, \mbu, \mbp) = \mu^\text{max} \frac{x_2(t)}{x_2(t) + 1} \left(1 - \frac{x_1(t)}{x_1^\text{max}}\right) x_1(t),
 \end{equation}
-where $\sqrt{\mu^\text{max}}=b(T-T_\text{min})$. It follows:
+where $\sqrt{\mu^\text{max}}=b(T-T_\text{min})$.
+It follows:
 \begin{alignat}{6}
     \frac{\partial\mu^\text{max}}{\partial p_1} &= 0\\
     \frac{\partial\mu^\text{max}}{\partial p_2} &= 2b(T-T_\text{min})^2 &=& &&\frac{2\mu^\text{max}}{b}\\
