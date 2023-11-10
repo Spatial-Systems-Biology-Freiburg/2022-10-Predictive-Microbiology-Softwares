@@ -8,6 +8,8 @@
 \usepackage{changepage}
 \usepackage{cite}
 \usepackage{nameref,hyperref}
+\usepackage[utf8x]{inputenc}
+\usepackage{newunicodechar}
 \usepackage[right]{lineno}
 \usepackage[nopatch=eqnum]{microtype}
 
@@ -78,6 +80,23 @@
 \newacro{ode}[ODE]{Ordinary Differential Equation}
 \newacro{oed}[OED]{optimal experimental design}
 \newacro{fim}[FIM]{Fisher Information Matrix}
+
+% Define unicode characters needed for output of simulation
+\makeatletter
+\verbatim@font
+\newsavebox\v@sp
+\sbox{\v@sp}{\ }
+\newlength{\v@spwd}
+\setlength{\v@spwd}{\wd\v@sp}
+\newunicodechar{└}{\mbox{\kern0.5\v@spwd\vrule height 2ex depth -1ex width 0.2ex\kern-0.2ex\rule[1ex]{0.5\v@spwd}{0.2ex}}}
+\newunicodechar{─}{\rule[1ex]{1\v@spwd}{0.2ex}}
+\newunicodechar{┬}{\rule[1ex]{0.5\v@spwd}{0.2ex}\vrule height 1ex
+depth 0.5ex width0.2ex\kern-0.2ex\rule[1ex]{0.5\v@spwd}{0.2ex}}
+\newunicodechar{├}{\mbox{\kern0.5\v@spwd\vrule height 2ex depth 0.5ex width 0.2ex\kern-0.2ex\rule[1ex]{0.5\v@spwd}{0.2ex}}}
+\newunicodechar{│}{\mbox{\kern0.5\v@spwd\vrule height 2ex depth 0.5ex width
+0.2ex\kern-0.2ex \kern0.5\v@spwd}}
+\makeatother
+\normalfont
 
 \begin{document}
 % ########################################################################
@@ -930,8 +949,122 @@ In summary, model-based experimental design can accelerate and simplify the plan
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.5]{Figures/ident_check_output.pdf}
-    \caption{{\footnotesize The result of the identifiability check for the Experimental Design provided in Figure~\ref{fig:baranyi_roberts_observable}.
+    %\includegraphics[scale=0.5]{Figures/ident_check_output.pdf}
+    \begin{minted}[linenos=false,fontsize=\scriptsize]{text}
+=========================== SUMMARY OF FISHER MODEL ============================
+================================ ODE FUNCTIONS =================================
+├─ode_fun   baranyi_roberts_ode
+├─ode_dfdx  ode_dfdx
+├─ode_dfdp  ode_dfdp
+├─obs_fun   unknown
+├─obs_dgdx  unknown
+└─obs_dgdp  unknown
+================================ INITIAL GUESS =================================
+├─ode_x0           [array([50.,  1.])]
+├─ode_t0           [0.]
+├─times            [[  0. 100.]
+    [  0. 100.]]
+├─inputs           [array([ 2., 12.])]
+├─parameters       (20000.0, 0.02, -5.5)
+├─ode_args         None
+├─identical_times  False
+└─covariance       CovarianceDefinition(rel=1.1, abs=1.3)
+============================= VARIABLE DEFINITIONS =============================
+├─ode_x0           None
+├─ode_t0           None
+├─times            VariableDefinition(lb=0.0, ub=100.0, n=2)
+├─inputs           [VariableDefinition(lb=2.0, ub=12.0, n=2)]
+├─parameters       (20000.0, 0.02, -5.5)
+├─ode_args         None
+├─identical_times  False
+└─covariance       CovarianceDefinition(rel=1.1, abs=1.3)
+=============================== VARIABLE VALUES ================================
+├─ode_x0           [array([50.,  1.])]
+├─ode_t0           [0.]
+├─times            [[  0. 100.]
+│                   [  0. 100.]]
+├─inputs           [array([ 2., 12.])]
+├─parameters       (20000.0, 0.02, -5.5)
+├─ode_args         None
+├─identical_times  False
+└─covariance       CovarianceDefinition(rel=1.1, abs=1.3)
+================================ OTHER OPTIONS =================================
+└─identical_times  False
+    \end{minted}
+    \caption{{\footnotesize Command-line output of {\it eDPM} of all parameters, inputs, \ac{ode} functions and initial values needed to run the optimization method.}}
+    \label{fig:summary_configuration_edpm_command_line}
+\end{figure}
+\begin{figure}
+    \begin{minted}[linenos=false,fontsize=\scriptsize]{text}
+========================== STARTING OPTIMIZATION RUN ===========================
+differential_evolution step 1: f(x)= -72.0062
+differential_evolution step 2: f(x)= -152.503
+differential_evolution step 3: f(x)= -152.503
+differential_evolution step 4: f(x)= -152.689
+differential_evolution step 5: f(x)= -176.106
+differential_evolution step 6: f(x)= -210.415
+differential_evolution step 7: f(x)= -224.958
+differential_evolution step 8: f(x)= -240.512
+differential_evolution step 9: f(x)= -240.512
+differential_evolution step 10: f(x)= -240.512
+differential_evolution step 11: f(x)= -246.616
+differential_evolution step 12: f(x)= -246.616
+differential_evolution step 13: f(x)= -247.332
+differential_evolution step 14: f(x)= -248.422
+differential_evolution step 15: f(x)= -248.744
+differential_evolution step 16: f(x)= -249.315
+differential_evolution step 17: f(x)= -251.202
+differential_evolution step 18: f(x)= -251.202
+differential_evolution step 19: f(x)= -251.229
+differential_evolution step 20: f(x)= -251.229
+differential_evolution step 21: f(x)= -251.469
+differential_evolution step 22: f(x)= -251.469
+differential_evolution step 23: f(x)= -251.8
+differential_evolution step 24: f(x)= -252.206
+differential_evolution step 25: f(x)= -252.217
+differential_evolution step 26: f(x)= -252.217
+differential_evolution step 27: f(x)= -252.31
+
+============================== OPTIMIZED RESULTS ===============================
+================================== CRITERION ===================================
+├─fisher_determinant         252.31000727743015
+├─sensitivity matrix         [[0.02936982 6.00979198 3.68012032]
+│                             [0.02936994 6.00979942 3.68012487]
+│                             [0.19345575 8.42296024 2.64726938]
+│                             [0.99551519 0.10814337 0.0339886 ]]
+├─inverse covariance matrix  [[0.82338185 0.         0.         0.        ]
+│                             [0.         0.82338186 0.         0.        ]
+│                             [0.         0.         0.82594678 0.        ]
+│                             [0.         0.         0.         0.82634818]]
+============================== INDIVIDUAL RESULTS ==============================
+Result_0
+├─ode_x0      [50.  1.]
+├─ode_t0      0.0
+├─times       [99.9942128  99.99433358]
+├─inputs      [3.4817324001093413]
+└─parameters  (20000.0, 0.02, -5.5)
+Result_1
+├─ode_x0      [50.  1.]
+├─ode_t0      0.0
+├─times       [42.95660959 98.6753861 ]
+├─inputs      [11.999647652116655]
+└─parameters  (20000.0, 0.02, -5.5)
+======================== DISCRETIZATION PENALTY SUMMARY ========================
+├─penalty          1.0
+├─penalty_ode_t0   1.0
+├─penalty_inputs   1.0
+├─penalty_times    1.0
+└─penalty_summary  {'ode_t0': [], 'inputs': [], 'times': []}
+    \end{minted}
+    \caption{{\footnotesize Command-line output which summarizes of the optimization routine and its results.}}
+    \label{fig:summary_optimization_routine_command_line}
+\end{figure}
+\begin{figure}
+    \begin{minted}[linenos=false,fontsize=\scriptsize]{text}
+=============================== ANALYSIS RESULTS ===============================
+└─structural identifiability  True
+    \end{minted}
+    \caption{{\footnotesize Command-line output showing the result of the identifiability check for the Experimental Design provided in Figure~\ref{fig:baranyi_roberts_observable}.
     The output shows that the Experimental Design gives structurally identifiable result and allows to estimate parameters of the system.}}
     \label{fig:identif_check}
 \end{figure}
