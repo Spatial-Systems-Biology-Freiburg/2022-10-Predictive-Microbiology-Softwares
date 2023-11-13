@@ -1,6 +1,4 @@
 \documentclass[graybox]{svmult}
-%\documentclass{Springer_template_contributed_works/svmult}
-%\usepackage{newtxmat}
 
 \usepackage{acronym}
 \usepackage{amsmath,amssymb}
@@ -725,6 +723,9 @@ A full list of optional arguments can be seen in the \href{https://docs.scipy.or
 In addition, there are some interesting optimization options such as the optional arguments \mintinline[bgcolor=white,style=emacs]{python}{relative_sensitivities,criterion}, which are responsible for using relative sensitivities $\tfrac{dy}{dp}\tfrac{p}{y}$ and specifying the optimality criterion as explained in the previous section.
 Please view the \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{full documentation} for explanation.
 The resulting class \mintinline[bgcolor=white,style=emacs]{python}{fsr} contains all definitions, current values and information on the optimization process.
+Note that our toolbox optimizes and provides the timepoints with an assumption that the initial timepoint $t_0$ is always measured.
+For the parameter estimation the initial values $\mbx(t_0)$ of the system are required.
+Hence, the reader should keep that in mind and include the initial time $t_0$ as a measurement point in the final \ac{oed}.
 %
 % ########################################################################
 \subsubsection*{Identifiability}
@@ -945,7 +946,8 @@ In summary, model-based experimental design can accelerate and simplify the plan
     \caption{{\footnotesize The example of the output of the Experimental Design optimization procedure for the Baranyi and Roberts model.
     The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
     The Optimal Design is proposed for one observable which is the total bacterial count of the species $x_1$ and consists of two time series where samples are stored at temperatures (a) $T_1 = 3.5^\circ$C and (b) $T_2 = 12^\circ$C.
-    The corresponding measurement times are (a)~$t_{11}=100$h and (b)~$t_{21}=43$h, $t_{22}=100$h.}}
+    The corresponding measurement times are (a)~$t_{11}=100$h and (b)~$t_{21}=43$h, $t_{22}=100$h.
+    The initial time $t_0=0$ is included in the Experimental Design by definition.}}
     \label{fig:baranyi_roberts_observable}
 \end{figure}
 %
@@ -1083,32 +1085,32 @@ Result_1
     \begin{subfigure}{.5\textwidth}
       \centering
       \subcaption{{\footnotesize $T_1=3.5^\circ$C, parameter $x_\text{max}$}}
-      \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_00.pdf}
+      \includegraphics[scale=0.25]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_00.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
         \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $x_\text{max}$}}
-        \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_00.pdf}
+        \includegraphics[scale=0.25]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_00.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
       \centering
       \subcaption{{\footnotesize $T_1=3.5^\circ$C, parameter $b$}}
-      \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_01.pdf}
+      \includegraphics[scale=0.25]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_01.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
         \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $b$}}
-        \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_01.pdf}
+        \includegraphics[scale=0.25]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_01.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
         \subcaption{{\footnotesize $T_1=3.5^\circ$C, parameter $T_\text{min}$}}
-        \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_02.pdf}
+        \includegraphics[scale=0.25]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_02.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
           \centering
           \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $T_\text{min}$}}
-          \includegraphics[scale=0.255]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_02.pdf}
+          \includegraphics[scale=0.25]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_02.pdf}
         \end{subfigure}
     \caption{{\footnotesize The example of the sensitivities of the total bacterial count calculated for the Experimental Design optimization procedure for the Baranyi and Roberts model.
     The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
@@ -1130,28 +1132,29 @@ Result_1
     \begin{subfigure}{.5\textwidth}
         \centering
         \subcaption{{\footnotesize Species 1, $T = 12^\circ$C, $t=12 \text{h}, 38$h}}
-        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_00.pdf}
+        \includegraphics[scale=0.25]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_00.pdf}
       \end{subfigure} 
     \begin{subfigure}{.5\textwidth}
         \centering
         \subcaption{{\footnotesize Species 1, $T = 2^\circ$C, $t=58 \text{h}, 90$h}}
-        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_00.pdf}
+        \includegraphics[scale=0.25]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_00.pdf}
     \end{subfigure}
       \begin{subfigure}{.5\textwidth}
         \centering
         \subcaption{{\footnotesize Species 2, $T = 12^\circ$C, $t=12 \text{h}, 38$h}}
-        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_01.pdf}
+        \includegraphics[scale=0.25]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_01.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
         \subcaption{{\footnotesize Species 2, $T = 2^\circ$C, $t=58 \text{h}, 90$h}}
-        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_01.pdf}
+        \includegraphics[scale=0.25]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_01.pdf}
     \end{subfigure} 
     \caption{{\footnotesize
     The Optimal Experimental Design for the Baranyi and Roberts model with two different species~(\ref{eq:model_2species_resource}) is proposed for two observables: the bacterial count of the first species $x_1$ and of the second species $x_2$.
     (a), (c) show the first experimental series held at the temperature $T_1=12^\circ$C and with measurement times $t_{11}=12$h, $t_{12}=38$h for observables $x_1$ and $x_2$, respectively.
     (b), (d) show the second experimental series held at the temperature $T_2=2^\circ$C and with measurement times $t_{21}=58$h, $t_{22}=90$h for observables $x_1$ and $x_2$, respectively.
-    The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.}}
+    The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
+    The initial time $t_0=0$ is included in the Experimental Design by definition.}}
     \label{fig:baranyi_roberts_2species_observable}
 \end{figure}
 
