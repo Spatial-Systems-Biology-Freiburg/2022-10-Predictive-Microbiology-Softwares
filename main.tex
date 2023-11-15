@@ -201,11 +201,9 @@ Afterwards, we import the needed packages.
     \end{minted}
     \caption{Import statements to use {\it eDPM}}
     \label{code:import_statements}
-    % TODO make this FisInMa into a link
 \end{code}
 This will serve as the starting point for our script.\\
 In the following, we will append more code to it and utilize the methods developed in {\it eDPM}~\cite{edpm2023}.
-% TODO add citation which points to github repository
 If line numbers are missing, these should be filled by blank lines for better readability.
 %
 %
@@ -325,11 +323,7 @@ In essence, Experimental Design comprises maximizing an objective function depen
 The objective function needs to quantify the information the observation $\mby$ has about the parameter vector $\mbp$.
 A common choice here is constructing objective functions based on the \acf{fim} \cite{lyTutorialFisher2017}.
 According to the so-called 'Cramer-Rao inequality', the Fisher information is inversely proportional to the minimal squared estimation error \cite{friedenExploratoryData2010}.
-%Therefore, we choose some function of the FIM and optimize this objective function instead. 
-%Due to this relationship, the \ac{fim} can be used as an estimate to 
-%Due to this relationship maximization of the information leads to a minimization of the variance or uncertainty in the parameters.
 This relation justifies using the FIM to improve our experimental design.
-%Due to this relationship maximization of the information leads to an improvement of the experimental design.
 In the following we explain one of the ways to calculate the \ac{fim} for an \acp{ode} system (\ref{eq:ode_general}) and the observable function (\ref{eq:observ_general}) \cite{lyTutorialFisher2017}.
 %
 %
@@ -360,7 +354,7 @@ In the case the parameters are of very different scale (e.g., on the second and 
 \end{equation}
 These sensitivities are the elements of the sensitivity matrix \cite{stigterObservabilityComplex2017}.
 For example, in case of two observables $\mby = (y_1, y_2)$, two different inputs $\mbu = (u_1, u_2)$, $N$ different measurement times and $N_p$ parameters, sensitivity matrix reads:
-
+%
 \begin{equation}
     S =
 \begin{pmatrix}
@@ -436,10 +430,8 @@ and consequently:
 \end{alignat}
 Similarly, the derivatives $\partial f/\partial x_i$ are given by:
 \begin{alignat}{7}
-    % TODO
     \frac{\partial f_1}{\partial x_1}(t) &= \mu^\text{max} &\frac{x_2(t)}{x_2(t) + 1} && \left(1-2\frac{x_1(t)}{x_1^\text{max}}\right) &&\\
     \frac{\partial f_1}{\partial x_2}(t) &= \mu^\text{max} &\frac{1}{(x_2(t)+1)^2} && \left(1 - \frac{x_1(t)}{x_1^\text{max}}\right) &&x_1(t).
-    % TODO
 \end{alignat}
 The readers are encouraged to calculate the components $\partial f_2/\partial p_i$ and $\partial f_2/\partial x_i$ as an exercise.
 The resulting implemented functions in python can be seen in Code Sample~\ref{code:code_baranyi_roberts_ode_fun_derivatives}.
