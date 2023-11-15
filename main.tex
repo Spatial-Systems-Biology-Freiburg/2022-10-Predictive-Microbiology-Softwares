@@ -135,11 +135,6 @@ In order to efficiently plan experiments model-based experimental design is used
 % ########################################################################
 % ########################################################################
 \section*{Introduction}
-% \begin{figure}[h]
-% 	\inputminted[linenos,firstline=57,lastline=79]{python}{../model-design-fischer-information-matrix/pool_model.py}
-% 	\caption{Sample code written in Python~\cite{rossumPythonLanguageReference2010}.}
-% \end{figure}
-%
 Mathematical modeling is widely used to describe, understand and predict the behavior of living systems.
 In particular, in the field of Predictive Biology, one can find a large variety of works that dwell on building models of different levels of complexity controlled by model parameters, e.g., to describe bacterial growth \cite{bernaertsConceptsToolsPredictive2004}.
 Predictive microbiology is a subfield of food microbiology that uses mathematical models to predict the behavior of microorganisms in food.
@@ -182,7 +177,7 @@ We require a working installation of the popular scripting language Python $\geq
 For installation instructions, please refer to the website \href{https://www.python.org/downloads/}{python.org}.
 In addition, we expect users to be able to write, execute and display output of scripts.
 This tutorial can also be followed using jupyter notebooks \cite{jupyterteamJupyterNotebook}.
-% TODO
+%
 Users can obtain it by installing {\it eDPM} from \href{https://pypi.org/project/edpm/0.0.1/}{pypi.org}.
 The python website has guides for installing packages \href{https://packaging.python.org/en/latest/tutorials/installing-packages/}{packaging.python.org/}.
 Most Unix-Based systems (e.g. GNU/Linux) and Mac-OS can use \mintinline[bgcolor=white,style=emacs]{bash}{pip}
@@ -530,49 +525,39 @@ Here, we supply a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} wit
 \end{code}
 \subsubsection*{Defining Explicit Values and Sampling}
 There are two distinct ways to define inputs of the model.
-First, one can fix (multiple) explicit values for an input variable.
-The experiment will then be solved for only these values without optimizing them.
-Secondly, one can also optimize inputs of the system.
-The difference between choosing explicit values and specifying a sampling range may be subtle at first glance, but in turn allows to very easily switch between fixed values and optimized sampling points.
-For example, suppose we want to optimize the temperature at which the experiments are performed, which means we let the optimization algorithm pick the optimal temperature points such that the information gathered from the system is maximized.
-Then the difference between defining explicit values for the temperatures and defining an interval for optimization can be understood in code sample~\ref{code:difference_explicit_sampling}.\newline
-\begin{code}[h]
-    \begin{minted}[linenos=false]{python}
-    # This will fix values explicitly
+First, one can fix (multiple) explicit values for an input variable
+\begin{minted}[linenos=false]{python}
     inputs = [
         np.linspace(Temp_low, Temp_high, n_Temp)
     ]
     # >>> inputs
     # [array([2., 7., 12.])]
-
-
-    # This will sample in the interval (Temp_low, Temp_high)
-    # with n_Temp points.
+\end{minted}
+so that experiment will then be solved for only these values without optimizing them.
+Secondly, one can also optimize inputs of the system.
+For example, suppose we want to optimize the temperature at which the experiments are performed, which means we let the optimization algorithm pick the optimal temperature points such that the information gathered from the system is maximized.
+To sample in the interval \mintinline[bgcolor=white,style=emacs]{bash}{(Temp_low, Temp_high)} with \mintinline[bgcolor=white,style=emacs]{bash}{n_Temp} points the reader can simply write:
+\begin{minted}[linenos=false]{python}
     inputs = [
         {"lb":Temp_low, "ub":Temp_high, "n":n_Temp}
     ]
     # >>> inputs
     # [{'lb': 2.0, 'ub': 12.0, 'n': 3}]
-    \end{minted}
-    \caption{Difference between choosing explicit values and sampling over a given interval.}
-    \label{code:difference_explicit_sampling}
-\end{code}%
+\end{minted}
+The difference between choosing explicit values and specifying a sampling range may be subtle at first glance, but in turn allows to very easily switch between fixed values and optimized sampling points.
+
 The different variables can be treated individually as needed.
 Suppose, we have a system with temperatures and humidity as input variables.
 We could decide to have the temperature optimized, but fix the humidity explicitly, because experimentally one can change the temperature continuously (or in discrete steps) but is restricted regarding the humidity.
-In our code, we simply would mix explicit and sampled definitions for individual inputs (see code sample~\ref{code:mix_sampling_explicit}).
-\begin{code}[h]
-    \begin{minted}[linenos=false]{python}
+In our code, we simply would mix explicit and sampled definitions for individual inputs:
+\begin{minted}[linenos=false]{python}
     inputs = [
         # These values will be sampled
         {"lb":Temp_low, "ub":Temp_high, "n":n_Temp},
         # These are fixed
         np.array([0.4, 0.45, 0.5, 0.55])
     ]
-    \end{minted}
-    \caption{Mixing of explicit and sampling for inputs.}
-    \label{code:mix_sampling_explicit}
-\end{code}
+\end{minted}
 %
 % ########################################################################
 \subsubsection*{Define Model}
@@ -669,7 +654,6 @@ The papers of Banga \etal \cite{banga_global_1996, banga_dynamic_2005, bangaImpr
 %
 % ########################################################################
 \subsubsection*{Optimization Code}
-% The usage of the three implemented optimization methods is greatly simplified in our approach:
 To run the optimization procedure the following function can be used:
 \begin{minted}[linenos=false]{python}
     fsr = find_optimal(fsm)
@@ -678,8 +662,9 @@ This code will produce the output shown in Figures~\ref{Fig4} and \ref{Fig5}.
 The user can choose between any of the three previously explained optimization procedures.
 Any optimization argument of the aforementioned routines, can be specified.
 The default arguments of the \mintinline[bgcolor=white,style=emacs]{python}{"scipy_differential_evolution"} optimization method are given by the scipy default arguments~\cite{scipydiffev}.
-For our specific use-case, we advise to experiment with the following options:
-\begin{minted}[firstnumber=96]{python}
+For our specific use-case, we advise to experiment with the options presented in Code Sample~\ref{code:fsr}.
+\begin{code}[h]
+    \begin{minted}[firstnumber=96]{python}
     fsr = find_optimal(
         # Required argument: The model to optimize
         fsm,
@@ -695,7 +680,10 @@ For our specific use-case, we advise to experiment with the following options:
         popsize=10,
         polish=False,
     )
-\end{minted}
+    \end{minted}
+    \caption{Define the optimization conditions and calculate the resulting Experimental design.}
+    \label{code:fsr}
+\end{code}
 A full list of optional arguments can be seen in the \href{https://docs.scipy.org/doc/scipy/reference/optimize.html#global-optimization}{scipy documentation}~\cite{virtanenSciPyFundamentalAlgorithms2020}.
 In addition, there are some interesting optimization options such as the optional arguments \mintinline[bgcolor=white,style=emacs]{python}{relative_sensitivities,criterion}, which are responsible for using relative sensitivities $\tfrac{dy}{dp}\tfrac{p}{y}$ and specifying the optimality criterion as explained in the previous section.
 Please view the \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{full documentation} for explanation.
@@ -731,11 +719,15 @@ Methods such as profile-likelihood~\cite{wieland_structural_2021} are able to te
 % ########################################################################
 \subsubsection*{Identifiability Code}
 Using the {\it eDPM} package, the reader can quite easily check if the resulting Experimental Design is structurally identifiable.
-For this, one can call the function that compares the rank of the sensitivity matrix with the number of parameters using the following code:
-\begin{minted}[firstnumber=112]{python}
-    # Check the structural identifiability
-    check_if_identifiable(fsr)
-\end{minted}
+For this, one can call the function that compares the rank of the sensitivity matrix with the number of parameters as in Code Sample~\ref{code:identifiability_check}.
+\begin{code}[h]
+    \begin{minted}[firstnumber=112]{python}
+        # Check the structural identifiability
+        check_if_identifiable(fsr)
+    \end{minted}
+\caption{Check the identifiability the optimizaton result.}
+\label{code:identifiability_check}
+\end{code}
 The function returns \mintinline[bgcolor=white,style=emacs]{python}{True}, if the identifiability condition is reached, and \mintinline[bgcolor=white,style=emacs]{python}{False} otherwise.
 If this test is not passed, the reader should either reconsider the model structure including the definition of parameters or increase the number of numerically optimized measurement conditions (inputs or times).
 From a mathematical point of view, we need at least as many measurement points as we have parameters in our system.
@@ -745,12 +737,16 @@ Thus we suggest that the reader considers the optimization result not as a finis
 %
 % ########################################################################
 \subsubsection*{Plotting, Json, etc.}
-Our package also provides the option to save results into Json file and automatically plot results for the ode solutions, observables and sensitivities:
-\begin{minted}[firstnumber=115]{python}
-    plot_all_observables(fsr)
-    plot_all_sensitivities(fsr)
-    json_dump(fsr, "baranyi.json").
-\end{minted}
+Our package also provides the option to save results into Json file and automatically plot results for the ode solutions, observables and sensitivities (see Code Sample~\ref{code:plot_save}).
+\begin{code}[h]
+    \begin{minted}[firstnumber=115]{python}
+        plot_all_observables(fsr)
+        plot_all_sensitivities(fsr)
+        json_dump(fsr, "baranyi.json").
+    \end{minted}
+\caption{Plot the observables and sensitivities calculated for the \ac{oed} and save the result in the Json format.}
+\label{code:plot_save}
+\end{code}
 %
 %
 %
