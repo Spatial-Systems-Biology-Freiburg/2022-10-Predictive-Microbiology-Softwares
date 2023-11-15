@@ -2,7 +2,7 @@
 
 \usepackage{acronym}
 \usepackage{amsmath,amssymb}
-\usepackage[aboveskip=1pt,labelfont=bf,labelsep=period,justification=raggedright,singlelinecheck=off]{caption}
+\usepackage[aboveskip=1pt,labelfont=bf,labelsep=period,justification=raggedright,singlelinecheck=off, font=small]{caption}
 \usepackage{changepage}
 \usepackage{cite}
 \usepackage{nameref,hyperref}
@@ -165,7 +165,7 @@ Using multi-objective approaches, some attempts were made to answer these questi
 For models which depend on external cues like temperature, it is {\it a priori} not clear whether constant variable conditions are more efficient for the parameter estimation \cite{versyckIntroducingOptimal1999,garciaQualityShelflifePrediction2015}.
 Using the initial guess of parameters a first \ac{oed} is determined taking into account specific constraints, such as maximum number of measurements, measurement times, etc.
 Next, the designed experiments need to be performed and this data results into a new estimation of the parameters.
-If the confidence intervals of the parameters are sufficiently small, the scheme ends, otherwise one uses the new estimates as the starting point for the next experimental design (see Figure~\ref{fig:expdesign_scheme}).
+If the confidence intervals of the parameters are sufficiently small, the scheme ends, otherwise one uses the new estimates as the starting point for the next experimental design (see Figure~\ref{Fig1}).
 The process can be repeated several times to increase the precision of the parameter estimates until the desired accuracy is achieved.
 To test the scheme one can also perform numerical experiments and obtain {\it in-silico} data.
 %
@@ -267,36 +267,11 @@ Based on this model, we would like to optimize the choice of measurement times a
 % ########################################################################
 \subsubsection*{Code}
 In order to be able to solve the equations numerically, we first need first to define the \ac{ode} system in python.
-As was explained in the previous sections, this system consists of the equation1 (\ref{eq:ode_general}) with initial values $t_0, \mbx_0$.
+As was explained in the previous sections, this system consists of the equation (\ref{eq:ode_general}) with initial values $t_0, \mbx_0$.
 Next, we need to define all numerical values present in the system.
 We distinguish between time points $t_i$ at which the result of the \ac{ode} is evaluated, inputs $\mbu$, which alter the behavior of our system (for example temperature, humidity, etc.), parameters $\mbp$, which are the quantities that we want to estimate and other arguments which might be needed to solve the \ac{ode}.
-Table \ref{tab:fsm-variables} provides an overview of these quantities and gives corresponding names in the code.
+Table \ref{Table1} provides an overview of these quantities and gives corresponding names in the code.
 In the following, we will step-by-step explain how to specify all variables needed by using the example of the Baranyi-Roberts Model (Eq. \ref{eq:ode_BaranyiRoberts}).
-\begin{table}[H]
-    \centering
-    \begin{tabular}{ccccc}
-        \specialrule{.1em}{.01em}{.05em}
-        Description & Formula & Code \\[1ex]
-        \toprule \vspace{1mm}
-        \multirow{3}{*}{ODE} & $\mbf$                       & \mintinline[bgcolor=white,style=emacs]{python}{def ode_fun(t, x, u, p, ode_args)} \\
-            & $\partial \mbf / \partial \mbx$ & \mintinline[bgcolor=white,style=emacs]{python}{def ode_dfdx(t, x, u, p, ode_args)} \\[0.5ex]
-            & $\partial \mbf / \partial \mbp$ & \mintinline[bgcolor=white,style=emacs]{python}{def ode_dfdp(t, x, u, p, ode_args)} \\[0.5ex]
-        \midrule
-        \multirow{3}{*}{\shortstack{Observable\\(optional)}} & $\mbg$                       &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_fun(t, x, u, p, ode_args)}\\[0.5ex]
-         & $\partial \mbg / \partial x$ &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_dgdx(t, x, u, p, ode_args)}\\[0.5ex]
-                        & $\partial \mbg / \partial p$ &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_dgdp(t, x, u, p, ode_args)}\\[0.5ex]
-        \midrule
-        Initial value   & $\mbx_0$ & \mintinline[bgcolor=white,style=emacs]{python}{x0}\\[0.5ex]
-        Initial time    & $t_0$ & \mintinline[bgcolor=white,style=emacs]{python}{t0}\\[0.5ex]
-        Time points     & $t_i$ & \mintinline[bgcolor=white,style=emacs]{python}{t}\\[0.5ex]
-        Inputs          & $\mbu$   & \mintinline[bgcolor=white,style=emacs]{python}{u}\\[0.5ex]
-        Parameters      & $\mbp$   & \mintinline[bgcolor=white,style=emacs]{python}{p}\\[0.5ex]
-        Other arguments &       & \mintinline[bgcolor=white,style=emacs]{python}{ode_args}\\[0.5ex]
-        \bottomrule
-    \end{tabular}
-    \caption{Summary of user-defined functions and variables.}
-\label{tab:fsm-variables}
-\end{table}
 \paragraph{Defining the \acs{ode}}
 We must define a few functions in python.
 The first function will be the right-hand side of equation (\ref{eq:ode_general}), i.e., we need to implement the Baranyi-Roberts model (\ref{eq:ode_BaranyiRoberts}) into a function.
@@ -578,8 +553,6 @@ Then the difference between defining explicit values for the temperatures and de
     ]
     # >>> inputs
     # [{'lb': 2.0, 'ub': 12.0, 'n': 3}]
-
-
     \end{minted}
     \caption{Difference between choosing explicit values and sampling over a given interval.}
     \label{code:difference_explicit_sampling}
@@ -637,7 +610,7 @@ Optimization of the different objectives leads to different experimental design 
 The most popular criteria are~\cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008, dette_designing_1997, walter_qualitative_1990}:
 \begin{itemize}
 \item \textbf{D-optimality criterion} maximizes the determinant $\det (F)$ of the \ac{fim}.
- Translated to the parameter space, it means that the volume of the confidence region (see Figure~\ref{fig:opt_criteria}) (or the geometric mean of all errors) is minimized.
+ Translated to the parameter space, it means that the volume of the confidence region (see Figure~\ref{Fig2}) (or the geometric mean of all errors) is minimized.
  The size of the confidence region is determined by a confidence level, which is typically chosen $90 \%$ or $95 \%$.
  The confidence level can be interpreted as a probability value that the best
  parameter fit will belong to this area in case of repeating the experiment and estimations multiple times.
@@ -649,7 +622,7 @@ The most popular criteria are~\cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMI
 
 \end{itemize}
 Each of the criteria has its pros and cons so the reader should have a closer look at the various properties of these criteria, for instance, in Franceschini's and Macchietto's paper \cite{franceschiniModelbasedDesignExperiments2008}.
-For the geometrical interpretation of the criteria using the confidence region shown in Figure~\ref{fig:opt_criteria}.
+For the geometrical interpretation of the criteria using the confidence region shown in Figure~\ref{Fig2}.
 %
 %
 % ########################################################################
@@ -699,9 +672,9 @@ The papers of Banga \etal \cite{banga_global_1996, banga_dynamic_2005, bangaImpr
 % The usage of the three implemented optimization methods is greatly simplified in our approach:
 To run the optimization procedure the following function can be used:
 \begin{minted}[linenos=false]{python}
-    fsr = find_optimal(fsm).
+    fsr = find_optimal(fsm)
 \end{minted}
-This code will produce the output shown in Figures~\ref{fig:summary_configuration_edpm_command_line} and \ref{fig:summary_optimization_routine_command_line}.
+This code will produce the output shown in Figures~\ref{Fig4} and \ref{Fig5}.
 The user can choose between any of the three previously explained optimization procedures.
 Any optimization argument of the aforementioned routines, can be specified.
 The default arguments of the \mintinline[bgcolor=white,style=emacs]{python}{"scipy_differential_evolution"} optimization method are given by the scipy default arguments~\cite{scipydiffev}.
@@ -790,40 +763,23 @@ To this end we study the growth of a bacterial colony consisting of a single spe
 We aim to estimate the parameters of the model and determine optimal measurement conditions.
 The observable is the bacterial count, i.e., the first component of the state variable vector $y = x_1$.
 As an additional constraint we need to consider that the available climate chambers can only operate the temperature in the range from 2 to 12 degrees, and the experiment should not take longer than 100 hours.
-The parameter values and initial values of the system are taken in accordance with the literature~\cite{gospavic_mathematical_2008} and presented in Table~\ref{tab:1species_vals}.
-\begin{table}[H]
-    \centering
-    \begin{tabular}{ccc}
-    \specialrule{.1em}{.01em}{.05em}
-    \textbf{Variable} \hspace{3mm} & \textbf{Value} \hspace{3mm} & \textbf{Units}                            \\
-    \toprule
-    $n_\text{max}$                 & $2 \cdot 10^4$              & cfu/g                                     \\
-    $b$                            & 0.2                         & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
-    $T_{\text{min}}$               & -5.5                        & ${^\circ \text{C}}$                       \\
-    \midrule
-    $x_1(t_0)$                       & 50.0                        & cfu/g                                     \\
-    $x_2(t_0)$                       & 1.0                         &                                           \\
-    \bottomrule
-    \end{tabular}
-    \caption{{\footnotesize The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}).
-    The values correspond to estimated parameters for Pseudomonas spp. in poultry under aerobic conditions~\cite{gospavic_mathematical_2008}.}}
-    \label{tab:1species_vals}
-\end{table}%
+The parameter values and initial values of the system are taken in accordance with the literature~\cite{gospavic_mathematical_2008} and presented in Table~\ref{Table2}.
+%
 To model realistic uncertainties, we choose the error model given by Eq. (\ref{eq:error_model}) with $\gamma_\text{abs}=0.3$ and $\gamma_\text{rel}=0.1$ for all the measurement points.
 We identify the three parameters of our system by choosing 4 independent measurement conditions consisting of two temperature-points and two time-points.
 % The task is to propose at which temperatures to perform the experiments and which sampling times to choose.
 % The number of different temperatures of the experiments is not specified yet, but we aim to select the lowest possible number.
 In our Experimental Design optimization routine, we use the D-optimality criterion, relative sensitivities, and the differential evolution optimization method.
-The identifiability test confirms the validity of our model setup (Fig.~\ref{fig:identif_check}).
-The resulting \ac{oed} for the described system is presented in Figure \ref{fig:baranyi_roberts_observable}, \ref{fig:baranyi_roberts_sensitivities}.
+The resulting \ac{oed} for the described system is presented in Figure \ref{Fig3}, \ref{Fig7}.
+The identifiability test confirms the validity of our model setup (Fig.~\ref{Fig6}).
 %
 %
-For the system described above the minimal requirements for passing the identifiability test (see Figure~\ref{fig:identif_check}) is using a setup with at least two temperatures and two measurement times per temperature.
-The choice of minimal number of measurement times can also be justified when looking at Figure~\ref{fig:det_vs_ntimes}.
+For the system described above the minimal requirements for passing the identifiability test (see Figure~\ref{Fig6}) is using a setup with at least two temperatures and two measurement times per temperature.
+The choice of minimal number of measurement times can also be justified when looking at Figure~\ref{Fig8}.
 Here we see that one measurement time is not enough as the determinant is numerically very close to zero indicating a non-identifiability of this systems configuration.
 %
 %
-Figure~\ref{fig:baranyi_roberts_sensitivities} shows that each of the chosen optimal time points corresponds to the maximum of at least one local sensitivity curve.
+Figure~\ref{Fig7} shows that each of the chosen optimal time points corresponds to the maximum of at least one local sensitivity curve.
 This maximizes the determinant of the Fisher Information matrix.
 %
 %
@@ -867,31 +823,11 @@ Combining equations (\ref{eq:Lotka_Volterra_2species_2}, \ref{eq:growth_rate_2sp
     \label{eq:model_2species_resource}
 \end{equation}
 where $x_2, y_2$ are the concentration of the quantities determining the critical substance (nutrient) needed for growth of the species $x_1$ and $y_1$, respectively.
-The values of the parameter vector $\mbp = (n_\text{max}, b_x, T_{\text{min}, x}, b_y, T_{\text{min}, y})$ and the vector of the initial values $\mbx(t_0)=(x_1(t_0), x_2(t_0), y_1(t_0), y_2(t_0))$ are presented in Table~\ref{tab:2species_vals}.
-\begin{table}[H]
-    \centering
-    \begin{tabular}{ccc}
-    \specialrule{.1em}{.01em}{.05em}
-    \textbf{Variable}\hspace{3mm} & \textbf{Value}\hspace{3mm} & \textbf{Units}\\
-    \toprule
-    $n_\text{max}$                & $2 \cdot 10^4$             & cfu/g                                     \\
-    $b_x$                         & 0.03                       & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
-    $T_{\text{min}, x}$           & -8.0                       & ${^\circ \text{C}}$                       \\
-    $b_y$                         & 0.04                       & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
-    $T_{\text{min}, y}$           & -5.5                       & ${^\circ \text{C}}$                       \\
-    \midrule
-    $x_1(t_0)$                      & 50.0                       & cfu/g                                     \\
-    $x_2(t_0)$                      & 1.0                        &      1                                     \\
-    $y_1(t_0)$                      & 20.0                       & cfu/g                                     \\
-    $y_2(t_0)$                      & 1.0                        &      1                                     \\
-    \bottomrule
-    \end{tabular}
-    \caption{{\footnotesize The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:model_2species_resource}).}}
-    \label{tab:2species_vals}
-\end{table}
+The values of the parameter vector $\mbp = (n_\text{max}, b_x, T_{\text{min}, x}, b_y, T_{\text{min}, y})$ and the vector of the initial values $\mbx(t_0)=(x_1(t_0), x_2(t_0), y_1(t_0), y_2(t_0))$ are presented in Table~\ref{Table3}.
+%
 In comparison to the previous example, we now choose the count of the two bacteria species $x_1,y_1$ as observables.
 Meanwhile other optimization arguments were taken the same as in the previous example ie. we optimize measurement times and temperatures.
-The new \ac{oed} is shown in Figure \ref{fig:baranyi_roberts_2species_observable}.
+The new \ac{oed} is shown in Figure \ref{Fig9}.
 %
 %
 The presented design shows that the least needed number of experiments is two with temperatures of $2^\circ$C and $12^\circ$C.
@@ -915,44 +851,115 @@ In summary, model-based experimental design can accelerate and simplify the plan
 %
 %
 %
+\section*{Tables}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccccc}
+        \specialrule{.1em}{.01em}{.05em}
+        Description & Formula & Code \\[1ex]
+        \toprule \vspace{1mm}
+        \multirow{3}{*}{ODE} & $\mbf$                          & \mintinline[bgcolor=white,style=emacs]{python}{def ode_fun(t, x, u, p, ode_args)}  \\
+                             & $\partial \mbf / \partial \mbx$ & \mintinline[bgcolor=white,style=emacs]{python}{def ode_dfdx(t, x, u, p, ode_args)} \\[0.5ex]
+                             & $\partial \mbf / \partial \mbp$ & \mintinline[bgcolor=white,style=emacs]{python}{def ode_dfdp(t, x, u, p, ode_args)} \\[0.5ex]
+        \midrule
+        \multirow{3}{*}{\shortstack{Observable\\(optional)}} & $\mbg$                       &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_fun(t, x, u, p, ode_args)} \\[0.5ex]
+                                                             & $\partial \mbg / \partial x$ &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_dgdx(t, x, u, p, ode_args)}\\[0.5ex]
+                                                             & $\partial \mbg / \partial p$ &  \mintinline[bgcolor=white,style=emacs]{python}{def obs_dgdp(t, x, u, p, ode_args)}\\[0.5ex]
+        \midrule
+        Initial value   & $\mbx_0$ & \mintinline[bgcolor=white,style=emacs]{python}{x0}\\[0.5ex]
+        Initial time    & $t_0$    & \mintinline[bgcolor=white,style=emacs]{python}{t0}\\[0.5ex]
+        Time points     & $t_i$    & \mintinline[bgcolor=white,style=emacs]{python}{t}\\[0.5ex]
+        Inputs          & $\mbu$   & \mintinline[bgcolor=white,style=emacs]{python}{u}\\[0.5ex]
+        Parameters      & $\mbp$   & \mintinline[bgcolor=white,style=emacs]{python}{p}\\[0.5ex]
+        Other arguments &          & \mintinline[bgcolor=white,style=emacs]{python}{ode_args}\\[0.5ex]
+        \bottomrule
+    \end{tabular}
+    \caption{Summary of user-defined functions and variables.}
+\label{Table1}
+\end{table}
+%
+%
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccc}
+    \specialrule{.1em}{.01em}{.05em}
+    \textbf{Variable} \hspace{3mm} & \textbf{Value} \hspace{3mm} & \textbf{Units}                            \\
+    \toprule
+    $n_\text{max}$                 & $2 \cdot 10^4$              & cfu/g                                     \\
+    $b$                            & 0.2                         & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
+    $T_{\text{min}}$               & -5.5                        & ${^\circ \text{C}}$                       \\
+    \midrule
+    $x_1(t_0)$                     & 50.0                        & cfu/g                                     \\
+    $x_2(t_0)$                     & 1.0                         & 1                                         \\
+    \bottomrule
+    \end{tabular}
+    \caption{The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}).
+    The values correspond to estimated parameters for Pseudomonas spp. in poultry under aerobic conditions~\cite{gospavic_mathematical_2008}.}
+    \label{Table2}
+\end{table}
+%
+%
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccc}
+    \specialrule{.1em}{.01em}{.05em}
+    \textbf{Variable}\hspace{3mm} & \textbf{Value}\hspace{3mm} & \textbf{Units}\\
+    \toprule
+    $n_\text{max}$                & $2 \cdot 10^4$             & cfu/g                                     \\
+    $b_x$                         & 0.03                       & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
+    $T_{\text{min}, x}$           & -8.0                       & ${^\circ \text{C}}$                       \\
+    $b_y$                         & 0.04                       & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
+    $T_{\text{min}, y}$           & -5.5                       & ${^\circ \text{C}}$                       \\
+    \midrule
+    $x_1(t_0)$                      & 50.0                       & cfu/g                                     \\
+    $x_2(t_0)$                      & 1.0                        &      1                                     \\
+    $y_1(t_0)$                      & 20.0                       & cfu/g                                     \\
+    $y_2(t_0)$                      & 1.0                        &      1                                     \\
+    \bottomrule
+    \end{tabular}
+    \caption{The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:model_2species_resource}).}
+    \label{Table3}
+\end{table}
+%
+%
 \section*{Figures}
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.3]{Figures/scheme.pdf}
-    \caption{{\footnotesize The workflow of the iterative process for model-based experimental design for parameter estimation.}}
-    \label{fig:expdesign_scheme}
+    \includegraphics[scale=0.3]{Figures/Fig1.pdf}
+    \caption{The workflow of the iterative process for model-based experimental design for parameter estimation.}
+    \label{Fig1}
 \end{figure}
 %
 %
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.6]{Figures/optimality_criteria.pdf}
-    \caption{{\footnotesize The confidence ellipsoid projection to the ($p_1$, $p_2$) parameter space.
+    \includegraphics[scale=0.6]{Figures/Fig2.pdf}
+    \caption{The confidence ellipsoid projection to the ($p_1$, $p_2$) parameter space.
     The ellipsoid shows the geometrical meaning of the optimality criteria.
     The center of the ellipsoid represents the estimated parameter values.
     The radii are the uncertainties of the estimates associated with different eigenvalues of the \ac{fim} $\lambda_1$, $\lambda_2$ ($\lambda_1 < \lambda_2$).
-    The D-optimality aims to minimize the volume of the ellipsoid, the E-optimality minimizes the largest radius, A-optimality minimizes the perimeter of the rectangle that encloses the ellipse (dashed gray line), and, finally,  modified E-optimality tends to make the ellipse as spherical as possible.}}
-    \label{fig:opt_criteria}
+    The D-optimality aims to minimize the volume of the ellipsoid, the E-optimality minimizes the largest radius, A-optimality minimizes the perimeter of the rectangle that encloses the ellipse (dashed gray line), and, finally,  modified E-optimality tends to make the ellipse as spherical as possible.}
+    \label{Fig2}
 \end{figure}
 %
 %
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{{\footnotesize Experiment 1: $T = 3.5^\circ$C, $t=100$h}}
-        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00.pdf}
+        \subcaption{Experiment 1: $T = 3.5^\circ$C, $t=100$h}
+        \includegraphics[scale=0.255]{Figures/Fig3a.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{{\footnotesize Experiment 2: $T = 12^\circ$C, $t=43\text{h}, 100$h}}
-        \includegraphics[scale=0.255]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00.pdf}
+        \subcaption{Experiment 2: $T = 12^\circ$C, $t=43\text{h}, 100$h}
+        \includegraphics[scale=0.255]{Figures/Fig3b.pdf}
     \end{subfigure}
-    \caption{{\footnotesize The example of the output of the Experimental Design optimization procedure for the Baranyi and Roberts model.
+    \caption{The example of the output of the Experimental Design optimization procedure for the Baranyi and Roberts model.
     The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
     The Optimal Design is proposed for one observable which is the total bacterial count of the species $x_1$ and consists of two time series where samples are stored at temperatures (a) $T_1 = 3.5^\circ$C and (b) $T_2 = 12^\circ$C.
     The corresponding measurement times are (a)~$t_{11}=100$h and (b)~$t_{21}=43$h, $t_{22}=100$h.
-    The initial time $t_0=0$ is included in the Experimental Design by definition.}}
-    \label{fig:baranyi_roberts_observable}
+    The initial time $t_0=0$ is included in the Experimental Design by definition.}
+    \label{Fig3}
 \end{figure}
 %
 %
@@ -964,7 +971,7 @@ In summary, model-based experimental design can accelerate and simplify the plan
 \AtBeginEnvironment{minted}{\color{MintedFgColor}}
 \begin{figure}[H]
     \centering
-    %\includegraphics[scale=0.5]{Figures/ident_check_output.pdf}
+    %\includegraphics[scale=1.]{Figures/Fig5.pdf}
     \begin{minted}[bgcolor=MintedBgColor,linenos=false,fontsize=\scriptsize]{text}
 =========================== SUMMARY OF FISHER MODEL ============================
 ================================ ODE FUNCTIONS =================================
@@ -1007,9 +1014,10 @@ In summary, model-based experimental design can accelerate and simplify the plan
 └─identical_times  False
     \end{minted}
     \caption{{\footnotesize Command-line output of {\it eDPM} of all parameters, inputs, \ac{ode} functions and initial values needed to run the optimization method.}}
-    \label{fig:summary_configuration_edpm_command_line}
+    \label{Fig4}
 \end{figure}
 \begin{figure}
+    %\includegraphics[scale=1.]{Figures/Fig4.pdf}
     \begin{minted}[bgcolor=MintedBgColor,linenos=false,fontsize=\scriptsize]{text}
 ========================== STARTING OPTIMIZATION RUN ===========================
 differential_evolution step 1: f(x)= -72.0062
@@ -1071,17 +1079,19 @@ Result_1
 ├─penalty_times    1.0
 └─penalty_summary  {'ode_t0': [], 'inputs': [], 'times': []}
     \end{minted}
-    \caption{{\footnotesize Command-line output which summarizes of the optimization routine and its results.}}
-    \label{fig:summary_optimization_routine_command_line}
+    \caption{Command-line output which summarizes of the optimization routine and its results.} 
+    \label{Fig5}
 \end{figure}
+%
 \begin{figure}
+    %\includegraphics[scale=1.]{Figures/Fig6.pdf}
     \begin{minted}[bgcolor=MintedBgColor,linenos=false,fontsize=\scriptsize]{text}
 =============================== ANALYSIS RESULTS ===============================
 └─structural identifiability  True
     \end{minted}
-    \caption{{\footnotesize Command-line output showing the result of the identifiability check for the Experimental Design provided in Figure~\ref{fig:baranyi_roberts_observable}.
-    The output shows that the Experimental Design gives structurally identifiable result and allows to estimate parameters of the system.}}
-    \label{fig:identif_check}
+    \caption{Command-line output showing the result of the identifiability check for the Experimental Design provided in Figure~\ref{Fig3}.
+    The output shows that the Experimental Design gives structurally identifiable result and allows to estimate parameters of the system.}
+    \label{Fig6}
 \end{figure}
 %
 %
@@ -1089,77 +1099,76 @@ Result_1
     \begin{subfigure}{.5\textwidth}
       \centering
       \subcaption{{\footnotesize $T_1=3.5^\circ$C, parameter $x_\text{max}$}}
-      \includegraphics[scale=0.25]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_00.pdf}
+      \includegraphics[scale=0.25]{Figures/Fig7a.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
         \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $x_\text{max}$}}
-        \includegraphics[scale=0.25]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_00.pdf}
+        \includegraphics[scale=0.25]{Figures/Fig7b.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
       \centering
       \subcaption{{\footnotesize $T_1=3.5^\circ$C, parameter $b$}}
-      \includegraphics[scale=0.25]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_01.pdf}
+      \includegraphics[scale=0.25]{Figures/Fig7c.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
         \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $b$}}
-        \includegraphics[scale=0.25]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_01.pdf}
+        \includegraphics[scale=0.25]{Figures/Fig7d.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
         \subcaption{{\footnotesize $T_1=3.5^\circ$C, parameter $T_\text{min}$}}
-        \includegraphics[scale=0.25]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_000_x_00_p_02.pdf}
+        \includegraphics[scale=0.25]{Figures/Fig7e.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
           \centering
           \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $T_\text{min}$}}
-          \includegraphics[scale=0.25]{Figures/Sensitivity_Results_baranyi_roberts_ode_fisher_determinant_rel_sensit_cont_2times_2temps_001_x_00_p_02.pdf}
+          \includegraphics[scale=0.25]{Figures/Fig7f.pdf}
         \end{subfigure}
     \caption{{\footnotesize The example of the sensitivities of the total bacterial count calculated for the Experimental Design optimization procedure for the Baranyi and Roberts model.
     The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
     In (a), (c), (e) the sensitivity curves for the experimental series at storage temperature $T_1=3.5^\circ$C are shown for parameters $x_\text{max}$, $b$, $T_\text{min}$, respectively.
     As well as, (b), (d), (f) subfigures present the sensitivities for the $T_2=12^\circ$C experiment for parameters $x_\text{max}$, $b$, $T_\text{min}$, respectively.}}
-    \label{fig:baranyi_roberts_sensitivities}
+    \label{Fig7}
 \end{figure}
 %
 %
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.3]{Figures/det_vs_ntimes.pdf}
-    \caption{{\footnotesize The determinant of the \ac{fim} as a function of the number of measurement times for the Experimental Design consisted of two measured temperatures.}}
-    \label{fig:det_vs_ntimes}
+    \includegraphics[scale=0.3]{Figures/Fig8.pdf}
+    \caption{The determinant of the \ac{fim} as a function of the number of measurement times for the Experimental Design consisted of two measured temperatures.}
+    \label{Fig8}
 \end{figure}
 %
 %
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{{\footnotesize Species 1, $T = 12^\circ$C, $t=12 \text{h}, 38$h}}
-        \includegraphics[scale=0.25]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_00.pdf}
+        \subcaption{Species 1, $T = 12^\circ$C, $t=12 \text{h}, 718$h}
+        \includegraphics[scale=0.25]{Figures/Fig9a.pdf}
       \end{subfigure} 
     \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{{\footnotesize Species 1, $T = 2^\circ$C, $t=58 \text{h}, 90$h}}
-        \includegraphics[scale=0.25]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_00.pdf}
+        \subcaption{Species 1, $T = 2^\circ$C, $t=58 \text{h}, 90$h}
+        \includegraphics[scale=0.25]{Figures/Fig9b.pdf}
     \end{subfigure}
       \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{{\footnotesize Species 2, $T = 12^\circ$C, $t=12 \text{h}, 38$h}}
-        \includegraphics[scale=0.25]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_000_x_01.pdf}
+        \subcaption{Species 2, $T = 12^\circ$C, $t=12 \text{h}, 71$h}
+        \includegraphics[scale=0.25]{Figures/Fig9c.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{{\footnotesize Species 2, $T = 2^\circ$C, $t=58 \text{h}, 90$h}}
-        \includegraphics[scale=0.25]{Figures/Observable_Results_baranyi_roberts_ode_fisher_determinant_2species_rel_sensit_cont_2times_2temps_001_x_01.pdf}
+        \subcaption{Species 2, $T = 2^\circ$C, $t=58 \text{h}, 90$h}
+        \includegraphics[scale=0.25]{Figures/Fig9d.pdf}
     \end{subfigure} 
-    \caption{{\footnotesize
-    The Optimal Experimental Design for the Baranyi and Roberts model with two different species~(\ref{eq:model_2species_resource}) is proposed for two observables: the bacterial count of the first species $x_1$ and of the second species $x_2$.
+    \caption{The Optimal Experimental Design for the Baranyi and Roberts model with two different species~(\ref{eq:model_2species_resource}) is proposed for two observables: the bacterial count of the first species $x_1$ and of the second species $x_2$.
     (a), (c) show the first experimental series held at the temperature $T_1=12^\circ$C and with measurement times $t_{11}=12$h, $t_{12}=38$h for observables $x_1$ and $x_2$, respectively.
     (b), (d) show the second experimental series held at the temperature $T_2=2^\circ$C and with measurement times $t_{21}=58$h, $t_{22}=90$h for observables $x_1$ and $x_2$, respectively.
     The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
-    The initial time $t_0=0$ is included in the Experimental Design by definition.}}
-    \label{fig:baranyi_roberts_2species_observable}
+    The initial time $t_0=0$ is included in the Experimental Design by definition.}
+    \label{Fig9}
 \end{figure}
 
 % ########################################################################
