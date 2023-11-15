@@ -170,13 +170,13 @@ To test the scheme one can also perform numerical experiments and obtain {\it in
 % ########################################################################
 \section*{Materials and Methods}
 There are several software packages available for model-based experimental design~\cite{balsa-canto_amigo2_2016, zhang_optimal_2018, busetto_near-optimal_2013}.
-These packages comprise a large number of tools and consequently require some time to understand how to use them.
-We developed {\it eDPM} (Experimental Design for Predictive Microbiology), which focusses on ease of use.
+These packages comprise numerous tools and consequently require some time to understand how to use them.
+We developed {\it eDPM} (Experimental Design for Predictive Microbiology), which focuses on ease of use.
 It is a set of tools to calculate the Sensitivity and Fischer Information Matrix and do parameter space exploration in order to find optimal results.
 We require a working installation of the popular scripting language Python $\geq3.7$~\cite{rossumPythonLanguageReference2010}.
 For installation instructions, please refer to the website \href{https://www.python.org/downloads/}{python.org}.
 In addition, we expect users to be able to write, execute and display output of scripts.
-This tutorial can also be followed using jupyter notebooks \cite{jupyterteamJupyterNotebook}.
+This tutorial can also be followed using Jupyter Notebook~\cite{jupyterteamJupyterNotebook}.
 %
 Users can obtain it by installing {\it eDPM} from \href{https://pypi.org/project/edpm/0.0.1/}{pypi.org}.
 The python website has guides for installing packages \href{https://packaging.python.org/en/latest/tutorials/installing-packages/}{packaging.python.org/}.
@@ -261,7 +261,7 @@ Based on this model, we would like to optimize the choice of measurement times a
 %
 % ########################################################################
 \subsubsection*{Code}
-In order to be able to solve the equations numerically, we first need first to define the \ac{ode} system in python.
+In order to be able to solve the equations numerically, we first need to define the \ac{ode} system in python.
 As was explained in the previous sections, this system consists of the equation (\ref{eq:ode_general}) with initial values $t_0, \mbx_0$.
 Next, we need to define all numerical values present in the system.
 We distinguish between time points $t_i$ at which the result of the \ac{ode} is evaluated, inputs $\mbu$, which alter the behavior of our system (for example temperature, humidity, etc.), parameters $\mbp$, which are the quantities that we want to estimate and other arguments which might be needed to solve the \ac{ode}.
@@ -309,7 +309,7 @@ In this case the logarithm of the likelihood function (log-likelihood) is given 
     \ln L(\mbp) \propto - \sum_{i}\frac{ \big(\mathbf{g}^{i}(\mbp) - \mbd^{i}\big)^2}{2 \sigma_{i}^2}.
     \label{eq:likelihood_Gaussian}
 \end{equation}
-We introduced the following short hand notations:
+We introduced the following shorthand notations:
 \begin{itemize}
 \item $\mbd^{i}$: data measured at time $t=t_i$
 \item $\mathbf{g}^{i}(\mbp)$: the observation function depending on the parameter vector $\mbp$ evaluated at time $t=t_i$
@@ -346,8 +346,8 @@ These can be calculated using an enhanced system of the \acp{ode}:
     \end{cases}.
 \label{eq:ode_and_sensitiv}
 \end{equation}
-For the \ac{fim} we need the sensitivities of observables functions $(\mathrm{d} y_i / \mathrm{d} p_j) = s_{ij}$.
-We determine these at a certain times $t_m$ and input $u_n$ using the solutions of $s^x_{ij}$:
+For the \ac{fim} we need the sensitivities of observable functions $(\mathrm{d} y_i / \mathrm{d} p_j) = s_{ij}$.
+We determine these at the certain times $t_m$ and input $u_n$ using the solutions of $s^x_{ij}$:
 \begin{equation}
     s_{ij} (t_m, u_n) = \sum_k \frac{\partial g_i}{\partial x_k}\bigg|_{t_m, u_n} s_{kj}^x (t_m, u_n) + \frac{\partial g_i}{\partial p_j}\bigg|_{t_m, u_n}.
 \label{eq:observ_sensitivities}
@@ -606,7 +606,7 @@ The most popular criteria are~\cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMI
 \item \textbf{Modified E-optimality criterion} maximizes the ratio between the minimal and maximal eigenvalue $\lambda_{\min} / \lambda_{\max}$ and reduces correlation between two parameters corresponding to these eigenvalues.
 
 \end{itemize}
-Each of the criteria has its pros and cons so the reader should have a closer look at the various properties of these criteria, for instance, in Franceschini's and Macchietto's paper \cite{franceschiniModelbasedDesignExperiments2008}.
+Each of the criteria has its pros and cons, so the reader should have a closer look at the various properties of these criteria, for instance, in Franceschini's and Macchietto's paper \cite{franceschiniModelbasedDesignExperiments2008}.
 For the geometrical interpretation of the criteria using the confidence region shown in Figure~\ref{Fig2}.
 %
 %
@@ -633,7 +633,7 @@ If this random number is less than the recombination constant, then the trial ve
 The degree of mutation can be controlled by changing the recombination constant; the larger this constant is, the more often vector elements are chosen from $D_m$.
 Subsequently, the objective function is calculated using the trial vector and the result is compared to result obtained using the initial solution $D_0$; and the best of them is chosen for the next generation.
 This procedure is repeated for every solution candidate of the initial population, by means of which the new generation is build~\cite{scipydiffev}.
-The process of population mutation is repeated till a stoping criterion is reached, e.g., the maximum number of generations (steps) is reached or the standard deviation of the candidate vectors is below a certain threshold~\cite{Zielinski_DE}.
+The process of population mutation is repeated till a stopping criterion is reached, e.g., the maximum number of generations (steps) is reached or the standard deviation of the candidate vectors is below a certain threshold~\cite{Zielinski_DE}.
 This method is rather simple and straightforward, does not require any gradient calculation and is easy to parallelize.
 Another advantages include its fast convergence and robustness at numerical optimization~\cite{babu_differential_2007}.
 \newline
@@ -705,12 +705,6 @@ Hence, we can check if the final result of the optimization routine is able to i
 This does not replace a systematic inspection the model but at least we can validate our results.
 If a non-identifiability is detected, the structure of the model or number of measurements does not allow determination of the involved parameters.
 This means we need to adjust our description and check all supplied parameters for their validity.
-% SOME COMMENTS:
-% 1. The reader cannot check non-identifieability with our tool
-% 2. We can only check if the results of the optimization have zero-rank (thus not identifiying one parameter). This is different to a principled identifieability check (which should hold for all values of the parameters)
-% 3. We need to think how this functionality should be used. The reader should simply do this check and afterwards see if the model which was put in was fine or not. Thus we should aim to describe it as a very simple "check if you fucked up" method.
-% Only if this condition is satisfied, we can continue with optimization.
-% In case the rank of the sensitivity matrix is less than the number of parameters it is necessary to change the structure of the model or change or increase the number of observables.
 On the other hand, there are also {\it a priori} methods, e.g., using Lie group theory, that only require model definition~\cite{wieland_structural_2021}.
 However, due to the extensiveness of the topic we constrain ourselves to the method discussed above.
 Practical non-identifiability results in large confidence intervals~\cite{holmberg_practical_1982, miao_identifiability_2011, kreutzProfileLikelihood2013}.
@@ -732,8 +726,8 @@ The function returns \mintinline[bgcolor=white,style=emacs]{python}{True}, if th
 If this test is not passed, the reader should either reconsider the model structure including the definition of parameters or increase the number of numerically optimized measurement conditions (inputs or times).
 From a mathematical point of view, we need at least as many measurement points as we have parameters in our system.
 Note that the described test above only allows to exclude structural identifiability but to obtain reasonable confidence intervals for parameter estimates the practical identifiability should be considered as well.
-Therefore in reality more experiments are needed to increase the accuracy of the model.
-Thus we suggest that the reader considers the optimization result not as a finished design but as a reference pointing to the minimal requirements and the most crucial conditions (inputs and times) for the parameter estimations.
+Therefore, in reality more experiments are needed to increase the accuracy of the model.
+Thus, we suggest that the reader considers the optimization result not as a finished design but as a reference pointing to the minimal requirements and the most crucial conditions (inputs and times) for the parameter estimations.
 %
 % ########################################################################
 \subsubsection*{Plotting, Json, etc.}
@@ -763,8 +757,6 @@ The parameter values and initial values of the system are taken in accordance wi
 %
 To model realistic uncertainties, we choose the error model given by Eq. (\ref{eq:error_model}) with $\gamma_\text{abs}=0.3$ and $\gamma_\text{rel}=0.1$ for all the measurement points.
 We identify the three parameters of our system by choosing 4 independent measurement conditions consisting of two temperature-points and two time-points.
-% The task is to propose at which temperatures to perform the experiments and which sampling times to choose.
-% The number of different temperatures of the experiments is not specified yet, but we aim to select the lowest possible number.
 In our Experimental Design optimization routine, we use the D-optimality criterion, relative sensitivities, and the differential evolution optimization method.
 The resulting \ac{oed} for the described system is presented in Figure \ref{Fig3}, \ref{Fig7}.
 The identifiability test confirms the validity of our model setup (Fig.~\ref{Fig6}).
@@ -772,7 +764,7 @@ The identifiability test confirms the validity of our model setup (Fig.~\ref{Fig
 %
 For the system described above the minimal requirements for passing the identifiability test (see Figure~\ref{Fig6}) is using a setup with at least two temperatures and two measurement times per temperature.
 The choice of minimal number of measurement times can also be justified when looking at Figure~\ref{Fig8}.
-Here we see that one measurement time is not enough as the determinant is numerically very close to zero indicating a non-identifiability of this systems configuration.
+Here we see that one measurement time is not enough as the determinant is numerically very close to zero indicating a non-identifiability of this system configuration.
 %
 %
 Figure~\ref{Fig7} shows that each of the chosen optimal time points corresponds to the maximum of at least one local sensitivity curve.
@@ -822,14 +814,14 @@ where $x_2, y_2$ are the concentration of the quantities determining the critica
 The values of the parameter vector $\mbp = (n_\text{max}, b_x, T_{\text{min}, x}, b_y, T_{\text{min}, y})$ and the vector of the initial values $\mbx(t_0)=(x_1(t_0), x_2(t_0), y_1(t_0), y_2(t_0))$ are presented in Table~\ref{Table3}.
 %
 In comparison to the previous example, we now choose the count of the two bacteria species $x_1,y_1$ as observables.
-Meanwhile other optimization arguments were taken the same as in the previous example ie. we optimize measurement times and temperatures.
+Meanwhile, other optimization arguments were taken the same as in the previous example i.e. we optimize measurement times and temperatures.
 The new \ac{oed} is shown in Figure \ref{Fig9}.
 %
 %
 The presented design shows that the least needed number of experiments is two with temperatures of $2^\circ$C and $12^\circ$C.
 In each experiment two observables that correspond to the concentrations of two bacteria types and two time points were measured.
 Note that for both temperatures at least two time-points are required for identifiability.
-Thus we can estimate the parameters by performing experiments according to this design.
+Thus, we can estimate the parameters by performing experiments according to this design.
 %
 %
 %
@@ -1086,7 +1078,7 @@ Result_1
 └─structural identifiability  True
     \end{minted}
     \caption{Command-line output showing the result of the identifiability check for the Experimental Design provided in Figure~\ref{Fig3}.
-    The output shows that the Experimental Design gives structurally identifiable result and allows to estimate parameters of the system.}
+    The output shows that the Experimental Design gives structurally identifiable result and allows parameter estimation of the system.}
     \label{Fig6}
 \end{figure}
 %
