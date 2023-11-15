@@ -8,7 +8,13 @@ COMPILATION_FILES:=$(filter-out src/$(TARGET)_expanded.tex, $(TEX_FILES))
 
 ZIP_TARGETS:= Makefile README.md $(BIBFILE)_cited.bib $(TARGET)_expanded.tex $(TARGET).pdf Figures/* svmult.cls
 
-all:
+all: main listings
+
+listings:
+	$(CC) $(OPTIONS) $(CURDIR)/$(TARGET)_listings.tex
+	gs -dNOPAUSE -dQUIET -dBATCH -sOutputFile=Figures/listing_%03d.pdf -sDEVICE=pdfwrite $(TARGET)_listings.pdf
+
+main:
 	$(CC) $(OPTIONS) $(CURDIR)/$(TARGET).tex
 
 clean: clean_cite clean_zip
@@ -21,8 +27,9 @@ clean: clean_cite clean_zip
 	-rm -r *.out
 	-rm -r *.pdf
 	-rm -r *.pyg
-	-rm -r _minted-main
+	-rm -r _minted-$(TARGET)*
 	-rm -r $(TARGET)_expanded.tex
+	-rm -r $(wildcard Figures/listing_*.pdf)
 
 clean_cite:
 	-rm -r $(BIBFILE)_cited.bib*
