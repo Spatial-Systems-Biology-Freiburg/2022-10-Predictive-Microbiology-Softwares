@@ -15,7 +15,6 @@
 \usepackage{multirow}
 \usepackage{ctable} % for \specialrule command
 \usepackage{multirow} % to combine cells vertically in a table
-\usepackage{graphicx}
 \usepackage{subcaption}
 
 
@@ -46,22 +45,10 @@
     tabsize=4,
     numbersep=-10pt
 }
-
 % Used to externaly generate previews of the listings
 \usepackage[tightpage]{preview}
 \PreviewEnvironment{minted}
-
-\bibliographystyle{abbrv}
-
-% Header and Footer with logo
-\usepackage{lastpage,fancyhdr,graphicx}
-\usepackage{epstopdf}
-\pagestyle{fancy}
-\fancyhf{}
-\rfoot{\thepage/\pageref{LastPage}}
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrule}{\hrule height 2pt \vspace{2mm}}
-\lfoot{\today}
+\bibliographystyle{unsrt}
 
 \newcommand{\etal}{{\textit{et al. }}}
 \newcommand{\mbx}{\mathbf{x}}
@@ -105,10 +92,10 @@ depth 0.5ex width0.2ex\kern-0.2ex\rule[1ex]{0.5\v@spwd}{0.2ex}}
 % ########################################################################
 
 \title*{Experimental design for predictive models in microbiology depending on environmental variables}
+\titlerunning{Experimental Design in Predictive Microbiology}
 
-\author{
-    Polina Gaindrik, Jonas Pleyer, Daniel Heger and Christian Fleck
-}
+\author{Polina Gaindrik, Jonas Pleyer, Daniel Heger and Christian Fleck}
+\authorrunning{Polina Gaindrik \etal}
 \institute{
     Polina Gaindrik, Jonas Pleyer, Christian Fleck \at
     \href{https://www.fdm.uni-freiburg.de/spatsysbio}{University of Freiburg, Freiburg Center for Data Analysis and Modeling},
@@ -117,16 +104,15 @@ depth 0.5ex width0.2ex\kern-0.2ex\rule[1ex]{0.5\v@spwd}{0.2ex}}
     Daniel Heger \at
     \href{https://tsenso.com/en/}{tsenso GmbH, Johannesstr. 19, 70176 Stuttgart, Germany}
 }
-
-
 \maketitle
-
 % ########################################################################
 % ########################################################################
 \abstract{
-%
-The aim of predictive microbiology is the provision of tools and methods for predicting the growth, survival, and death of microorganisms in different food matrices under a range of environmental conditions. The parametrized mathematical models need to be calibrated using dedicated experimental data.
-In order to efficiently plan experiments model-based experimental design is used. In this chapter, we explain model-based experimental design and provide step-by-step instructions for finding the optimal design using the well-known Baranyi\&Roberts growth model as an example. We provide the Python software {\it eDPM} for \ac{ode} -based models, such that the reader can apply model-based experimental design in his/her research context.
+The aim of predictive microbiology is the provision of tools and methods for predicting the growth, survival, and death of microorganisms in different food matrices under a range of environmental conditions.
+The parametrized mathematical models need to be calibrated using dedicated experimental data.
+In order to efficiently plan experiments, model-based experimental design is used.
+In this chapter, we explain model-based experimental design and provide step-by-step instructions for finding the optimal design using the well-known Baranyi-Roberts growth model as an example.
+We provide the Python software {\it eDPM} for \ac{ode} -based models, such that the reader can apply model-based experimental design in his/her research context.
 }
 \keywords{Optimal experimental design, Parameter estimation, \ac{fim}, Identifiability, Uncertainty}
 %
@@ -134,11 +120,11 @@ In order to efficiently plan experiments model-based experimental design is used
 %
 % ########################################################################
 % ########################################################################
-\section*{Introduction}
+\section{Introduction}
 Mathematical modeling is widely used to describe, understand and predict the behavior of living systems.
-In particular, in the field of Predictive Biology, one can find a large variety of works that dwell on building models of different levels of complexity controlled by model parameters, e.g., to describe bacterial growth \cite{bernaertsConceptsToolsPredictive2004}.
+In particular, in the field of predictive microbiology, one can find a large variety of works that dwell on building models of different levels of complexity controlled by model parameters, e.g., to describe bacterial growth~\cite{bernaertsConceptsToolsPredictive2004}.
 Predictive microbiology is a subfield of food microbiology that uses mathematical models to predict the behavior of microorganisms in food.
-It is based on the premise that the behavior of microorganisms can be mathematically described by the use of mathematical models, which can take into account the effects of various factors such as temperature, pH, water activity, and the presence of preservatives, on the growth and survival of microorganisms.
+It is based on the premise that the behavior of microorganisms can be described by the use of mathematical models, which can take into account the effects of various factors such as temperature, pH, water activity, and the presence of preservatives, on the growth and survival of microorganisms.
 These models can then be used to predict the behavior of microorganisms under different conditions, and to evaluate the effectiveness of various control measures, such as refrigeration, heat treatment, or the addition of preservatives.
 Predictive microbiology has many applications in food safety, as it can be used to assess the risk of food-borne illness, to design safe food processing and storage practices, and to develop new food products with extended shelf-life.
 For successful predictions it is essential that the model parameters can be estimated from experimental data.
@@ -146,10 +132,11 @@ Due to measurement noise, the parameters can only be estimated with some uncerta
 That gives rise to a set of important questions: Can all parameters of the given model structure be estimated?
 What should be measured and when? What are the confidence intervals for the parameters? How can the experimental effort be minimized?
 Answering these questions equates to finding the \ac{oed}.
-This results in optimized experimental conditions and/or measurement times which allows for a reduction of the experimental load without loss of information \cite{derlindenImpactExperimentDesign2013, balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}.
-In general, the Experimental Design procedure can be used not only for the parameter estimation but also for model discrimination \cite{kreutzSystemsBiology2009, stamatiOptimalExperimentalDesign2016}.
+This results in optimized experimental conditions and/or measurement times which allows for a reduction of the experimental load without loss of information~\cite{derlindenImpactExperimentDesign2013, balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}.
+In general, the Experimental Design procedure can be used not only for the parameter estimation but also for model discrimination~\cite{kreutzSystemsBiology2009, stamatiOptimalExperimentalDesign2016}.
 However, in this chapter, we focus on Experimental Design for parameter estimation.
-Comprehensive reviews can be found here: \cite{atkinsonDevelopmentsDesignExperiments1982, franceschiniModelbasedDesignExperiments2008,sunParameterEstimation2011,vilasPredictiveFood2016}.\\\linebreak
+Comprehensive reviews can be found here:~\cite{atkinsonDevelopmentsDesignExperiments1982, franceschiniModelbasedDesignExperiments2008,sunParameterEstimation2011,vilasPredictiveFood2016}.
+
 The whole parameter estimation process starts with choosing a model structure and defining observable quantities which the researcher is interested in.
 Once this is chosen a first parameter set is selected based on literature review or prior data.
 In order to fine-tune the experimental design setup to the given use-case, we need to choose an objective function that will be optimized.
@@ -157,10 +144,10 @@ Depending on the goal, a researcher faces an important choice; which of the seve
 For example, is it more desirable to have precise knowledge in a chosen set of parameters and less information about the remaining ones?
 What is the best balance between experimental effort and precision?
 Using multi-objective approaches, some attempts were made to answer these questions and to improve the experimental design by combining several objectives~\cite{telenOptimalExperimentDesign2012, logistRobustMultiobjectiveOptimal2011}.
-For models which depend on external cues like temperature, it is {\it a priori} not clear whether constant variable conditions are more efficient for the parameter estimation \cite{versyckIntroducingOptimal1999,garciaQualityShelflifePrediction2015}.
+For models which depend on external cues like temperature, it is {\it a priori} not clear whether constant variable conditions are more efficient for the parameter estimation~\cite{versyckIntroducingOptimal1999,garciaQualityShelflifePrediction2015}.
 Using the initial guess of parameters a first \ac{oed} is determined taking into account specific constraints, such as maximum number of measurements, measurement times, etc.
 Next, the designed experiments need to be performed and this data results into a new estimation of the parameters.
-If the confidence intervals of the parameters are sufficiently small, the scheme ends, otherwise one uses the new estimates as the starting point for the next experimental design (see Figure~\ref{Fig1}).
+If the confidence intervals of the parameters are sufficiently small, the scheme ends, otherwise one uses the new estimates as the starting point for the next experimental design (see Fig.~\ref{Fig1}).
 The process can be repeated several times to increase the precision of the parameter estimates until the desired accuracy is achieved.
 To test the scheme one can also perform numerical experiments and obtain {\it in-silico} data.
 %
@@ -168,7 +155,7 @@ To test the scheme one can also perform numerical experiments and obtain {\it in
 %
 % ########################################################################
 % ########################################################################
-\section*{Materials and Methods}
+\section{Materials and Methods}
 There are several software packages available for model-based experimental design~\cite{balsa-canto_amigo2_2016, zhang_optimal_2018, busetto_near-optimal_2013}.
 These packages comprise numerous tools and consequently require some time to understand how to use them.
 We developed {\it eDPM} (Experimental Design for Predictive Microbiology), which focuses on ease of use.
@@ -180,7 +167,7 @@ This tutorial can also be followed using Jupyter Notebook~\cite{jupyterteamJupyt
 %
 Users can obtain it by installing {\it eDPM} from \href{https://pypi.org/project/edpm/0.0.1/}{pypi.org}.
 The python website has guides for installing packages \href{https://packaging.python.org/en/latest/tutorials/installing-packages/}{packaging.python.org/}.
-Most Unix-Based systems (e.g. GNU/Linux) and Mac-OS can use \mintinline[bgcolor=white,style=emacs]{bash}{pip}
+Most Unix-Based systems (e.g., GNU/Linux) and Mac-OS can use \mintinline[bgcolor=white,style=emacs]{bash}{pip}
 \begin{minted}[bgcolor=white, linenos=false]{bash}
     pip install eDPM
 \end{minted}
@@ -202,14 +189,15 @@ Afterwards, we import the needed packages.
     \caption{Import statements to use {\it eDPM}}
     \label{code:import_statements}
 \end{code}
-This will serve as the starting point for our script.\\
+This will serve as the starting point for our script.
+
 In the following, we will append more code to it and utilize the methods developed in {\it eDPM}~\cite{edpm2023}.
 If line numbers are missing, these should be filled by blank lines for better readability.
 %
 %
 % ########################################################################
-\subsection*{Model Formulation}
-\subsubsection*{Theory}
+\subsection{Model Formulation}
+\subsubsection{Theory}
 As a starting point it is necessary to define the mathematical model.
 We restrict our discussion to biological system which can be described by a system of \aclp{ode}:
 \begin{equation}
@@ -219,7 +207,7 @@ We restrict our discussion to biological system which can be described by a syst
     \label{eq:ode_general}
     \end{cases}
 \end{equation}
-Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is the time, $\mbu$ is a vector of a externally controlled inputs into the system (e.g., supply of glucose or the external temperature) and $\mbp$ are the parameters of the system.
+Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is the time, $\mbu$ is a vector of an externally controlled inputs into the system (e.g., supply of glucose or the external temperature) and $\mbp$ are the parameters of the system.
 We assume that a subset of the parameters $\mbp$ is unknown and should be estimated from data.
 Predominantly, the state variables cannot be directly observed, but rather the observables are functions of the state variables:
 \begin{equation}
@@ -227,9 +215,9 @@ Predominantly, the state variables cannot be directly observed, but rather the o
     \label{eq:observ_general}
 \end{equation}
 where the function $g$ is the observation or output function, and $\epsilon$ is the measurement noise.
-The observational noise is often assumed to be an independently distributed Gaussian noise with zero mean and variance $\sigma^2$: $\epsilon (t) \sim N(0, \sigma^2)$, $\forall t$.\\
-%
-In this tutorial, we demonstrate the usage of Experimental Design on the widely employed mathematical model developed by Baranyi and Roberts \cite{baranyiDynamicApproach1994}, which was devised to describe bacterial growth.
+The observational noise is often assumed to be an independently distributed Gaussian noise with zero mean and variance $\sigma^2$: $\epsilon (t) \sim N(0, \sigma^2)$, $\forall t$.
+
+In this tutorial, we demonstrate the usage of Experimental Design on the widely employed mathematical model developed by Baranyi-Roberts~\cite{baranyiDynamicApproach1994}, which was devised to describe bacterial growth.
 The model introduces two state variables $\mbx = (x_1, x_2)$, where $x_1(t)$ denotes the cell concentration of a bacterial population at the time $t$
 and $x_2(t)$ is the quantity defining the proportion of the growth rate specified by the environment, e.g., a limiting nutrient critical for bacterial growth.
 \begin{equation}
@@ -247,7 +235,7 @@ To account for the influence of the temperature on the activity of the model, we
     \label{eq:RatkowskyModel}
 \end{equation}
 where $b$ is the regression coefficient, and $T_\text{min}$ is the minimum temperature at which the growth can occur.
-As the observable we choose the bacteria count, i.e:
+As the observable we choose the bacteria count, i.e.:
 \begin{equation}
     y(t) = x_1(t)+\epsilon(t),
     \label{eq:observable}
@@ -258,18 +246,14 @@ Here $x_1^\text{max}, b, T_\text{min}$ are the parameters that we estimate using
 Based on this model, we would like to optimize the choice of measurement times as well as temperatures (inputs) of the system to find the \acl{oed}.
 %
 % ########################################################################
-\subsubsection*{Code}
-In order to be able to solve the equations numerically, we first need to define the \ac{ode} system in python.
-As was explained in the previous sections, this system consists of the equation (\ref{eq:ode_general}) with initial values $t_0, \mbx_0$.
+\subsubsection{Code}
+In order to be able to solve the equations numerically, we first need to define the \ac{ode} system~(\ref{eq:ode_general}) in python.
 Next, we need to define all numerical values present in the system.
 We distinguish between time points $t_i$ at which the result of the \ac{ode} is evaluated, inputs $\mbu$, which alter the behavior of our system (for example temperature, humidity, etc.), parameters $\mbp$, which are the quantities that we want to estimate and other arguments which might be needed to solve the \ac{ode}.
 Table \ref{Table1} provides an overview of these quantities and gives corresponding names in the code.
-In the following, we will step-by-step explain how to specify all variables needed by using the example of the Baranyi-Roberts Model (Eq. \ref{eq:ode_BaranyiRoberts}).
-\paragraph{Defining the \acs{ode}}
-We must define a few functions in python.
-The first function will be the right-hand side of equation (\ref{eq:ode_general}), i.e., we need to implement the Baranyi-Roberts model (\ref{eq:ode_BaranyiRoberts}) into a function.
-The implementation can be seen in Figure \ref{code:code_baranyi_roberts_ode_fun}.
-We explain the individual steps to create this function in Code Sample~\ref{code:code_baranyi_roberts_ode_fun}.
+In the following, we will step-by-step explain how to specify all variables needed by using the example of the Baranyi-Roberts Model.\\
+%
+First we need to define the right-hand side of Eq.~(\ref{eq:ode_general}), i.e., we need to implement the Baranyi-Roberts model~(\ref{eq:ode_BaranyiRoberts} - \ref{eq:RatkowskyModel}) into a function as can be seen in Code Sample~\ref{code:code_baranyi_roberts_ode_fun}.
 \begin{code}[h]
     \begin{minted}[firstnumber=6]{python}
     # The function name can be chosen freely, but the order
@@ -298,7 +282,7 @@ We explain the individual steps to create this function in Code Sample~\ref{code
 \end{code}
 %
 % ########################################################################
-\subsection*{Parameter Estimation}
+\subsection{Parameter Estimation}
 After defining the model, the user needs to provide an initial parameter set.
 This could be chosen from the literature or estimated from previously gathered experimental data.
 It is common to assume that the observational or measurement noise is Gaussian white noise (e.g., no temporal correlations) with zero mean and variance $\sigma(t)^2$: $\epsilon(t) \sim N(0, \sigma(t)^2)$, $\forall t$.
@@ -317,18 +301,18 @@ The method of maximum likelihood consists in searching for the parameter vector 
 %
 %
 % ########################################################################
-\subsection*{Experimental Design}
+\subsection{Experimental Design}
 Following our definition of the model and setting the initial parameter vector $\mbp_0$ we can proceed to the Experimental Design.
 In essence, Experimental Design comprises maximizing an objective function depending on the model, the initial parameter vector $\mbp_0$, external input $\mbu$ into the system, and a set of discrete observation times $t_i$ at which the potential measurements should be performed.
 The objective function needs to quantify the information the observation $\mby$ has about the parameter vector $\mbp$.
-A common choice here is constructing objective functions based on the \acf{fim} \cite{lyTutorialFisher2017}.
-According to the so-called 'Cramer-Rao inequality', the Fisher information is inversely proportional to the minimal squared estimation error \cite{friedenExploratoryData2010}.
+A common choice here is constructing objective functions based on the \acf{fim}~\cite{lyTutorialFisher2017}.
+According to the so-called 'Cramer-Rao inequality', the Fisher information is inversely proportional to the minimal squared estimation error~\cite{friedenExploratoryData2010}.
 This relation justifies using the FIM to improve our experimental design.
-In the following we explain one of the ways to calculate the \ac{fim} for an \acp{ode} system (\ref{eq:ode_general}) and the observable function (\ref{eq:observ_general}) \cite{lyTutorialFisher2017}.
+In the following we explain one of the ways to calculate the \ac{fim} for an \acp{ode} system (\ref{eq:ode_general}) and the observable function (\ref{eq:observ_general})~\cite{lyTutorialFisher2017}.
 %
 %
 % ########################################################################
-\subsubsection*{Sensitivity Calculation}
+\subsubsection{Sensitivity Calculation}
 An easy way to calculate the \ac{fim} uses local sensitivities of the observables $y$, that are in turn calculated from local sensitivities of the internal variables $x$~\cite{versyckIntroducingOptimal1999, banks_generalized_2010}.
 Assume that functions $\mbf$ and $\mbg$ are differentiable functions with respect to the state variables $\mbx$ and parameters $\mbp$.
 The local sensitivities of $\mbx$ are defined by $s^x_{ij} = (\mathrm{d} x_i / \mathrm{d} p_j )$.
@@ -352,7 +336,7 @@ In the case the parameters are of very different scale (e.g., on the second and 
     \tilde{s}_{ij} (t_m, u_n) =\frac{\mathrm{d}\ln(y_i)}{\mathrm{d}\ln(p_j)} = \frac{\mathrm{d} y_i}{\mathrm{d} p_j} \frac{p_j}{y_i}\bigg|_{t_m, u_n}.
 \label{eq:relat_sensitivities}
 \end{equation}
-These sensitivities are the elements of the sensitivity matrix \cite{stigterObservabilityComplex2017}.
+These sensitivities are the elements of the sensitivity matrix~\cite{stigterObservabilityComplex2017}.
 For example, in case of two observables $\mby = (y_1, y_2)$, two different inputs $\mbu = (u_1, u_2)$, $N$ different measurement times and $N_p$ parameters, sensitivity matrix reads:
 %
 \begin{equation}
@@ -406,7 +390,7 @@ In case one uses relative sensitivities $\tilde{s}_{ij} (t_m, u_n)$, one needs t
 \end{equation}
 %
 % ########################################################################
-\subsubsection*{Numerical Sensitivity Calculation}
+\subsubsection{Numerical Sensitivity Calculation}
 For the calculation of the sensitivities (Eq. \ref{eq:ode_and_sensitiv}) we need to supply the derivatives of $f$ with respect to the parameters and state variables.
 We define $\mbx=(x_1,x_2,x_3)$ and $\mbp=(p_1,p_2,p_3)$ with $p_1=x_{max}$, $p_2=b$ and $p_3=T_\text{min}$.
 Firstly, we calculate the mathematical derivatives $\partial f_i/\partial p_j$ and $\partial f_i/\partial x_j$ and then implement the corresponding functions.
@@ -478,7 +462,7 @@ The resulting implemented functions in python can be seen in Code Sample~\ref{co
 \end{code}
 %
 % ########################################################################
-\subsubsection*{Define numerical values}
+\subsubsection{Define numerical values}
 After the definition of the structure of the \ac{ode}, we need to specify numerical values.
 It is good practice, to gather such definitions in the \mintinline[bgcolor=white,style=emacs]{python}{__main__} method of the python program as it was done in Code Sample~\ref{code:code_write_main_function_start}.
 We start by defining the parameters of the \ac{ode} (line 64) and afterwards the initial values (line 67).
@@ -515,7 +499,7 @@ Here, we supply a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} wit
     }
     \label{code:code_write_main_function_start}
 \end{code}
-\subsubsection*{Defining Explicit Values and Sampling}
+\subsubsection{Defining Explicit Values and Sampling}
 There are two distinct ways to define inputs of the model.
 First, one can fix (multiple) explicit values for an input variable
 \begin{minted}[linenos=false]{python}
@@ -552,7 +536,7 @@ In our code, we simply would mix explicit and sampled definitions for individual
 \end{minted}
 %
 % ########################################################################
-\subsubsection*{Define Model}
+\subsubsection{Define Model}
 After we have decided on the numerical values for our model, we need to put everything together.
 The \mintinline[bgcolor=white,style=emacs]{python}{FisherModel} class serves as the entry point.
 Here, we simply supply every previously made definition of variables and methods.
@@ -581,13 +565,13 @@ However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherMo
 % ########################################################################
 %
 % ########################################################################
-\subsubsection*{Optimality Criteria}
+\subsubsection{Optimality Criteria}
 In the next step we choose the objective function also called optimality criterion.
 Optimization of the different objectives leads to different experimental design outcomes.
 The most popular criteria are~\cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008, dette_designing_1997, walter_qualitative_1990}:
 \begin{itemize}
 \item \textbf{D-optimality criterion} maximizes the determinant $\det (F)$ of the \ac{fim}.
- Translated to the parameter space, it means that the volume of the confidence region (see Figure~\ref{Fig2}) (or the geometric mean of all errors) is minimized.
+ Translated to the parameter space, it means that the volume of the confidence region (see Fig.~\ref{Fig2}) (or the geometric mean of all errors) is minimized.
  The size of the confidence region is determined by a confidence level, which is typically chosen $90 \%$ or $95 \%$.
  The confidence level can be interpreted as a probability value that the best
  parameter fit will belong to this area in case of repeating the experiment and estimations multiple times.
@@ -598,20 +582,19 @@ The most popular criteria are~\cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMI
 \item \textbf{Modified E-optimality criterion} maximizes the ratio between the minimal and maximal eigenvalue $\lambda_{\min} / \lambda_{\max}$ and reduces correlation between two parameters corresponding to these eigenvalues.
 
 \end{itemize}
-Each of the criteria has its pros and cons, so the reader should have a closer look at the various properties of these criteria, for instance, in Franceschini's and Macchietto's paper \cite{franceschiniModelbasedDesignExperiments2008}.
-For the geometrical interpretation of the criteria using the confidence region shown in Figure~\ref{Fig2}.
+Each of the criteria has its pros and cons, so the reader should have a closer look at the various properties of these criteria, for instance, in Franceschini's and Macchietto's paper~\cite{franceschiniModelbasedDesignExperiments2008}.
+The geometrical interpretation of the criteria using the confidence region is shown in Fig.~\ref{Fig2}.
 %
 %
 % ########################################################################
-\subsubsection*{Optimization}
+\subsubsection{Optimization}
 After defining the objective function based on the \ac{fim} the next step is to optimize the chosen optimality criteria.
 Finding the Experimental Design corresponds to finding the global maximum of the objective, which can be formulated as an optimal control problem~\cite{espie_optimal_1989}.
 This problem has been widely studied, and multiple numerical solution algorithms for both local and global optimization were introduced~\cite{esposito_global_2000, bangaImprovingFoodProcessing2003, ali_numerical_1997, runarsson_stochastic_2000}.
 In the supplied toolbox {\it eDPM}, three methods were implemented: Differential evolution, basin-hopping, and the so-called “brute force” method.
 We give in the following a brief summary of the implemented methods.
 For more information the reader should turn to the available literature, e.g.,~\cite{stornDifferentialEvolutionSimple1997, wales_global_1997}.
-\newline
-%
+
 The differential evolution algorithm developed by Storn and Price (1996)~\cite{stornDifferentialEvolutionSimple1997} is one of the stochastic global optimization methods appropriate for nonlinear dynamic problems.
 Such types of algorithms have mild computational load but one cannot be sure that the absolute optimum is reached~\cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}.
 For differential evolution an initial population of candidate vectors for the Experimental Design (sampling times and inputs) is randomly chosen from the region of available values.
@@ -628,7 +611,6 @@ This procedure is repeated for every solution candidate of the initial populatio
 The process of population mutation is repeated till a stopping criterion is reached, e.g., the maximum number of generations (steps) is reached or the standard deviation of the candidate vectors is below a certain threshold~\cite{Zielinski_DE}.
 This method is rather simple and straightforward, does not require any gradient calculation and is easy to parallelize.
 Another advantages include its fast convergence and robustness at numerical optimization~\cite{babu_differential_2007}.
-\newline
 
 The second implemented method is basin-hopping developed by David Wales and Jonathan Doye~\cite{wales_global_1997}.
 This iterative algorithm combines Monte-Carlo and local optimization and works as follows:
@@ -636,21 +618,20 @@ During the iteration step the design vector, i.e., vector of measurement times a
 After this, the step is either accepted or rejected.
 As in a standard Monte-Carlo method, the decision is made using the Metropolis criterion for the objective function~\cite{scipybashop}.
 For a deeper understanding of the Monte-Carlo minimization, the reader can refer to the papers~\cite{li_monte_1987, beichl_metropolis_2000}.
-\newline
 
 And lastly, a simple brute force method was implemented as well.
 It is a grid search algorithm calculating the objective function value at each point of a multidimensional grid in a chosen region.
 This method is suitable for discrete optimization with limited number of grid values.
 However, the downside of this technique is its slowness, inefficiency and long computational times, noticeable for higher numbers of possible discrete solutions~\cite{scipybrute}.
-The papers of Banga \etal \cite{banga_global_1996, banga_dynamic_2005, bangaImprovingFoodProcessing2003} list additional information about this topic.
+The papers of Banga \etal~\cite{banga_global_1996, banga_dynamic_2005, bangaImprovingFoodProcessing2003} list additional information about this topic.
 %
 % ########################################################################
-\subsubsection*{Optimization Code}
+\subsubsection{Optimization Code}
 To run the optimization procedure the following function can be used:
 \begin{minted}[linenos=false]{python}
     fsr = find_optimal(fsm)
 \end{minted}
-This code will produce the output shown in Figures~\ref{Fig4} and \ref{Fig5}.
+This code will produce the output shown in Fig.~\ref{Fig4} and \ref{Fig5}.
 The user can choose between any of the three previously explained optimization procedures.
 Any optimization argument of the aforementioned routines, can be specified.
 The default arguments of the \mintinline[bgcolor=white,style=emacs]{python}{"scipy_differential_evolution"} optimization method are given by the scipy default arguments~\cite{scipydiffev}.
@@ -685,8 +666,8 @@ For the parameter estimation the initial values $\mbx(t_0)$ of the system are re
 Hence, the reader should keep that in mind and include the initial time $t_0$ as a measurement point in the final \ac{oed}.
 %
 % ########################################################################
-\subsubsection*{Identifiability}
-Before using the \acl{oed} generated in the preceding section, the reader needs to check if the parameters of the system are identifiable, i.e. to examine if it is possible to obtain a unique solution for the parameters from the optimization.
+\subsubsection{Identifiability}
+Before using the \acl{oed} generated in the preceding section, the reader needs to check if the parameters of the system are identifiable, i.e., to examine if it is possible to obtain a unique solution for the parameters from the optimization.
 It can happen that a subset of the parameters are non-identifiable.
 The non-identifiability can be due to the model structure or observables (structural non-identifiability) or insufficient data (practical non-identifiability)~\cite{guillaume_introductory_2019, wieland_structural_2021, walter_identifiability_1996}.
 Structural non-identifiability should be avoided as it results in at least one parameter which cannot be determined.
@@ -703,7 +684,7 @@ Practical non-identifiability results in large confidence intervals~\cite{holmbe
 Methods such as profile-likelihood~\cite{wieland_structural_2021} are able to test for these cases but they require experimental data.
 %
 % ########################################################################
-\subsubsection*{Identifiability Code}
+\subsubsection{Identifiability Code}
 Using the {\it eDPM} package, the reader can quite easily check if the resulting Experimental Design is structurally identifiable.
 For this, one can call the function that compares the rank of the sensitivity matrix with the number of parameters as in Code Sample~\ref{code:identifiability_check}.
 \begin{code}[h]
@@ -722,7 +703,7 @@ Therefore, in reality more experiments are needed to increase the accuracy of th
 Thus, we suggest that the reader considers the optimization result not as a finished design but as a reference pointing to the minimal requirements and the most crucial conditions (inputs and times) for the parameter estimations.
 %
 % ########################################################################
-\subsubsection*{Plotting, Json, etc.}
+\subsubsection{Plotting, Json, etc.}
 Our package also provides the option to save results into Json file and automatically plot results for the ode solutions, observables and sensitivities (see Code Sample~\ref{code:plot_save}).
 \begin{code}[h]
     \begin{minted}[firstnumber=115]{python}
@@ -738,33 +719,33 @@ Our package also provides the option to save results into Json file and automati
 %
 % ########################################################################
 % ########################################################################
-\section*{Results}
-\subsection*{Baranyi-Roberts Model - Single Species}
+\section{Results}
+\subsection{Baranyi-Roberts Model - Single Species}
 As a summary of this tutorial, we would like to present the resulting output of our package.
-To this end we study the growth of a bacterial colony consisting of a single species and describe it mathematically using the Baranyi and Roberts model given by Eqs. (\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}).
+To this end we study the growth of a bacterial colony consisting of a single species and describe it mathematically using the Baranyi-Roberts model given by Eqs. (\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}).
 We aim to estimate the parameters of the model and determine optimal measurement conditions.
 The observable is the bacterial count, i.e., the first component of the state variable vector $y = x_1$.
 As an additional constraint we need to consider that the available climate chambers can only operate the temperature in the range from 2 to 12 degrees, and the experiment should not take longer than 100 hours.
 The parameter values and initial values of the system are taken in accordance with the literature~\cite{gospavic_mathematical_2008} and presented in Table~\ref{Table2}.
 %
-To model realistic uncertainties, we choose the error model given by Eq. (\ref{eq:error_model}) with $\gamma_\text{abs}=0.3$ and $\gamma_\text{rel}=0.1$ for all the measurement points.
+To model realistic uncertainties, we choose the error model given by Eq.~(\ref{eq:error_model}) with $\gamma_\text{abs}=0.3$ and $\gamma_\text{rel}=0.1$ for all the measurement points.
 We identify the three parameters of our system by choosing 4 independent measurement conditions consisting of two temperature-points and two time-points.
 In our Experimental Design optimization routine, we use the D-optimality criterion, relative sensitivities, and the differential evolution optimization method.
-The resulting \ac{oed} for the described system is presented in Figure \ref{Fig3}, \ref{Fig7}.
+The resulting \ac{oed} for the described system is presented in Fig.~\ref{Fig3}, \ref{Fig7}.
 The identifiability test confirms the validity of our model setup (Fig.~\ref{Fig6}).
 %
 %
-For the system described above the minimal requirements for passing the identifiability test (see Figure~\ref{Fig6}) is using a setup with at least two temperatures and two measurement times per temperature.
-The choice of minimal number of measurement times can also be justified when looking at Figure~\ref{Fig8}.
+For the system described above the minimal requirements for passing the identifiability test is using a setup with at least two temperatures and two measurement times per temperature.
+The choice of minimal number of measurement times can also be justified when looking at Fig.~\ref{Fig8}.
 Here we see that one measurement time is not enough as the determinant is numerically very close to zero indicating a non-identifiability of this system configuration.
 %
 %
-Figure~\ref{Fig7} shows that each of the chosen optimal time points corresponds to the maximum of at least one local sensitivity curve.
+Fig.~\ref{Fig7} shows that each of the chosen optimal time points corresponds to the maximum of at least one local sensitivity curve.
 This maximizes the determinant of the Fisher Information matrix.
 %
 %
 %
-\subsection*{Two-Species Resource Competition}
+\subsection{Two-Species Resource Competition}
 As a second example we discuss a slightly more complicated system and extend the previous example of bacterial growth to a system where two species are present.
 The species interact by competitive inhibition because they depend on a common nutrient resource.
 Analogously to the previous example, we denote the concentration of the two different species as $x_1$ and $y_1$, respectively.
@@ -786,13 +767,13 @@ Using the conservation quantity $x_1 + y_1 + n_\text{max}R = n_\text{max}$ this 
     \end{cases}
     \label{eq:Lotka_Volterra_2species_2}
 \end{equation}
-Based on the one species case for the growth rates we use \cite{baranyiDynamicApproach1994,ratkowsky_relationship_1982}
+Based on the one species case for the growth rates we use~\cite{baranyiDynamicApproach1994,ratkowsky_relationship_1982}
 \begin{eqnarray}
     \alpha_x (t, T) = b_x^2 (T - T_{\text{min}, x})^2 \frac{x_2(t)}{x_2(t) + 1}\\
     \alpha_y (t, T) = b_y^2 (T - T_{\text{min}, y})^2 \frac{y_2(t)}{y_2(t) + 1}
     \label{eq:growth_rate_2species}
 \end{eqnarray}
-Combining equations (\ref{eq:Lotka_Volterra_2species_2}, \ref{eq:growth_rate_2species}), we get the system of four differential equations:
+Combining equations~(\ref{eq:Lotka_Volterra_2species_2}, \ref{eq:growth_rate_2species}), we get the system of four differential equations:
 \begin{equation}
     \begin{cases}
         \dot x_1 = b_x^2 (T - T_{\text{min}, x})^2 \frac{x_2}{x_2 + 1} x_1 (1 - \frac{x_1 + y_1}{n_\text{max}})\\
@@ -806,8 +787,8 @@ where $x_2, y_2$ are the concentration of the quantities determining the critica
 The values of the parameter vector $\mbp = (n_\text{max}, b_x, T_{\text{min}, x}, b_y, T_{\text{min}, y})$ and the vector of the initial values $\mbx(t_0)=(x_1(t_0), x_2(t_0), y_1(t_0), y_2(t_0))$ are presented in Table~\ref{Table3}.
 %
 In comparison to the previous example, we now choose the count of the two bacteria species $x_1,y_1$ as observables.
-Meanwhile, other optimization arguments were taken the same as in the previous example i.e. we optimize measurement times and temperatures.
-The new \ac{oed} is shown in Figure \ref{Fig9}.
+Meanwhile, other optimization arguments were taken the same as in the previous example i.e., we optimize measurement times and temperatures.
+The new \ac{oed} is shown in Fig.~\ref{Fig9}.
 %
 %
 The presented design shows that the least needed number of experiments is two with temperatures of $2^\circ$C and $12^\circ$C.
@@ -817,11 +798,11 @@ Thus, we can estimate the parameters by performing experiments according to this
 %
 %
 %
-\section*{Conclusion}
+\section{Conclusion}
 We introduced the concepts of Experimental Design and identifiability and their practical applications to systems described by \acp{ode}.
 In addition, we implemented the numerical calculations in simple python code which we provide within our software {\it eDPM}.
 Our toolbox provides a simple way to apply methods of mathematical statistics and optimization.
-We demonstrated how to use these methods by applying them to the well-known Baranyi \& Roberts model for microbial growth with one and two species.
+We demonstrated how to use these methods by applying them to the well-known Baranyi-Roberts model for microbial growth with one and two species.
 These results show us how parameters of the model can now be estimated most precisely by designing experiments around the predicted measurement conditions.
 % The output of our approach identifies the most relevant measurement conditions in order to most optimally estimate the parameters of the system.
 % The calculated measurement conditions can then be further used to ...
@@ -934,7 +915,7 @@ In summary, model-based experimental design can accelerate and simplify the plan
         \subcaption{Experiment 2: $T = 12^\circ$C, $t=43\text{h}, 100$h}
         \includegraphics[scale=0.255]{Figures/Fig3b.pdf}
     \end{subfigure}
-    \caption{The example of the output of the Experimental Design optimization procedure for the Baranyi and Roberts model.
+    \caption{The example of the output of the Experimental Design optimization procedure for the Baranyi-Roberts model.
     The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
     The Optimal Design is proposed for one observable which is the total bacterial count of the species $x_1$ and consists of two time series where samples are stored at temperatures (a) $T_1 = 3.5^\circ$C and (b) $T_2 = 12^\circ$C.
     The corresponding measurement times are (a)~$t_{11}=100$h and (b)~$t_{21}=43$h, $t_{22}=100$h.
@@ -1106,7 +1087,7 @@ Result_1
           \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $T_\text{min}$}}
           \includegraphics[scale=0.25]{Figures/Fig7f.pdf}
         \end{subfigure}
-    \caption{{\footnotesize The example of the sensitivities of the total bacterial count calculated for the Experimental Design optimization procedure for the Baranyi and Roberts model.
+    \caption{{\footnotesize The example of the sensitivities of the total bacterial count calculated for the Experimental Design optimization procedure for the Baranyi-Roberts model.
     The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
     In (a), (c), (e) the sensitivity curves for the experimental series at storage temperature $T_1=3.5^\circ$C are shown for parameters $x_\text{max}$, $b$, $T_\text{min}$, respectively.
     As well as, (b), (d), (f) subfigures present the sensitivities for the $T_2=12^\circ$C experiment for parameters $x_\text{max}$, $b$, $T_\text{min}$, respectively.}}
@@ -1143,7 +1124,7 @@ Result_1
         \subcaption{Species 2, $T = 2^\circ$C, $t=58 \text{h}, 90$h}
         \includegraphics[scale=0.25]{Figures/Fig9d.pdf}
     \end{subfigure} 
-    \caption{The Optimal Experimental Design for the Baranyi and Roberts model with two different species~(\ref{eq:model_2species_resource}) is proposed for two observables: the bacterial count of the first species $x_1$ and of the second species $x_2$.
+    \caption{The Optimal Experimental Design for the Baranyi-Roberts model with two different species~(\ref{eq:model_2species_resource}) is proposed for two observables: the bacterial count of the first species $x_1$ and of the second species $x_2$.
     (a), (c) show the first experimental series held at the temperature $T_1=12^\circ$C and with measurement times $t_{11}=12$h, $t_{12}=38$h for observables $x_1$ and $x_2$, respectively.
     (b), (d) show the second experimental series held at the temperature $T_2=2^\circ$C and with measurement times $t_{21}=58$h, $t_{22}=90$h for observables $x_1$ and $x_2$, respectively.
     The line plot presents the model solution for the observable, and the circles determine the suggested by Experimental Design time points.
