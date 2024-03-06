@@ -6,7 +6,7 @@ on:
       - '*'
 jobs:
   build_latex:
-    name: Compile Latex Files
+    name: Build
     runs-on: ${{matrix.os }}
     strategy:
       matrix:
@@ -15,21 +15,18 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v2
 
-      - name: Compile Latex document
+      - name: Compile
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: src/main.tex
+          root_file: main.tex
           latexmk_shell_escape: true
-          args: -pdf -cd --output-directory=../out
-
-      - name: Show folder entries
-        run: ls && ls out
+          args: -pdf -shell-escape
 
       - name: Upload main.pdf as artifact
         uses: actions/upload-artifact@v3
         with:
           name: main.pdf
-          path: out/main.pdf
+          path: main.pdf
   
   release_pdf:
     name: Release PDF
