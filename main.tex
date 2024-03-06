@@ -607,26 +607,11 @@ For more information the reader should turn to the available literature, e.g.,~\
 
 The differential evolution algorithm developed by Storn and Price (1996)~\cite{stornDifferentialEvolutionSimple1997} is one of the stochastic global optimization methods appropriate for nonlinear dynamic problems.
 Such types of algorithms have mild computational load but one cannot be sure that the absolute optimum is reached~\cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}.
-For differential evolution an initial population of candidate vectors for the experimental design (sampling times and inputs) is randomly chosen from the region of available values.
-Then each vector mutates by mixing with one of other candidate vectors.
-To a chosen vector from the initial population $D_0$, we add a weighted difference between two other randomly chosen vectors from the same set $(D_\text{rand1} - D_\text{rand2})$.
-This process is called mutation and a new vector $D_m$ is obtained.
-The next step is to construct a new trial solution.
-This is done by choosing the elements of the trial vector either from the initial $D_0$ or the mutated $D_m$ vectors.
-For each new element of trial vector, a random number drawn uniformly from the interval [0, 1) and compared to the so-called recombination constant.
-If this random number is less than the recombination constant, then the trial vector element is chosen from the vector $D_m$, otherwise from $D_0$.
-The degree of mutation can be controlled by changing the recombination constant; the larger this constant is, the more often vector elements are chosen from $D_m$.
-Subsequently, the objective function is calculated using the trial vector and the result is compared to result obtained using the initial solution $D_0$; and the best of them is chosen for the next generation.
-This procedure is repeated for every solution candidate of the initial population, by means of which the new generation is build~\cite{scipydiffev}.
-The process of population mutation is repeated till a stopping criterion is reached, e.g., the maximum number of generations (steps) is reached or the standard deviation of the candidate vectors is below a certain threshold~\cite{Zielinski_DE}.
 This method is rather simple and straightforward, does not require any gradient calculation and is easy to parallelize.
-Another advantages include its fast convergence and robustness at numerical optimization~\cite{babu_differential_2007}.
+Another advantage is its fast convergence and robustness at numerical optimization~\cite{babu_differential_2007} (see Note~\ref{note-differential-evolution-details}).
 
 The second implemented method is basin-hopping developed by David Wales and Jonathan Doye~\cite{wales_global_1997}.
-This iterative algorithm combines Monte-Carlo and local optimization and works as follows:
-During the iteration step the design vector, i.e., vector of measurement times and inputs, is subject to a random perturbation and then to local minimization.
-After this, the step is either accepted or rejected.
-As in a standard Monte-Carlo method, the decision is made using the Metropolis criterion for the objective function~\cite{scipybashop}.
+This iterative algorithm combines Monte-Carlo and local optimization (see Note~\ref{note-basin-hopping-details}).
 For a deeper understanding of the Monte-Carlo minimization, the reader can refer to the papers~\cite{li_monte_1987, beichl_metropolis_2000}.
 
 And lastly, a simple brute force method was implemented as well.
@@ -811,6 +796,8 @@ In summary, model-based experimental design can accelerate and simplify the plan
 \section{Notes}
 \begin{enumerate}
     \item \label{note-order-arguments-python} When using the syntax as shown in code sample~\ref{code:model_definition}, the order of arguments does not matter. However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherModel(x0, 0.0, ...)}, please pay attention to the order of arguments.
+    \item \label{note-differential-evolution-details} For differential evolution an initial population of candidate vectors for the experimental design (sampling times and inputs) is randomly chosen from the region of available values. Then each vector mutates by mixing with one of other candidate vectors. To a chosen vector from the initial population $D_0$, we add a weighted difference between two other randomly chosen vectors from the same set $(D_\text{rand1} - D_\text{rand2})$. This process is called mutation and a new vector $D_m$ is obtained. The next step is to construct a new trial solution. This is done by choosing the elements of the trial vector either from the initial $D_0$ or the mutated $D_m$ vectors. For each new element of trial vector, a random number drawn uniformly from the interval [0, 1) and compared to the so-called recombination constant. If this random number is less than the recombination constant, then the trial vector element is chosen from the vector $D_m$, otherwise from $D_0$. The degree of mutation can be controlled by changing the recombination constant; the larger this constant is, the more often vector elements are chosen from $D_m$. Subsequently, the objective function is calculated using the trial vector and the result is compared to result obtained using the initial solution $D_0$; and the best of them is chosen for the next generation. This procedure is repeated for every solution candidate of the initial population, by means of which the new generation is build~\cite{scipydiffev}. The process of population mutation is repeated till a stopping criterion is reached, e.g., the maximum number of generations (steps) is reached or the standard deviation of the candidate vectors is below a certain threshold~\cite{Zielinski_DE}.
+    \item \label{note-basin-hopping-details} During the iteration step the design vector, i.e., vector of measurement times and inputs, is subject to a random perturbation and then to local minimization. After this, the step is either accepted or rejected. As in a standard Monte-Carlo method, the decision is made using the Metropolis criterion for the objective function~\cite{scipybashop}.
     \item \label{note-timepoints} Our toolbox optimizes and provides the timepoints with an assumption that the initial one $t_0$ is always measured. Hence, the reader should keep that in mind and include the initial time $t_0$ as a measurement point in the final \ac{oed}.
     \item \label{note-structural-identifiability} The provided identifiability test only allows to exclude structural identifiability but to obtain reasonable confidence intervals for parameter estimates the practical identifiability should be considered as well. Therefore, in reality more experiments are needed to increase the accuracy of the model. Thus, we suggest that the reader considers the optimization result not as a finished design but as a reference pointing to the minimal requirements and the most crucial conditions (inputs and times) for the parameter estimations.
     \item \label{note-temperature-identifiability} For both temperatures we require at least two time-points for identifiability. Thus, we can estimate the parameters by performing experiments according to this design.
