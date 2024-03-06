@@ -551,9 +551,7 @@ In our code, we simply would mix explicit and sampled definitions for individual
 \subsubsection{Define Model}
 After we have decided on the numerical values for our model, we need to put everything together.
 The \mintinline[bgcolor=white,style=emacs]{python}{FisherModel} class serves as the entry point.
-Here, we simply supply every previously made definition of variables and methods.
-When using the syntax as shown in code sample~\ref{code:model_definition}, the order of arguments does not matter.
-However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherModel(x0, 0.0, ...)}, please pay attention to the order of arguments.
+Here, we simply supply every previously made definition of variables and methods (see Note~\ref{note-order-arguments-python}).
 \begin{code}[H]
     \begin{minted}[firstnumber=82]{python}
     # Create the FisherModel which serves as the entry point
@@ -672,10 +670,8 @@ For our specific use-case, we advise to experiment with the options presented in
 A full list of optional arguments can be seen in the \href{https://docs.scipy.org/doc/scipy/reference/optimize.html#global-optimization}{scipy documentation}~\cite{virtanenSciPyFundamentalAlgorithms2020}.
 In addition, there are some interesting optimization options such as the optional arguments \mintinline[bgcolor=white,style=emacs]{python}{relative_sensitivities,criterion}, which are responsible for using relative sensitivities $\tfrac{dy}{dp}\tfrac{p}{y}$ and specifying the optimality criterion as explained in the previous section.
 Please view the \href{https://spatial-systems-biology-freiburg.github.io/FisInMa/}{full documentation} for explanation.
-The resulting class \mintinline[bgcolor=white,style=emacs]{python}{fsr} contains all definitions, current values and information on the optimization process.
-Note that our toolbox optimizes and provides the timepoints with an assumption that the initial timepoint $t_0$ is always measured.
+The resulting class \mintinline[bgcolor=white,style=emacs]{python}{fsr} contains all definitions, current values (see Note~\ref{note-timepoints}) and information on the optimization process.
 For the parameter estimation the initial values $\mbx(t_0)$ of the system are required.
-Hence, the reader should keep that in mind and include the initial time $t_0$ as a measurement point in the final \ac{oed}.
 %
 % ########################################################################
 \subsubsection{Identifiability}
@@ -709,10 +705,7 @@ For this, one can call the function that compares the rank of the sensitivity ma
 \end{code}
 The function returns \mintinline[bgcolor=white,style=emacs]{python}{True}, if the identifiability condition is reached, and \mintinline[bgcolor=white,style=emacs]{python}{False} otherwise.
 If this test is not passed, the reader should either reconsider the model structure including the definition of parameters or increase the number of numerically optimized measurement conditions (inputs or times).
-From a mathematical point of view, we need at least as many measurement points as we have parameters in our system.
-Note that the described test above only allows to exclude structural identifiability but to obtain reasonable confidence intervals for parameter estimates the practical identifiability should be considered as well.
-Therefore, in reality more experiments are needed to increase the accuracy of the model.
-Thus, we suggest that the reader considers the optimization result not as a finished design but as a reference pointing to the minimal requirements and the most crucial conditions (inputs and times) for the parameter estimations.
+From a mathematical point of view, we need at least as many measurement points as we have parameters in our system (see Note~\ref{note-structural-identifiability}).
 %
 % ########################################################################
 \subsubsection{Plotting, Json, etc.}
@@ -804,19 +797,24 @@ The new \ac{oed} is shown in Fig.~\ref{Fig9}.
 %
 %
 The presented design shows that the least needed number of experiments is two with temperatures of $2^\circ$C and $12^\circ$C.
-In each experiment two observables that correspond to the concentrations of two bacteria types and two time points were measured.
-Note that for both temperatures at least two time-points are required for identifiability.
-Thus, we can estimate the parameters by performing experiments according to this design.
+In each experiment two observables that correspond to the concentrations of two bacteria types and two time points were measured (see Note~\ref{note-temperature-identifiability}).
 %
 %
 %
-\section{Conclusion}
+\subsection{Conclusion}
 We introduced the concepts of experimental design and identifiability and their practical applications to systems described by \acp{ode}.
 In addition, we implemented the numerical calculations in simple python code which we provide within our software {\it eDPM}.
 Our toolbox provides a simple way to apply methods of mathematical statistics and optimization.
 We demonstrated how to use these methods by applying them to the well-known Baranyi-Roberts model for microbial growth with one and two species.
 These results show us how parameters of the model can now be estimated most precisely by designing experiments around the predicted measurement conditions.
 In summary, model-based experimental design can accelerate and simplify the planning of efficient experiments for parameter estimation in microbiology.
+\section{Notes}
+\begin{enumerate}
+    \item \label{note-order-arguments-python} When using the syntax as shown in code sample~\ref{code:model_definition}, the order of arguments does not matter. However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherModel(x0, 0.0, ...)}, please pay attention to the order of arguments.
+    \item \label{note-timepoints} Our toolbox optimizes and provides the timepoints with an assumption that the initial one $t_0$ is always measured. Hence, the reader should keep that in mind and include the initial time $t_0$ as a measurement point in the final \ac{oed}.
+    \item \label{note-structural-identifiability} The provided identifiability test only allows to exclude structural identifiability but to obtain reasonable confidence intervals for parameter estimates the practical identifiability should be considered as well. Therefore, in reality more experiments are needed to increase the accuracy of the model. Thus, we suggest that the reader considers the optimization result not as a finished design but as a reference pointing to the minimal requirements and the most crucial conditions (inputs and times) for the parameter estimations.
+    \item \label{note-temperature-identifiability} For both temperatures we require at least two time-points for identifiability. Thus, we can estimate the parameters by performing experiments according to this design.
+\end{enumerate}
 %
 %
 %
