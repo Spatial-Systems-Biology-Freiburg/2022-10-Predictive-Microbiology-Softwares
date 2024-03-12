@@ -158,7 +158,7 @@ Using the initial guess of parameters a first \ac{oed} is determined taking into
 Next, the designed experiments need to be performed and this data results into a new estimation of the parameters.
 If the confidence intervals of the parameters are sufficiently small, the scheme ends, otherwise one uses the new estimates as the starting point for the next experimental design.
 The process can be repeated several times to increase the precision of the parameter estimates until the desired accuracy is achieved.
-To test the scheme one can also perform numerical experiments and obtain {\it in-silico} data.
+In order to test the scheme one can also perform numerical experiments and obtain {\it in-silico} data.
 %
 %
 %
@@ -203,7 +203,6 @@ This will serve as the starting point for our script.
 In the following, we will append more code to it and utilize the methods developed in {\it eDPM}~\cite{edpm2023}.
 The Code Samples containing line numbers correspond to one script that defines the system subjected to optimization.
 The line numbers indicate the order of the code.
-If line numbers are missing, these should be filled by blank lines for better readability.
 %
 %
 % ########################################################################
@@ -211,7 +210,7 @@ If line numbers are missing, these should be filled by blank lines for better re
 \subsection{Model Formulation}
 \subsubsection{Theory}
 As a starting point it is necessary to define the mathematical model.
-We restrict our discussion to biological system which can be described by a system of \aclp{ode}:
+We restrict our discussion to biological systems which can be described by a system of \aclp{ode}:
 \begin{equation}
     \begin{cases}
     \dot \mbx (t) = \mbf(t, \mbx, \mbu, \mbp) \\
@@ -219,7 +218,7 @@ We restrict our discussion to biological system which can be described by a syst
     \label{eq:ode_general}
     \end{cases}
 \end{equation}
-Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is a time, $\mbu$ is a vector of an externally controlled inputs into the system (e.g., supply of glucose or external temperature) and $\mbp$ are the parameters of the system.
+Here $\mbx = (x_1, x_2, ..., x_n)$ is a vector of state variables of the system with initial condition $\mbx_0$, $t$ is a time, $\mbu$ is a vector of externally controlled inputs into the system (e.g., supply of glucose or external temperature) and $\mbp$ are the parameters of the system.
 We assume that a subset of the parameters $\mbp$ is unknown and should be estimated from data.
 Predominantly, the state variables cannot be directly observed, but rather the observables are functions of the state variables:
 \begin{equation}
@@ -280,7 +279,7 @@ First we define the right-hand side of the \acp{ode}, i.e., we need to implement
         # Calculate the maximum growth rate
         mu_max = b**2 * (Temp - Temp_min)**2
 
-        # Calculate the right hand side of the \ac{ode}, store
+        # Calculate the right hand side of the ODEs, store
         # it in a list [ ... ] and return it.
         return [
             mu_max * (x2/(x2 + 1)) * (1 - x1/x_max) * x1,
@@ -320,7 +319,7 @@ The objective function needs to quantify the information the observation $\mby$ 
 A common choice here is constructing objective functions based on the \acf{fim}~\cite{lyTutorialFisher2017}.
 According to the so-called 'Cramer-Rao inequality', the Fisher information is inversely proportional to the minimal squared estimation error~\cite{friedenExploratoryData2010}.
 This relation justifies using the FIM to improve our experimental design.
-In the following we explain one of the ways to calculate the \ac{fim} for an \acp{ode} system (Eq.~\ref{eq:ode_general}) and the observable function (Eq.~\ref{eq:observ_general})~\cite{lyTutorialFisher2017}.
+In the following we explain one of the ways to calculate the \ac{fim} for an \ac{ode} system (Eq.~\ref{eq:ode_general}) and the observable function (Eq.~\ref{eq:observ_general})~\cite{lyTutorialFisher2017}.
 %
 %
 % ########################################################################
@@ -343,11 +342,6 @@ We determine these at the certain times $t_m$ and input $u_n$ using the solution
 \label{eq:observ_sensitivities}
 \end{equation}
 \\
-In the case the parameters are of very different scale (e.g., on the second and on the day scale), it may be advisable to use the relative or normalized sensitivities to improve not the absolute but the relative accuracy of the parameter estimates:
-\begin{equation}
-    \tilde{s}_{ij} (t_m, u_n) =\frac{\mathrm{d}\ln(y_i)}{\mathrm{d}\ln(p_j)} = \frac{\mathrm{d} y_i}{\mathrm{d} p_j} \frac{p_j}{y_i}\bigg|_{t_m, u_n}.
-\label{eq:relat_sensitivities}
-\end{equation}
 These sensitivities are the elements of the sensitivity matrix~\cite{stigterObservabilityComplex2017}.
 For example, in case of two observables $\mby = (y_1, y_2)$, two different inputs $\mbu = (u_1, u_2)$, $N$ different measurement times and $N_p$ parameters, sensitivity matrix reads:
 %
@@ -396,7 +390,13 @@ Then the diagonal elements of the covariance matrix take form:
     \sigma_{i}^2 (t_m, u_n) = \gamma_\text{abs} + \gamma_\text{rel} \cdot y_i(t_m, u_n),
 \end{equation}
 where $\gamma_\text{abs}$ and $\gamma_\text{rel}$ are the coefficients determining the absolute and the relative error contribution, respectively.
-In case one uses relative sensitivities $\tilde{s}_{ij} (t_m, u_n)$, one needs to use relative measurements errors for the matrix $Q$:
+\\
+In the case the parameters are of very different scale (e.g., on the second and on the day scale), it may be advisable to use the relative or normalized sensitivities to improve not the absolute but the relative accuracy of the parameter estimates:
+\begin{equation}
+    \tilde{s}_{ij} (t_m, u_n) =\frac{\mathrm{d}\ln(y_i)}{\mathrm{d}\ln(p_j)} = \frac{\mathrm{d} y_i}{\mathrm{d} p_j} \frac{p_j}{y_i}\bigg|_{t_m, u_n}.
+\label{eq:relat_sensitivities}
+\end{equation}
+In this instance one needs to use relative measurements errors for the matrix $Q$:
 \begin{equation}
     \tilde{\sigma}_{i}^2 (t_m, u_n) = \frac{\sigma_{i}^2 (t_m, u_n)}{y^2_i(t_m, u_n)}.
 \end{equation}
@@ -476,10 +476,10 @@ The resulting implemented functions in python can be seen in Code Sample~\ref{co
 % ########################################################################
 \subsubsection{Define numerical values}
 After the definition of the structure of the \acp{ode}, we need to specify numerical values.
-It is good practice, to gather such definitions in the \mintinline[bgcolor=white,style=emacs]{python}{__main__} method of the python program as it was done in Code Sample~\ref{code:code_write_main_function_start}.
+It is good practice to gather such definitions in the \mintinline[bgcolor=white,style=emacs]{python}{__main__} method of the python program as it was done in Code Sample~\ref{code:code_write_main_function_start}.
 We start by defining the parameters of the \acp{ode} (line 64) and afterwards the initial values (line 67).
 Next, we constrain the optimization routine to find the best possible time points in the interval $t_i\in\left[t_\text{low},t_\text{high}\right]$.
-To do this, we write the times as a dictionary with entries \mintinline[bgcolor=white,style=emacs]{python}{{"lb":t_low, "ub":t_high, "n":n_times}} where \mintinline[bgcolor=white,style=emacs]{python}{"lb"} and \mintinline[bgcolor=white,style=emacs]{python}{"ub"} are the lower and the upper bound while \mintinline[bgcolor=white,style=emacs]{python}{n} describes the number of discrete time points at which we want to sample the system (line 70).
+For the purpose we write the times as a dictionary with entries \mintinline[bgcolor=white,style=emacs]{python}{{"lb":t_low, "ub":t_high, "n":n_times}} where \mintinline[bgcolor=white,style=emacs]{python}{"lb"} and \mintinline[bgcolor=white,style=emacs]{python}{"ub"} are the lower and the upper bound while \mintinline[bgcolor=white,style=emacs]{python}{n} describes the number of discrete time points at which we want to sample the system (line 70).
 In contrast, if we wanted to specify explicit values for the sampling points, we would have needed to supply a list of time values or a \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} directly.
 One can see this approach in lines 78-80 of the code example.
 Here, we supply an \mintinline[bgcolor=white,style=emacs]{python}{np.ndarray} with explicit values, thus fixing the sampling points for the optimization routine.
@@ -628,7 +628,7 @@ To run the optimization procedure the following function can be used:
 \end{minted}
 This code will produce the output shown in Fig.~\ref{Fig4} and \ref{Fig5}.
 The user can choose between any of the three previously explained optimization procedures.
-Any optimization argument of the aforementioned routines, can be specified.
+Any optimization argument of the aforementioned routines can be specified.
 The default arguments of the \mintinline[bgcolor=white,style=emacs]{python}{"scipy_differential_evolution"} optimization method are given by the scipy default arguments~\cite{scipydiffev}.
 For our specific use-case, we advise to experiment with the options presented in Code Sample~\ref{code:fsr}.
 \begin{code}[h]
@@ -649,7 +649,7 @@ For our specific use-case, we advise to experiment with the options presented in
         polish=False,
     )
     \end{minted}
-    \caption{Define the optimization conditions and calculate the resulting Experimental design.}
+    \caption{Define the optimization conditions and calculate the resulting experimental design.}
     \label{code:fsr}
 \end{code}
 A full list of optional arguments can be seen in the \href{https://docs.scipy.org/doc/scipy/reference/optimize.html#global-optimization}{scipy documentation}~\cite{virtanenSciPyFundamentalAlgorithms2020}.
@@ -668,10 +668,10 @@ Fortunately, there is a quick and easy way to check whether the system is struct
 For an identifiable system, the rank should coincide with the number of estimated parameters.
 This method allows for the analysis of the local structural identifiability for already chosen inputs and times.
 Hence, we can check if the final result of the optimization routine is able to identify every parameter by this method.
-This does not replace a systematic inspection the model but at least we can validate our results.
-If a non-identifiability is detected, the structure of the model or number of measurements does not allow determination of the involved parameters.
+This does not replace a systematic inspection of the model but at least we can validate our results.
+If a non-identifiability is detected, the structure of the model or the number of measurements does not allow determination of the involved parameters.
 This means we need to adjust our description and check all supplied parameters for their validity.
-On the other hand, there are also {\it a priori} methods, e.g., using Lie group theory, that only require model definition~\cite{wieland_structural_2021}.
+On the other hand, there are also {\it a priori} methods, e.g., using Lie group theory, that only require the model definition~\cite{wieland_structural_2021}.
 However, due to the extensiveness of the topic we constrain ourselves to the method discussed above.
 Practical non-identifiability results in large confidence intervals~\cite{holmberg_practical_1982, miao_identifiability_2011, kreutzProfileLikelihood2013}.
 Methods such as profile-likelihood~\cite{wieland_structural_2021} are able to test for these cases but they require experimental data.
@@ -685,7 +685,7 @@ For this, one can call the function that compares the rank of the sensitivity ma
         # Check the structural identifiability
         check_if_identifiable(fsr)
     \end{minted}
-\caption{Check the identifiability the optimizaton result.}
+\caption{Check the identifiability of the optimization result.}
 \label{code:identifiability_check}
 \end{code}
 The function returns \mintinline[bgcolor=white,style=emacs]{python}{True}, if the identifiability condition is reached, and \mintinline[bgcolor=white,style=emacs]{python}{False} otherwise.
@@ -694,14 +694,14 @@ From a mathematical point of view, we need at least as many measurement points a
 %
 % ########################################################################
 \subsubsection{Plotting, Json, etc.}
-Our package also provides the option to save results into Json file and automatically plot results for the ode solutions, observables and sensitivities (see Code Sample~\ref{code:plot_save}).
+Our package also provides the option to save results into a Json file and automatically plot results for the ode solutions, observables and sensitivities (see Code Sample~\ref{code:plot_save}).
 \begin{code}[h]
     \begin{minted}[firstnumber=115]{python}
         plot_all_observables(fsr)
         plot_all_sensitivities(fsr)
         json_dump(fsr, "baranyi.json").
     \end{minted}
-\caption{Plot the observables and sensitivities calculated for the \ac{oed} and save the result in the Json format.}
+\caption{Plot the observables and sensitivities calculated for the \ac{oed} and save the result in Json format.}
 \label{code:plot_save}
 \end{code}
 %
@@ -744,37 +744,37 @@ The system can be described by the following set of \acp{ode}:
     \begin{cases}
         \dot x_1 = \alpha_x R x_1 \\
         \dot y_1 = \alpha_y R y_1 \\
-        \dot R = -\frac{R}{n_\text{max}}(\alpha_x x_1+\alpha_y y_1)
+        \dot R = -\frac{R}{n^\text{max}}(\alpha_x x_1+\alpha_y y_1)
     \end{cases}
     \label{eq:Lotka_Volterra_2species_1}
 \end{equation}
 where $\alpha_x, \alpha_y$ are the time and temperature dependent growth rates for population $x_1$, $y_1$, and $R$ represents the nutrient pool concentration, respectively.
-Using the conservation quantity $x_1 + y_1 + n_\text{max}R = n_\text{max}$ this system can be reduced to:
+Using the conservation quantity $x_1 + y_1 + n^\text{max}R = n^\text{max}$ this system can be reduced to:
 \begin{equation}
     \begin{cases}
-        \dot x_1 = \alpha_x x_1\left(1-\frac{x_1+y_1}{n_\text{max}}\right) \\
-        \dot y_1 = \alpha_y y_1\left(1-\frac{x_1+y_1}{n_\text{max}}\right).
+        \dot x_1 = \alpha_x x_1\left(1-\frac{x_1+y_1}{n^\text{max}}\right) \\
+        \dot y_1 = \alpha_y y_1\left(1-\frac{x_1+y_1}{n^\text{max}}\right).
     \end{cases}
     \label{eq:Lotka_Volterra_2species_2}
 \end{equation}
 Based on the one species case for the growth rates we use~\cite{baranyiDynamicApproach1994,ratkowsky_relationship_1982}
 \begin{eqnarray}
-    \alpha_x (t, T) = b_x^2 (T - T_{\text{min}, x})^2 \frac{x_2(t)}{x_2(t) + 1}\\
-    \alpha_y (t, T) = b_y^2 (T - T_{\text{min}, y})^2 \frac{y_2(t)}{y_2(t) + 1}
+    \alpha_x (t, T) = b_x^2 (T - T^\text{min}_x)^2 \frac{x_2(t)}{x_2(t) + 1}\\
+    \alpha_y (t, T) = b_y^2 (T - T^\text{min}_y)^2 \frac{y_2(t)}{y_2(t) + 1}
     \label{eq:growth_rate_2species}
 \end{eqnarray}
 Combining equations~(\ref{eq:Lotka_Volterra_2species_2}, \ref{eq:growth_rate_2species}), we get the system of four differential equations:
 \begin{equation}
     \begin{cases}
-        \dot x_1 = b_x^2 (T - T_{\text{min}, x})^2 \frac{x_2}{x_2 + 1} x_1 (1 - \frac{x_1 + y_1}{n_\text{max}})\\
-        \dot x_2 = b_x^2 (T - T_{\text{min}, x})^2 x_2 \\
-        \dot y_1 = b_y^2 (T - T_{\text{min}, y})^2 \frac{y_2}{y_2 + 1} y_1 (1 - \frac{x_1 + y_1}{n_\text{max}})\\
-        \dot y_2 = b_y^2 (T - T_{\text{min}, y})^2 y_2 \\
+        \dot x_1 = b_x^2 (T - T^\text{min}_x)^2 \frac{x_2}{x_2 + 1} x_1 (1 - \frac{x_1 + y_1}{n^\text{max}})\\
+        \dot x_2 = b_x^2 (T - T^\text{min}_x)^2 x_2 \\
+        \dot y_1 = b_y^2 (T - T^\text{min}_y)^2 \frac{y_2}{y_2 + 1} y_1 (1 - \frac{x_1 + y_1}{n^\text{max}})\\
+        \dot y_2 = b_y^2 (T - T^\text{min}_y)^2 y_2 \\
     \end{cases}
     \label{eq:model_2species_resource}
 \end{equation}
 where $x_2, y_2$ are the concentration of the quantities determining the critical substance (nutrient) needed for growth of the species $x_1$ and $y_1$, respectively.
-The values of the parameter vector $\mbp = (n_\text{max}, b_x, T_{\text{min}, x}, b_y, T_{\text{min}, y})$ and the vector of the initial values $\mbx(t_0)=(x_1(t_0), x_2(t_0), y_1(t_0), y_2(t_0))$ are presented in Table~\ref{Table3}.
+The values of the parameter vector $\mbp = (n^\text{max}, b_x, T^\text{min}_x, b_y, T^{\text{min}, y})$ and the vector of the initial values $\mbx(t_0)=(x_1(t_0), x_2(t_0), y_1(t_0), y_2(t_0))$ are presented in Table~\ref{Table3}.
 %
 In comparison to the previous example, we now choose the count of the two bacteria species $x_1,y_1$ as observables.
 Meanwhile, other optimization arguments were taken the same as in the previous example i.e., we optimize measurement times and temperatures.
@@ -796,7 +796,7 @@ In summary, model-based experimental design can accelerate and simplify the plan
 \section{Notes}
 \begin{enumerate}
     \item \label{note-order-arguments-python} When using the syntax as shown in code sample~\ref{code:model_definition}, the order of arguments does not matter. However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherModel(x0, 0.0, ...)}, please pay attention to the order of arguments.
-    \item \label{note-differential-evolution-details} For differential evolution an initial population of candidate vectors for the experimental design (sampling times and inputs) is randomly chosen from the region of available values. Then each vector mutates by mixing with one of other candidate vectors. To a chosen vector from the initial population $D_0$, we add a weighted difference between two other randomly chosen vectors from the same set $(D_\text{rand1} - D_\text{rand2})$. This process is called mutation and a new vector $D_m$ is obtained. The next step is to construct a new trial solution. This is done by choosing the elements of the trial vector either from the initial $D_0$ or the mutated $D_m$ vectors. For each new element of trial vector, a random number drawn uniformly from the interval [0, 1) and compared to the so-called recombination constant. If this random number is less than the recombination constant, then the trial vector element is chosen from the vector $D_m$, otherwise from $D_0$. The degree of mutation can be controlled by changing the recombination constant; the larger this constant is, the more often vector elements are chosen from $D_m$. Subsequently, the objective function is calculated using the trial vector and the result is compared to result obtained using the initial solution $D_0$; and the best of them is chosen for the next generation. This procedure is repeated for every solution candidate of the initial population, by means of which the new generation is build~\cite{scipydiffev}. The process of population mutation is repeated till a stopping criterion is reached, e.g., the maximum number of generations (steps) is reached or the standard deviation of the candidate vectors is below a certain threshold~\cite{Zielinski_DE}.
+    \item \label{note-differential-evolution-details} For differential evolution an initial population of candidate vectors for the experimental design (sampling times and inputs) is randomly chosen from the region of available values. Then each vector mutates by mixing with one of other candidate vectors. To a chosen vector from the initial population $D_0$, we add a weighted difference between two other randomly chosen vectors from the same set $(D_\text{rand1} - D_\text{rand2})$. This process is called mutation and a new vector $D_m$ is obtained. The next step is to construct a new trial solution. This is done by choosing the elements of the trial vector either from the initial $D_0$ or the mutated $D_m$ vectors. For each new element of the trial vector a random number is drawn uniformly from the interval $[0, 1)$ and compared to the so-called recombination constant. If this random number is less than the recombination constant, then the trial vector element is chosen from the vector $D_m$, otherwise from $D_0$. The degree of mutation can be controlled by changing the recombination constant; the larger this constant is, the more often vector elements are chosen from $D_m$. Subsequently, the objective function is calculated using the trial vector and the result is compared to result obtained using the initial solution $D_0$; and the best of them is chosen for the next generation. This procedure is repeated for every solution candidate of the initial population, by means of which the new generation is build~\cite{scipydiffev}. The process of population mutation is repeated till a stopping criterion is reached, e.g., the maximum number of generations (steps) is reached or the standard deviation of the candidate vectors is below a certain threshold~\cite{Zielinski_DE}.
     \item \label{note-basin-hopping-details} During the iteration step the design vector, i.e., vector of measurement times and inputs, is subject to a random perturbation and then to local minimization. After this, the step is either accepted or rejected. As in a standard Monte-Carlo method, the decision is made using the Metropolis criterion for the objective function~\cite{scipybashop}.
     \item \label{note-timepoints} Our toolbox optimizes and provides the optimal experimental timepoints with an assumption that the initial one $t_0$ is always measured. Hence, the reader should keep that in mind and include the initial time $t_0$ as a measurement point in the final \ac{oed}.
     \item \label{note-structural-identifiability} The provided identifiability test only allows to exclude structural identifiability but to obtain reasonable confidence intervals for parameter estimates the practical identifiability should be considered as well. Therefore, in reality more experiments are needed to increase the accuracy of the model. Thus, we suggest that the reader considers the optimization result not as a finished design but as a reference pointing to the minimal requirements and the most crucial conditions (inputs and times) for the parameter estimations.
@@ -838,7 +838,7 @@ In summary, model-based experimental design can accelerate and simplify the plan
         \includegraphics[scale=0.255]{Figures/Fig3b.pdf}
     \end{subfigure}
     \caption{The example of the output of the experimental design optimization procedure for the Baranyi-Roberts model.
-    The line plot presents the model solution for the observable, and the circles determine the suggested by experimental design time points.
+    The line plot presents the model solution for the observable, and the circles determine the time points suggested by experimental design.
     The optimal design is proposed for one observable which is the total bacterial count of the species $x_1$ and consists of two time series where samples are stored at temperatures (a) $T_1 = 3.5^\circ$C and (b) $T_2 = 12^\circ$C.
     The corresponding measurement times are (a)~$t_{11}=100$h and (b)~$t_{21}=43$h, $t_{22}=100$h.
     The initial time $t_0=0$ is included in the experimental design by definition.}
@@ -854,7 +854,7 @@ In summary, model-based experimental design can accelerate and simplify the plan
 \AtBeginEnvironment{minted}{\color{MintedFgColor}}
 \begin{figure}[H]
     \centering
-    %\includegraphics[scale=1.]{Figures/Fig5.pdf}
+    %\includegraphics[scale=1.]{Figures/Fig4.pdf}
     \begin{minted}[bgcolor=MintedBgColor,linenos=false,fontsize=\scriptsize]{text}
 =========================== SUMMARY OF FISHER MODEL ============================
 ================================ ODE FUNCTIONS =================================
@@ -896,11 +896,11 @@ In summary, model-based experimental design can accelerate and simplify the plan
 ================================ OTHER OPTIONS =================================
 └─identical_times  False
     \end{minted}
-    \caption{{\footnotesize Command-line output of {\it eDPM} of all parameters, inputs, \ac{ode} functions and initial values needed to run the optimization method.}}
+    \caption{Command-line output of {\it eDPM} of all parameters, inputs, \ac{ode} functions and initial values needed to run the optimization method.}
     \label{Fig4}
 \end{figure}
 \begin{figure}
-    %\includegraphics[scale=1.]{Figures/Fig4.pdf}
+    %\includegraphics[scale=1.]{Figures/Fig5.pdf}
     \begin{minted}[bgcolor=MintedBgColor,linenos=false,fontsize=\scriptsize]{text}
 ========================== STARTING OPTIMIZATION RUN ===========================
 differential_evolution step 1: f(x)= -72.0062
@@ -962,7 +962,7 @@ Result_1
 ├─penalty_times    1.0
 └─penalty_summary  {'ode_t0': [], 'inputs': [], 'times': []}
     \end{minted}
-    \caption{Command-line output which summarizes of the optimization routine and its results.} 
+    \caption{Command-line output which summarizes the optimization routine and its results.} 
     \label{Fig5}
 \end{figure}
 %
@@ -973,7 +973,7 @@ Result_1
 └─structural identifiability  True
     \end{minted}
     \caption{Command-line output showing the result of the identifiability check for the experimental design provided in Figure~\ref{Fig3}.
-    The output shows that the experimental design gives structurally identifiable result and allows parameter estimation of the system.}
+    The output shows that the experimental design gives a structurally identifiable result and allows parameter estimation of the system.}
     \label{Fig6}
 \end{figure}
 %
@@ -981,12 +981,12 @@ Result_1
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
       \centering
-      \subcaption{{\footnotesize $T_1=3.5^\circ$C, parameter $x_\text{max}$}}
+      \subcaption{{\footnotesize $T_1=3.5^\circ$C, parameter $x^\text{max}$}}
       \includegraphics[scale=0.25]{Figures/Fig7a.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $x_\text{max}$}}
+        \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $x^\text{max}$}}
         \includegraphics[scale=0.25]{Figures/Fig7b.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
@@ -1009,10 +1009,10 @@ Result_1
           \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $T^\text{min}$}}
           \includegraphics[scale=0.25]{Figures/Fig7f.pdf}
         \end{subfigure}
-    \caption{{\footnotesize The example of the sensitivities of the total bacterial count calculated for the experimental design optimization procedure for the Baranyi-Roberts model.
-    The line plot presents the model solution for the observable, and the circles determine the suggested by experimental design time points.
-    In (a), (c), (e) the sensitivity curves for the experimental series at storage temperature $T_1=3.5^\circ$C are shown for parameters $x_\text{max}$, $b$, $T^\text{min}$, respectively.
-    As well as, (b), (d), (f) subfigures present the sensitivities for the $T_2=12^\circ$C experiment for parameters $x_\text{max}$, $b$, $T^\text{min}$, respectively.}}
+    \caption{The example of the sensitivities of the total bacterial count calculated for the experimental design optimization procedure for the Baranyi-Roberts model.
+    The line plot presents the model solution for the observable, and the circles determine the time points suggested by experimental design.
+    In (a), (c), (e) the sensitivity curves for the experimental series at storage temperature $T_1=3.5^\circ$C are shown for parameters $x^\text{max}$, $b$, $T^\text{min}$, respectively.
+    The subfigures (b), (d), (f) present the sensitivities for the $T_2=12^\circ$C experiment for parameters $x^\text{max}$, $b$, $T^\text{min}$, respectively.}
     \label{Fig7}
 \end{figure}
 %
@@ -1020,7 +1020,7 @@ Result_1
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.3]{Figures/Fig8.pdf}
-    \caption{The determinant of the \ac{fim} as a function of the number of measurement times for the experimental design consisted of two measured temperatures.}
+    \caption{The determinant of the \ac{fim} as a function of the number of measurement times for the experimental design consisting of two measured temperatures.}
     \label{Fig8}
 \end{figure}
 %
@@ -1090,16 +1090,16 @@ Result_1
     \specialrule{.1em}{.01em}{.05em}
     Variable \hspace{3mm} & Value \hspace{3mm} & Units                                     \\
     \toprule
-    $n_\text{max}$        & $2 \cdot 10^4$     & cfu/g                                     \\
+    $n^\text{max}$        & $2 \cdot 10^4$     & cfu/g                                     \\
     $b$                   & 0.2                & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
-    $T_{\text{min}}$      & -5.5               & ${^\circ \text{C}}$                       \\
+    $T^{\text{min}}$      & -5.5               & ${^\circ \text{C}}$                       \\
     \midrule
     $x_1(t_0)$            & 50.0               & cfu/g                                     \\
     $x_2(t_0)$            & 1.0                & 1                                         \\
     \bottomrule
     \end{tabular}
     \caption{The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}).
-    The values correspond to estimated parameters for Pseudomonas spp. in poultry under aerobic conditions~\cite{gospavic_mathematical_2008}.}
+    The values correspond to estimated parameters for the Baranyi-Roberts model for Pseudomonas spp. in poultry under aerobic conditions~\cite{gospavic_mathematical_2008}.}
     \label{Table2}
 \end{table}
 %
@@ -1110,11 +1110,11 @@ Result_1
     \specialrule{.1em}{.01em}{.05em}
     Variable\hspace{3mm} & Value\hspace{3mm} & Units\\
     \toprule
-    $n_\text{max}$       & $2 \cdot 10^4$             & cfu/g                                     \\
+    $n^\text{max}$       & $2 \cdot 10^4$             & cfu/g                                     \\
     $b_x$                & 0.03                       & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
-    $T_{\text{min}, x}$  & -8.0                       & ${^\circ \text{C}}$                       \\
+    $T^\text{min}_x$  & -8.0                       & ${^\circ \text{C}}$                       \\
     $b_y$                & 0.04                       & ${^\circ \text{C}}^{-1}{\text{h}^{-1/2}}$ \\
-    $T_{\text{min}, y}$  & -5.5                       & ${^\circ \text{C}}$                       \\
+    $T^\text{min}_y$  & -5.5                       & ${^\circ \text{C}}$                       \\
     \midrule
     $x_1(t_0)$           & 50.0                       & cfu/g                                     \\
     $x_2(t_0)$           & 1.0                        & 1                                         \\
@@ -1122,7 +1122,7 @@ Result_1
     $y_2(t_0)$           & 1.0                        & 1                                         \\
     \bottomrule
     \end{tabular}
-    \caption{The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:model_2species_resource}).}
+    \caption{The list of the parameter and \ac{ode}'s initial values of the system that fully define the Baranyi-Roberts two-species system~(\ref{eq:model_2species_resource}).}
     \label{Table3}
 \end{table}
 %
