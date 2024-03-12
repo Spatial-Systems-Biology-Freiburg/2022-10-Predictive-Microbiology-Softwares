@@ -252,8 +252,8 @@ As the observable we choose the bacterial count, i.e.:
     \label{eq:observable}
  \end{equation}
 a common choice in predictive microbiology.\\
-The equations (\ref{eq:ode_BaranyiRoberts} - \ref{eq:observable}) fully define the system.
-Here $x_1^\text{max}, b, T^\text{min}$ are the parameters that we estimate using observational data $y$ at measurement times $t_i$, and temperature $T$ is an input of the system.
+The Eqs.~\ref{eq:ode_BaranyiRoberts} - \ref{eq:observable} fully define the system.
+Here $x_1^\text{max}, b, T^\text{min}$ are the parameters that we estimate using observational data $y$ at measurement times $t$, and temperature $T$ is an input of the system.
 Based on this model, we would like to optimize the choice of measurement times as well as temperatures (inputs) of the system to find the \acl{oed}.
 %
 % ########################################################################
@@ -264,7 +264,7 @@ We distinguish between time points $t_i$ at which the result of the \ac{ode} is 
 Table \ref{Table1} provides an overview of these quantities and gives corresponding names in the code.
 In the following, we will step-by-step explain how to specify all variables needed by using the example of the Baranyi-Roberts model.\\
 %
-First we define the right-hand side of the \acp{ode}, i.e., we need to implement the Baranyi-Roberts model~(\ref{eq:ode_BaranyiRoberts} - \ref{eq:RatkowskyModel}) into a function as can be seen in Code Sample~\ref{code:code_baranyi_roberts_ode_fun}.
+First we define the right-hand side of the \acp{ode}, i.e., we need to implement the Baranyi-Roberts model (Eqs.~\ref{eq:ode_BaranyiRoberts} - \ref{eq:RatkowskyModel}) into a function as can be seen in Code Sample~\ref{code:code_baranyi_roberts_ode_fun}.
 \begin{code}[h]
     \begin{minted}[firstnumber=6]{python}
     # The function name can be chosen freely, but the order
@@ -744,9 +744,9 @@ The system can be described by the following set of \acp{ode}:
     \begin{cases}
         \dot x_1 = \alpha_x R x_1 \\
         \dot y_1 = \alpha_y R y_1 \\
-        \dot R = -\frac{R}{n^\text{max}}(\alpha_x x_1+\alpha_y y_1)
+        \dot R = -\frac{R}{n^\text{max}}(\alpha_x x_1+\alpha_y y_1),
+        \label{eq:Lotka_Volterra_2species_1}
     \end{cases}
-    \label{eq:Lotka_Volterra_2species_1}
 \end{equation}
 where $\alpha_x, \alpha_y$ are the time and temperature dependent growth rates for population $x_1$, $y_1$, and $R$ represents the nutrient pool concentration, respectively.
 Using the conservation quantity $x_1 + y_1 + n^\text{max}R = n^\text{max}$ this system can be reduced to:
@@ -760,21 +760,21 @@ Using the conservation quantity $x_1 + y_1 + n^\text{max}R = n^\text{max}$ this 
 Based on the one species case for the growth rates we use~\cite{baranyiDynamicApproach1994,ratkowsky_relationship_1982}
 \begin{eqnarray}
     \alpha_x (t, T) = b_x^2 (T - T^\text{min}_x)^2 \frac{x_2(t)}{x_2(t) + 1}\\
-    \alpha_y (t, T) = b_y^2 (T - T^\text{min}_y)^2 \frac{y_2(t)}{y_2(t) + 1}
+    \alpha_y (t, T) = b_y^2 (T - T^\text{min}_y)^2 \frac{y_2(t)}{y_2(t) + 1}.
     \label{eq:growth_rate_2species}
 \end{eqnarray}
-Combining equations~(\ref{eq:Lotka_Volterra_2species_2}, \ref{eq:growth_rate_2species}), we get the system of four differential equations:
+Combining Eqs.~\ref{eq:Lotka_Volterra_2species_2} and \ref{eq:growth_rate_2species}, we get the system of four differential equations:
 \begin{equation}
     \begin{cases}
         \dot x_1 = b_x^2 (T - T^\text{min}_x)^2 \frac{x_2}{x_2 + 1} x_1 (1 - \frac{x_1 + y_1}{n^\text{max}})\\
         \dot x_2 = b_x^2 (T - T^\text{min}_x)^2 x_2 \\
         \dot y_1 = b_y^2 (T - T^\text{min}_y)^2 \frac{y_2}{y_2 + 1} y_1 (1 - \frac{x_1 + y_1}{n^\text{max}})\\
-        \dot y_2 = b_y^2 (T - T^\text{min}_y)^2 y_2 \\
-    \end{cases}
-    \label{eq:model_2species_resource}
+        \dot y_2 = b_y^2 (T - T^\text{min}_y)^2 y_2,
+        \label{eq:model_2species_resource}
+    \end{cases}  
 \end{equation}
 where $x_2, y_2$ are the concentration of the quantities determining the critical substance (nutrient) needed for growth of the species $x_1$ and $y_1$, respectively.
-The values of the parameter vector $\mbp = (n^\text{max}, b_x, T^\text{min}_x, b_y, T^{\text{min}, y})$ and the vector of the initial values $\mbx(t_0)=(x_1(t_0), x_2(t_0), y_1(t_0), y_2(t_0))$ are presented in Table~\ref{Table3}.
+The values of the parameter vector $\mbp = (n^\text{max}, b_x, T^\text{min}_x, b_y, T^\text{min}_y)$ and the vector of the initial values $\mbx(t_0)=(x_1(t_0), x_2(t_0), y_1(t_0), y_2(t_0))$ are presented in Table~\ref{Table3}.
 %
 In comparison to the previous example, we now choose the count of the two bacteria species $x_1,y_1$ as observables.
 Meanwhile, other optimization arguments were taken the same as in the previous example i.e., we optimize measurement times and temperatures.
@@ -795,8 +795,8 @@ These results show us how parameters of the model can now be estimated most prec
 In summary, model-based experimental design can accelerate and simplify the planning of efficient experiments for parameter estimation in microbiology.
 \section{Notes}
 \begin{enumerate}
-    \item \label{note-order-arguments-python} When using the syntax as shown in code sample~\ref{code:model_definition}, the order of arguments does not matter. However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherModel(x0, 0.0, ...)}, please pay attention to the order of arguments.
-    \item \label{note-differential-evolution-details} For differential evolution an initial population of candidate vectors for the experimental design (sampling times and inputs) is randomly chosen from the region of available values. Then each vector mutates by mixing with one of other candidate vectors. To a chosen vector from the initial population $D_0$, we add a weighted difference between two other randomly chosen vectors from the same set $(D_\text{rand1} - D_\text{rand2})$. This process is called mutation and a new vector $D_m$ is obtained. The next step is to construct a new trial solution. This is done by choosing the elements of the trial vector either from the initial $D_0$ or the mutated $D_m$ vectors. For each new element of the trial vector a random number is drawn uniformly from the interval $[0, 1)$ and compared to the so-called recombination constant. If this random number is less than the recombination constant, then the trial vector element is chosen from the vector $D_m$, otherwise from $D_0$. The degree of mutation can be controlled by changing the recombination constant; the larger this constant is, the more often vector elements are chosen from $D_m$. Subsequently, the objective function is calculated using the trial vector and the result is compared to result obtained using the initial solution $D_0$; and the best of them is chosen for the next generation. This procedure is repeated for every solution candidate of the initial population, by means of which the new generation is build~\cite{scipydiffev}. The process of population mutation is repeated till a stopping criterion is reached, e.g., the maximum number of generations (steps) is reached or the standard deviation of the candidate vectors is below a certain threshold~\cite{Zielinski_DE}.
+    \item \label{note-order-arguments-python} When using the syntax as shown in Code Sample~\ref{code:model_definition}, the order of arguments does not matter. However, when only using \mintinline[bgcolor=white,style=emacs]{python}{FisherModel(x0, 0.0, ...)}, please pay attention to the order of arguments.
+    \item \label{note-differential-evolution-details} In differential evolution optimization algorithm an initial population of candidate vectors (sampling times and inputs) is randomly chosen from the region of available values. Then each vector mutates by mixing with one of other candidate vectors: To a chosen vector from the initial population $D_0$, we add a weighted difference between two other randomly chosen vectors from the same set $(D_\text{rand1} - D_\text{rand2})$. A new mutated vector $D_m$ is obtained. The next step is to construct a new trial solution. This is done by choosing the elements of the trial vector either from the initial $D_0$ or the mutated $D_m$ vectors. For each new element of the trial vector a random number is drawn uniformly from the interval $[0, 1)$ and compared to the so-called recombination constant. If this random number is less than the recombination constant, then the trial vector element is chosen from the vector $D_m$, otherwise from $D_0$. The degree of mutation can be controlled by changing the recombination constant; the larger this constant is, the more often vector elements are chosen from $D_m$. Subsequently, the objective function is calculated using the trial vector and the result is compared to result obtained using the initial solution $D_0$; and the best of them is chosen for the next generation. This procedure is repeated for every solution candidate of the initial population, by means of which the new generation is build~\cite{scipydiffev}. The process of population mutation is repeated till a stopping criterion is reached, e.g., the maximum number of generations (steps) is reached or the standard deviation of the candidate vectors is below a certain threshold~\cite{Zielinski_DE}.
     \item \label{note-basin-hopping-details} During the iteration step the design vector, i.e., vector of measurement times and inputs, is subject to a random perturbation and then to local minimization. After this, the step is either accepted or rejected. As in a standard Monte-Carlo method, the decision is made using the Metropolis criterion for the objective function~\cite{scipybashop}.
     \item \label{note-timepoints} Our toolbox optimizes and provides the optimal experimental timepoints with an assumption that the initial one $t_0$ is always measured. Hence, the reader should keep that in mind and include the initial time $t_0$ as a measurement point in the final \ac{oed}.
     \item \label{note-structural-identifiability} The provided identifiability test only allows to exclude structural identifiability but to obtain reasonable confidence intervals for parameter estimates the practical identifiability should be considered as well. Therefore, in reality more experiments are needed to increase the accuracy of the model. Thus, we suggest that the reader considers the optimization result not as a finished design but as a reference pointing to the minimal requirements and the most crucial conditions (inputs and times) for the parameter estimations.
@@ -829,15 +829,15 @@ In summary, model-based experimental design can accelerate and simplify the plan
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{Experiment 1: $T = 3.5^\circ$C, $t=100$h}
+        \subcaption{Experiment 1: $T = 3.5^\circ$C, $t=0 \text{h}, 100$h}
         \includegraphics[scale=0.255]{Figures/Fig3a.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{Experiment 2: $T = 12^\circ$C, $t=43\text{h}, 100$h}
+        \subcaption{Experiment 2: $T = 12^\circ$C, $t=0\text{h}, 43\text{h}, 100$h}
         \includegraphics[scale=0.255]{Figures/Fig3b.pdf}
     \end{subfigure}
-    \caption{The example of the output of the experimental design optimization procedure for the Baranyi-Roberts model.
+    \caption{The example of the output of the experimental design optimization procedure for the Baranyi-Roberts model~(Eqs.~\ref{eq:ode_BaranyiRoberts} - \ref{eq:observable}).
     The line plot presents the model solution for the observable, and the circles determine the time points suggested by experimental design.
     The optimal design is proposed for one observable which is the total bacterial count of the species $x_1$ and consists of two time series where samples are stored at temperatures (a) $T_1 = 3.5^\circ$C and (b) $T_2 = 12^\circ$C.
     The corresponding measurement times are (a)~$t_{11}=100$h and (b)~$t_{21}=43$h, $t_{22}=100$h.
@@ -972,7 +972,7 @@ Result_1
 =============================== ANALYSIS RESULTS ===============================
 └─structural identifiability  True
     \end{minted}
-    \caption{Command-line output showing the result of the identifiability check for the experimental design provided in Figure~\ref{Fig3}.
+    \caption{Command-line output showing the result of the identifiability check for the experimental design provided in Fig.~\ref{Fig3}.
     The output shows that the experimental design gives a structurally identifiable result and allows parameter estimation of the system.}
     \label{Fig6}
 \end{figure}
@@ -1009,7 +1009,7 @@ Result_1
           \subcaption{{\footnotesize $T_2=12^\circ$C, parameter $T^\text{min}$}}
           \includegraphics[scale=0.25]{Figures/Fig7f.pdf}
         \end{subfigure}
-    \caption{The example of the sensitivities of the total bacterial count calculated for the experimental design optimization procedure for the Baranyi-Roberts model.
+    \caption{The example of the sensitivities of the total bacterial count calculated for the experimental design optimization procedure for the Baranyi-Roberts model~(Eqs.~\ref{eq:ode_BaranyiRoberts} - \ref{eq:observable}).
     The line plot presents the model solution for the observable, and the circles determine the time points suggested by experimental design.
     In (a), (c), (e) the sensitivity curves for the experimental series at storage temperature $T_1=3.5^\circ$C are shown for parameters $x^\text{max}$, $b$, $T^\text{min}$, respectively.
     The subfigures (b), (d), (f) present the sensitivities for the $T_2=12^\circ$C experiment for parameters $x^\text{max}$, $b$, $T^\text{min}$, respectively.}
@@ -1020,7 +1020,7 @@ Result_1
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.3]{Figures/Fig8.pdf}
-    \caption{The determinant of the \ac{fim} as a function of the number of measurement times for the experimental design consisting of two measured temperatures.}
+    \caption{The determinant of the \ac{fim} as a function of the number of measurement times for the experimental design consisting of two measured temperatures for the Baranyi-Roberts model~(Eqs.~\ref{eq:ode_BaranyiRoberts} - \ref{eq:observable}).}
     \label{Fig8}
 \end{figure}
 %
@@ -1028,25 +1028,25 @@ Result_1
 \begin{figure}[H]
     \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{Species 1, $T = 12^\circ$C, $t=12 \text{h}, 71$h}
+        \subcaption{Species 1, $T = 12^\circ$C, $t=0 \text{h}, 12 \text{h}, 71$h}
         \includegraphics[scale=0.25]{Figures/Fig9a.pdf}
       \end{subfigure} 
     \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{Species 1, $T = 2^\circ$C, $t=58 \text{h}, 90$h}
+        \subcaption{Species 1, $T = 2^\circ$C, $t=0 \text{h}, 58 \text{h}, 90$h}
         \includegraphics[scale=0.25]{Figures/Fig9b.pdf}
     \end{subfigure}
       \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{Species 2, $T = 12^\circ$C, $t=12 \text{h}, 71$h}
+        \subcaption{Species 2, $T = 12^\circ$C, $t=0 \text{h}, 12 \text{h}, 71$h}
         \includegraphics[scale=0.25]{Figures/Fig9c.pdf}
     \end{subfigure}
     \begin{subfigure}{.5\textwidth}
         \centering
-        \subcaption{Species 2, $T = 2^\circ$C, $t=58 \text{h}, 90$h}
+        \subcaption{Species 2, $T = 2^\circ$C, $t=0 \text{h}, 58 \text{h}, 90$h}
         \includegraphics[scale=0.25]{Figures/Fig9d.pdf}
     \end{subfigure} 
-    \caption{The optimal experimental design for the Baranyi-Roberts model with two different species~(\ref{eq:model_2species_resource}) is proposed for two observables: the bacterial count of the first species $x_1$ and of the second species $x_2$.
+    \caption{The optimal experimental design for the Baranyi-Roberts model with two different species~(Eq.~\ref{eq:model_2species_resource}) is proposed for two observables: the bacterial count of the first species $x_1$ and of the second species $x_2$.
     (a), (c) show the first experimental series held at the temperature $T_1=12^\circ$C and with measurement times $t_{11}=12$h, $t_{12}=71$h for observables $x_1$ and $x_2$, respectively.
     (b), (d) show the second experimental series held at the temperature $T_2=2^\circ$C and with measurement times $t_{21}=58$h, $t_{22}=90$h for observables $x_1$ and $x_2$, respectively.
     The line plot presents the model solution for the observable, and the circles determine the suggested by experimental design time points.
@@ -1098,8 +1098,7 @@ Result_1
     $x_2(t_0)$            & 1.0                & 1                                         \\
     \bottomrule
     \end{tabular}
-    \caption{The list of the parameter and \ac{ode}'s initial values of the system that fully define the system~(\ref{eq:ode_BaranyiRoberts}),(\ref{eq:RatkowskyModel}).
-    The values correspond to estimated parameters for the Baranyi-Roberts model for Pseudomonas spp. in poultry under aerobic conditions~\cite{gospavic_mathematical_2008}.}
+    \caption{The list of the parameters and \ac{ode}'s initial values that fully define the one-species system described by the Baranyi-Roberts model and 'square root' temperature dependence for the maximum growth rate~(Eqs.~\ref{eq:ode_BaranyiRoberts}, \ref{eq:RatkowskyModel}).}
     \label{Table2}
 \end{table}
 %
@@ -1122,7 +1121,7 @@ Result_1
     $y_2(t_0)$           & 1.0                        & 1                                         \\
     \bottomrule
     \end{tabular}
-    \caption{The list of the parameter and \ac{ode}'s initial values of the system that fully define the Baranyi-Roberts two-species system~(\ref{eq:model_2species_resource}).}
+    \caption{The list of the parameter and \ac{ode}'s initial values of the system that fully define the Baranyi-Roberts two-species system~(Eq.~\ref{eq:model_2species_resource}).}
     \label{Table3}
 \end{table}
 %
