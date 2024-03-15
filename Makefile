@@ -34,7 +34,7 @@ clean: clean_cite clean_zip
 clean_cite:
 	-rm -r $(BIBFILE)_cited.bib*
 
-bibexport: all
+bibexport: all clean_cite
 	bibexport -r $(BIBFILE).bib -o $(BIBFILE)_cited.bib $(TARGET).aux
 
 latexpand:
