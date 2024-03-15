@@ -53,8 +53,6 @@ citecount: clean_cite bibexport
 
 zip: all bibexport latexpand
 	zip $(TARGET) $(ZIP_TARGETS)
-	printf "@ $(TARGET)_expanded.tex\n@=$(TARGET).tex" | zipnote -w $(TARGET).zip
-	
 	printf "@ $(BIBFILE)_cited.bib\n@=$(BIBFILE).bib\n" | zipnote -w $(TARGET).zip
 	printf "@ $(TARGET)_expanded.tex\n@=$(TARGET).tex\n" | zipnote -w $(TARGET).zip
 
