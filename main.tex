@@ -533,8 +533,8 @@ To sample in the interval \mintinline[bgcolor=white,style=emacs]{bash}{(Temp_low
     # >>> inputs
     # [{'lb': 2.0, 'ub': 12.0, 'n': 2}]
 \end{minted}
-The difference between choosing explicit values and specifying a sampling range may be subtle at first glance, but in turn allows to very easily switch between fixed values and optimized sampling points.
-
+The difference between choosing explicit values and specifying a sampling range may be subtle at first glance, but in turn allows to very easily switch between fixed values and optimized sampling points.\\
+%
 The different variables can be treated individually as needed.
 Suppose, we have a system with temperatures and humidity as input variables.
 We could decide to have the temperature optimized, but fix the humidity explicitly, because experimentally one can change the temperature continuously (or in discrete steps) but is restricted regarding the humidity.
@@ -604,17 +604,17 @@ Finding the experimental design corresponds to finding the global maximum of the
 This problem has been widely studied, and multiple numerical solution algorithms for both local and global optimization were introduced~\cite{esposito_global_2000, bangaImprovingFoodProcessing2003, ali_numerical_1997, runarsson_stochastic_2000}.
 In the supplied toolbox {\it eDPM}, three methods were implemented: differential evolution, basin-hopping, and the so-called “brute force” method.
 We give in the following a brief summary of the implemented methods.
-For more information the reader should turn to the available literature, e.g.,~\cite{stornDifferentialEvolutionSimple1997, wales_global_1997}.
-
+For more information the reader should turn to the available literature, e.g.,~\cite{stornDifferentialEvolutionSimple1997, wales_global_1997}.\\
+%
 The differential evolution algorithm developed by Storn and Price (1996)~\cite{stornDifferentialEvolutionSimple1997} is one of the stochastic global optimization methods appropriate for nonlinear dynamic problems.
 Such types of algorithms have mild computational load but one cannot be sure that the absolute optimum is reached~\cite{balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}.
 This method is rather simple and straightforward, does not require any gradient calculation and is easy to parallelize.
-Another advantage is its fast convergence and robustness at numerical optimization~\cite{babu_differential_2007} (see \textbf{Note~\ref{note-differential-evolution-details}}).
-
+Another advantage is its fast convergence and robustness at numerical optimization~\cite{babu_differential_2007} (see \textbf{Note~\ref{note-differential-evolution-details}}).\\
+%
 The second implemented method is basin-hopping developed by David Wales and Jonathan Doye~\cite{wales_global_1997}.
 This iterative algorithm combines Monte-Carlo and local optimization (see \textbf{Note~\ref{note-basin-hopping-details}}).
-For a deeper understanding of the Monte-Carlo minimization, the reader can refer to the papers~\cite{li_monte_1987, beichl_metropolis_2000}.
-
+For a deeper understanding of the Monte-Carlo minimization, the reader can refer to the papers~\cite{li_monte_1987, beichl_metropolis_2000}.\\
+%
 And lastly, a simple brute force method was implemented as well.
 It is a grid search algorithm calculating the objective function value at each point of a multidimensional grid in a chosen region.
 This method is suitable for discrete optimization with limited number of grid values.
@@ -737,7 +737,7 @@ This maximizes the determinant of the \acl{fim}.
 %
 %
 \subsubsection{Two-Species Resource Competition}
-As a second example we discuss a slightly more complicated system and extend the previous example of bacterial growth to a system where two species are present.
+In this example we discuss a slightly more complicated system and extend the previous example of bacterial growth to a system where two species are present.
 The species interact by competitive inhibition because they depend on a common nutrient resource.
 Analogously to the previous example, we denote the concentration of the two different species as $x_1$ and $y_1$, respectively.
 The system can be described by the following set of \acp{ode}:
@@ -764,7 +764,7 @@ Based on the one species case for the growth rates we use~\cite{baranyiDynamicAp
     \alpha_y (t, T) = b_y^2 (T - T^\text{min}_y)^2 \frac{y_2(t)}{y_2(t) + 1}.
     \label{eq:growth_rate_2species}
 \end{eqnarray}
-Combining Eqs.~\ref{eq:Lotka_Volterra_2species_2} and \ref{eq:growth_rate_2species}, we get the system of four differential equations:
+Combining Eqs.~\ref{eq:Lotka_Volterra_2species_2} and \ref{eq:growth_rate_2species}, we get a system of four differential equations:
 \begin{equation}
     \begin{cases}
         \dot x_1 = b_x^2 (T - T^\text{min}_x)^2 \frac{x_2}{x_2 + 1} x_1 (1 - \frac{x_1 + y_1}{n^\text{max}})\\
