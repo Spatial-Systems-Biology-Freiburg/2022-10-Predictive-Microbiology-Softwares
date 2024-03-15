@@ -45,7 +45,7 @@
     tabsize=4,
     numbersep=-10pt
 }
-% Used to externaly generate previews of the listings
+% Used to externally generate previews of the listings
 \usepackage[tightpage]{preview}
 \PreviewEnvironment{minted}
 \bibliographystyle{unsrt}
@@ -122,7 +122,7 @@ The aim of predictive microbiology is the provision of tools and methods for pre
 The parametrized mathematical models need to be calibrated using dedicated experimental data.
 In order to efficiently plan experiments, model-based experimental design is used.
 In this chapter, we explain model-based experimental design and provide step-by-step instructions for finding the optimal design using the well-known Baranyi-Roberts growth model as an example.
-We provide the Python software {\it eDPM} for \ac{ode} -based models, such that the reader can apply model-based experimental design in his/her research context.
+We provide the Python software {\it eDPM} for \ac{ode} -based models, such that the reader can apply model-based experimental design in their research context.
 }
 \keywords{Optimal experimental design, Parameter estimation, \ac{fim}, Identifiability, Uncertainty}
 %
@@ -133,19 +133,20 @@ We provide the Python software {\it eDPM} for \ac{ode} -based models, such that 
 \section{Introduction}
 Mathematical modeling is widely used to describe, understand and predict the behavior of living systems.
 In particular, in the field of predictive microbiology, one can find a large variety of works that dwell on building models of different levels of complexity controlled by model parameters, e.g., to describe bacterial growth~\cite{bernaertsConceptsToolsPredictive2004}.
-Predictive microbiology is a subfield of food microbiology based on the premise that the behavior of microorganisms can be described by the use of mathematical models accounting the effects of various factors such as temperature, pH, water activity, and the presence of preservatives, on the growth and survival of microorganisms.
+Predictive microbiology is a subfield of food microbiology based on the premise that the behavior of microorganisms can be described by the use of mathematical models accounting for the effects of various factors such as temperature, pH, water activity, and the presence of preservatives, on the growth and survival of microorganisms.
 These models can then be used to predict the behavior of microorganisms under different conditions and to evaluate the effectiveness of various control measures, such as refrigeration, heat treatment, or the addition of preservatives.
 Predictive microbiology has many applications in food safety, as it can be used to assess the risk of foodborne illness, to design safe food processing and storage practices, and to develop new food products with extended shelf-life.
 For successful predictions it is essential that the model parameters can be estimated from experimental data.
 However, due to measurement noise the estimates are accompanied by some uncertainties.
-That gives rise to a set of important questions: Can all parameters of the given model structure be estimated?
-What should be measured and when? What are the confidence intervals for the parameters? How can the experimental effort be minimized?
+That gives rise to a set of important questions:
+Can all parameters of the given model structure be estimated?
+What should be measured and when? What are the confidence intervals for the parameters?
+How can the experimental effort be minimized?
 Answering these questions equates to finding the \ac{oed}.
 This results in defining optimized experimental conditions and/or measurement times which allows for a reduction of the experimental load without loss of information~\cite{derlindenImpactExperimentDesign2013, balsa-cantoe.bangaj.r.COMPUTINGOPTIMALDYNAMIC2008}.
 In general, experimental design can be also used for model discrimination~\cite{kreutzSystemsBiology2009, stamatiOptimalExperimentalDesign2016}.
 However, in this chapter we focus on the design procedure developed to increase parameter estimation precision.
-Comprehensive reviews on can be found here:~\cite{atkinsonDevelopmentsDesignExperiments1982, franceschiniModelbasedDesignExperiments2008,sunParameterEstimation2011,vilasPredictiveFood2016}.
-
+Comprehensive reviews on can be found here:~\cite{atkinsonDevelopmentsDesignExperiments1982, franceschiniModelbasedDesignExperiments2008,sunParameterEstimation2011,vilasPredictiveFood2016}.\\
 The whole parameter estimation process starts with choosing a model structure and defining observable quantities which the researcher is interested in (see Fig.~\ref{Fig1}).
 Once this is chosen, a first parameter set is selected based on literature review or prior data.
 In order to fine-tune the experimental design setup to the given use-case, we need to choose an objective function that will be optimized.
