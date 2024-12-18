@@ -6,14 +6,11 @@ Line 77: '... in silico ...' -> make italic ?
 Line 84: '... and do ...' -> ' ... and to do ...'
 Line 90: 'using Jupyter Notebook ' -> 'using a Jupyter Notebook '
 Line 90: 'can obtain it ...' - > 'can obtain our package ...'
-
 Line 98: 'The documentation of the package' - > 'The documentation (spatial-systems-biology-freiburg.github.io/eDPM/) of the package' (Does it make sense here?)
-
 Code Sample 1: should be located after line 97
 Line 104: „ … packages.“ ->  „ packages in Code Sample 1“
 Line 105: Remove linebreak
 Line 106: Remove indentation
-
 Eq. (2):  replace '+ (t)' by '+ \epsilon(t)'
 Line 123: ' and is a ... ' -> 'and \epsilon is a ... '
 Line 126: replace ' (t)' by ' \epsilon(t)'
@@ -21,23 +18,33 @@ Line 134: 'critical for ...' -> 'which is critical for ...'
 Eq. (5):  replace '+ (t)' by '+ \epsilon(t)'
 Line 169: 'from the literature'  -> 'from literature'
 Line 173: replace ' (t)' by ' \epsilon(t)'
-
 Line 191: 'According to the so-called Cramer-Rao' -> 'According to the Cramer-Rao'
 Line 204-205: 'an enhanced system of the ODEs' -> 'an extended ODE system'
 Line 212: 'parameters, sensitivity matrix' -> \parameters, the sensitivity matrix' 
 Eq (12): remove \cdot between gamma_rel and y_i
 Line 226-227: remove '(e.g., on the second and on the day scale)'
-
 Line 254-255: 'For the purpose we write the times as a dictionary...' - > ' We define them in a dictionary...'
 Line 262: 'we supply an...' -> 'we supply a ...'
-
 Line 271-272: 'so that experiment will then be solved for only these values without optimizing them.' -> 'so that the experimental design will not optimize them.'
 Line 286: ' with temperatures ...' ->  'with temperature ...'
-
 Fig 2. (Caption): 'modiﬁed E-optimality tends to make' -> 'modiﬁed E-optimality aims to make'
-
 Line 341-342: 'We give in the following ...' ->'In the following we give ...'
-
 Fig 3. : remove linebreak before the last line
-
 Line 384: insert blank space between 'relative_sensitivities,' and  'criterion'
+Line 410-411: 'does not allow determination of the involved parameters' -> 'does not allow to determine the involved parameters'
+Section 3.3.11 name: 'Plotting, Json, etc.' -> 'Visualization and Output'
+Line 434: 'the ode solutions' -> 'the ODE solutions'
+Line 457: 'Figs. 2 and 6' -> 'Figs. 3 and 6'
+Fig 3: put after Fig 5.
+Line 465: 'this system configuration' -> 'this configuration'
+Line 477: make indent at the beginning small
+Line 482: make indent at the beginning small
+Line 484: make indent at the beginning small
+Line 489: make indent at the beginning small
+Line 490: 'the concentration of the quantities' -> 'the concentrations'
+Fig 9.: put before Notes section
+Fig 9: 'circles determine the suggested by experimental design time points' -> 'circles show the time points suggested by experimental design'
+Line 524: 'in differential evolution optimization' - 'in the differential evolution optimization'
+Line 527: 'one of other candidate' -> 'one of the other candidate'
+Line 543: 'to result obtained' -> 'to the result obtained'
+Line 544: 'D0; and' -> 'D0 and'
