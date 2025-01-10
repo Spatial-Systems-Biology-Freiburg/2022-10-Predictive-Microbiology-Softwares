@@ -1,18 +1,20 @@
-Organization: Freiburg Center for Data Analysis, Modeling and AI (FDMAI)
-
+General comments:
+- Organization for P. Gaindrik, J. Pleyer and C. Fleck: Freiburg Center for Data Analysis, Modeling and AI (FDMAI)
+- The ordering of the figures need to be changed: Fig. 1 -> Fig. 1, Fig. 2 -> Fig. 2, Fig. 3 -> Fig. 4, Fig. 4 -> Fig. 5, Fig. 5 -> Fig. 3., Fig. 6 -> Fig. 7, Fig. 7 -> Fig. 6, Fig. 8 -> Fig. 8, Fig. 9 -> Fig. 9. Change the Caption of the figures accordingly.
+ 
+Specific comments:  
 Line 48: 'Comprehensive reviews on can be ...' - > 'Comprehensive reviews on this topic can be ...'
 Line 71: 'into a new estimation of ... ' - > 'in a new estimate of ... '
-Line 77: '... in silico ...' -> make italic ?
+Line 77: '... in silico ...' -> make italic
 Line 84: '... and do ...' -> ' ... and to do ...'
 Line 90: 'using Jupyter Notebook ' -> 'using a Jupyter Notebook '
 Line 90: 'can obtain it ...' - > 'can obtain our package ...'
-Line 98: 'The documentation of the package' - > 'The documentation (spatial-systems-biology-freiburg.github.io/eDPM/) of the package' (Does it make sense here?)
-Code Sample 1: should be located after line 97
-Line 104: „ … packages.“ ->  „ packages in Code Sample 1“
-Line 105: Remove linebreak
+Line 98: 'The documentation of the package' - > 'The documentation (spatial-systems-biology-freiburg.github.io/eDPM/) of the package' 
+Line 104: „ …the needed packages.“ ->  „ the packages shown in Code Sample 1“
+Line 105: Remove line-break
 Line 106: Remove indentation
 Eq. (2):  replace '+ (t)' by '+ \epsilon(t)'
-Line 123: ' and is a ... ' -> 'and \epsilon is a ... '
+Line 123: ' and is a measurement... ' -> 'and $\epsilon$ is the  measurement... '
 Line 126: replace ' (t)' by ' \epsilon(t)'
 Line 134: 'critical for ...' -> 'which is critical for ...'
 Eq. (5):  replace '+ (t)' by '+ \epsilon(t)'
@@ -20,31 +22,37 @@ Line 169: 'from the literature'  -> 'from literature'
 Line 173: replace ' (t)' by ' \epsilon(t)'
 Line 191: 'According to the so-called Cramer-Rao' -> 'According to the Cramer-Rao'
 Line 204-205: 'an enhanced system of the ODEs' -> 'an extended ODE system'
-Line 212: 'parameters, sensitivity matrix' -> \parameters, the sensitivity matrix' 
+Line 212: '... parameters, sensitivity matrix reads:' -> '... parameters, the sensitivity matrix reads:' 
 Eq (12): remove \cdot between gamma_rel and y_i
 Line 226-227: remove '(e.g., on the second and on the day scale)'
-Line 254-255: 'For the purpose we write the times as a dictionary...' - > ' We define them in a dictionary...'
-Line 262: 'we supply an...' -> 'we supply a ...'
-Line 271-272: 'so that experiment will then be solved for only these values without optimizing them.' -> 'so that the experimental design will not optimize them.'
-Line 286: ' with temperatures ...' ->  'with temperature ...'
-Fig 2. (Caption): 'modiﬁed E-optimality tends to make' -> 'modiﬁed E-optimality aims to make'
-Line 341-342: 'We give in the following ...' ->'In the following we give ...'
-Fig 3. : remove linebreak before the last line
-Line 384: insert blank space between 'relative_sensitivities,' and  'criterion'
-Line 410-411: 'does not allow determination of the involved parameters' -> 'does not allow to determine the involved parameters'
-Section 3.3.11 name: 'Plotting, Json, etc.' -> 'Visualization and Output'
-Line 434: 'the ode solutions' -> 'the ODE solutions'
-Line 457: 'Figs. 2 and 6' -> 'Figs. 3 and 6'
-Fig 3: put after Fig 5.
-Line 465: 'this system configuration' -> 'this configuration'
-Line 477: make indent at the beginning small
-Line 482: make indent at the beginning small
-Line 484: make indent at the beginning small
-Line 489: make indent at the beginning small
-Line 490: 'the concentration of the quantities' -> 'the concentrations'
-Fig 9.: put before Notes section
-Fig 9: 'circles determine the suggested by experimental design time points' -> 'circles show the time points suggested by experimental design'
-Line 524: 'in differential evolution optimization' - 'in the differential evolution optimization'
-Line 527: 'one of other candidate' -> 'one of the other candidate'
-Line 543: 'to result obtained' -> 'to the result obtained'
-Line 544: 'D0; and' -> 'D0 and'
+Line 254-255: 'For the purpose we write the times as a dictionary with ...' - > ' We write them in a dictionary with...'
+Line 262: '... we supply an...' -> '... we supply a ...'
+Line 271: remove indentation
+Line 271-272: '... so that experiment will then be solved for only these values without optimizing them.' -> '... so that the experimental design will not optimize them.'
+Line 286: '... with temperatures ...' ->  '... with temperature ...'
+Line 296: '... entry point.' -> '... entry point (see Code Sample 5).'
+Fig 2. (Caption): '... modiﬁed E-optimality tends to make' -> '... modiﬁed E-optimality aims to make'
+Line 341-342: 'We give in the following ...' -> 'In the following we give ...'
+Line 367: remove reference to Fig. 3
+Fig 3. (Caption): remove line-break before the last line
+Line 374: ' ... Figs. 4 and 5.' ->   ' ... Figs. 3 and 4.'
+Line 410-411: '... does not allow determination of the involved parameters' -> '... does not allow to determine the involved parameters'
+Section 3.3.11 replace: 'Plotting, Json, etc.' -> 'Visualization and Output'
+Line 434: '.. the ode solutions... ' -> '... the ODE solutions...'
+Line 457: '... as presented in Figs. 2 and 6' -> '... as presented in Figs. 5 and 6'
+Line 458: '... model setup (Fig. 5).' ->  '... model setup (Fig. 7).' 
+Line 461: '... per temperature (Fig. 6).' ->  '... per temperature (Fig. 5).'
+Line 463: '... looking at Fig. 7.' ->  '... looking at Fig. 8.' 
+Line 465: '...this system configuration.' -> '... this configuration.'
+Line 465: 'Figure 8 ...' ->  'Figure 6 ...'
+Line 477: remove indentation
+Fig. 6 (Caption): '... provided in Fig. 2.' -> '... provided in Fig. 5.'
+Line 483: remove indentation
+Line 490: remove indentation
+Line 490: '... the concentration of the quantities determining ...' -> ... the concentrations determining ...'
+Swap Table 3 and Fig. 9
+Fig 9 (Caption): '... and the circles determine the suggested by experimental design time points' -> '... and filled circles show the time points suggested by experimental design'
+Line 524: 'In differential evolution optimization ...' - 'In the differential evolution optimization ...'
+Line 527: '... one of other candidate ...' -> '... one of the other candidate ...'
+Line 543: '... compared to result obtained ...' -> '... compared to the result obtained ...'
+Line 544: '... D0; and ...' -> '... D0 and ...'
